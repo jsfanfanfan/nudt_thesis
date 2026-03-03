@@ -49,6 +49,8 @@
 \DeclareOption{fz}{\isfztrue}
 \DeclareOption{fandol}{\isfandoltrue}
 \ProcessOptions\relax
+\InputIfFileExists{nudtpaper.cfg}{}{}
+\@ifundefined{nudtfontpath}{\newcommand{\nudtfontpath}{}}{}
 \RequirePackage{ifthen,calc}
 \ifistwoside
   \LoadClass[a4paper,12pt,openright,twoside]{book}
@@ -86,22 +88,34 @@
 \xeCJKsetcharclass{"0}{"2E7F}{0}
 \xeCJKsetcharclass{"2E80}{"FFFF}{1}
 
-% ttf字体 (Windows)
+% ttf字体 (Windows)，若 nudtpaper.cfg 中设置了 \nudtfontpath 则从该路径加载
   \newcommand{\installttf}{
     %%%%   Thesis Fonts
     \setmainfont{Times New Roman}
     \setsansfont{Arial}
     \setmonofont{Courier New}
     %%%% Using Office Family Fonts
-    \setCJKmainfont[BoldFont={STZhongsong}]{SimSun}
-    \setCJKsansfont{SimHei} % Hei
-    \setCJKmonofont{FangSong_GB2312} % Fangsong
-    %%%% alias
-    \setCJKfamilyfont{song}{SimSun}
-    \setCJKfamilyfont{hei}{SimHei}
-    \setCJKfamilyfont{fs}{FangSong_GB2312} % fang-song
-    \setCJKfamilyfont{kai}{KaiTi} % Kai
-    \setCJKfamilyfont{times}{Times New Roman} % times
+    \ifx\nudtfontpath\@empty
+      \setCJKmainfont[BoldFont={STZhongsong}]{SimSun}
+      \setCJKsansfont{SimHei}
+      \setCJKmonofont{FangSong_GB2312}
+      \setCJKfamilyfont{song}{SimSun}
+      \setCJKfamilyfont{hei}{SimHei}
+      \setCJKfamilyfont{fs}{FangSong_GB2312}
+      \setCJKfamilyfont{kai}{KaiTi}
+      \setCJKfamilyfont{times}{Times New Roman}
+    \else
+      % 从指定路径按文件名加载（与 ttf 文件夹内实际文件名一致）
+      % 仿宋：仿宋_GB2312.ttf；楷体：simkai.ttf；加粗用 SimHei
+      \setCJKmainfont[Path=\nudtfontpath,BoldFont={SimHei}]{SimSun}
+      \setCJKsansfont[Path=\nudtfontpath]{SimHei}
+      \setCJKmonofont[Path=\nudtfontpath,Extension=.ttf]{仿宋_GB2312}
+      \setCJKfamilyfont{song}[Path=\nudtfontpath]{SimSun}
+      \setCJKfamilyfont{hei}[Path=\nudtfontpath]{SimHei}
+      \setCJKfamilyfont{fs}[Path=\nudtfontpath,Extension=.ttf]{仿宋_GB2312}
+      \setCJKfamilyfont{kai}[Path=\nudtfontpath,Extension=.ttf]{simkai}
+      \setCJKfamilyfont{times}{Times New Roman}
+    \fi
 }
 
 % otf字体（Adobe）
@@ -277,7 +291,7 @@
 \titlecontents{chapter}[0pt]{\vspace{0.25\baselineskip} \heiti \xiaosi[1.25]}
     {第\zhnumber{\thecontentslabel}章\quad}{}
     {\hspace{.5em}\titlerule*{.}\contentspage}
-\titlecontents{section}[2em]{\songti \xiaosi[1.25]}
+\titlecontents{section}[2em]{\bfseries \songti \xiaosi[1.25]}
     {\thecontentslabel\quad}{}
     {\hspace{.5em}\titlerule*{.}\contentspage}
 \titlecontents{subsection}[4em]{\songti \xiaosi[1.25]}

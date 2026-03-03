@@ -1,0 +1,244 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand*\HyPL@Entry[1]{}
+\HyPL@Entry{0<</S/a>>}
+\HyPL@Entry{6<</S/R>>}
+\HyPL@Entry{12<</S/r>>}
+\@writefile{toc}{\contentsline {chapter}{摘\hspace  {1em}要}{i}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\textsf  {Abstract}}{iii}{section*.5}\protected@file@percent }
+\citation{galvatron2022}
+\citation{vaswani2017}
+\citation{bert}
+\citation{gpt2}
+\citation{t5}
+\citation{brown2020gpt3}
+\citation{openai2023}
+\citation{vit2020}
+\citation{scaling_vit}
+\citation{clip2021}
+\citation{dalle2021}
+\citation{blip2,llava2023,flamingo2022}
+\citation{minigpt4}
+\citation{blip2}
+\HyPL@Entry{18<</S/D>>}
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}绪论}{1}{chapter.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}研究背景}{1}{section.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}训练多模态大语言模型面临的挑战}{1}{subsection.1.1.1}\protected@file@percent }
+\citation{kaplan2020scaling}
+\citation{deepseek2024}
+\citation{qwen2024}
+\citation{megatron2021,megatron2020}
+\citation{zero2020,zero2021}
+\citation{pytorch_ddp,horovod}
+\citation{megatron2020,megatron2021}
+\citation{gpipe,pipedream2019}
+\citation{megatron2021}
+\citation{gshard}
+\citation{zero2020,zero2021}
+\citation{zero2021}
+\citation{zeroplusplus}
+\citation{mixed_precision2018}
+\citation{colossal_auto}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces 多模态大语言模型的核心组成部分\relax }}{2}{figure.caption.8}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:mllm_components}{{1.1}{2}{多模态大语言模型的核心组成部分\relax }{figure.caption.8}{}}
+\citation{whale,hetpipe2020}
+\citation{nvidia_a100}
+\citation{nvidia_h100}
+\citation{nvidia_blackwell}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}异构 GPU 集群的并行训练策略}{3}{subsection.1.1.2}\protected@file@percent }
+\citation{megatron2021,zero2020}
+\citation{whale,hetpipe2020}
+\citation{llama3}
+\citation{stable_diffusion}
+\citation{unet}
+\citation{blip2}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces NVIDIA GPU 架构与代表性产品演进\relax }}{4}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:nvidia_gpu_evolution}{{1.2}{4}{NVIDIA GPU 架构与代表性产品演进\relax }{figure.caption.9}{}}
+\citation{blip2}
+\citation{nextgpt}
+\citation{dreamllm}
+\citation{adam}
+\citation{galvatron2022}
+\citation{pytorch_ddp}
+\citation{open_images}
+\citation{youtube8m}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}研究现状}{5}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}多模态大语言模型并行训练策略研究现状}{5}{subsection.1.2.1}\protected@file@percent }
+\citation{megatron2021,megatron2020}
+\citation{zero2020,zero2021}
+\citation{megatron2021,megatron2020}
+\citation{megatron2023}
+\citation{whale,hetpipe2020}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}异构 GPU 集群并行训练策略研究现状}{6}{subsection.1.2.2}\protected@file@percent }
+\citation{zero2020,zero2021}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces 使用 Megatron 训练多模态大语言模型（同构假设下的典型配置）\relax }}{7}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:megatron_mllm}{{1.3}{7}{使用 Megatron 训练多模态大语言模型（同构假设下的典型配置）\relax }{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}研究内容与贡献}{8}{section.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}针对多模态大语言模型的复合粒度划分和异构设备映射}{8}{subsection.1.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}针对多模态大语言模型的提前终止流水线调度}{8}{subsection.1.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}针对多模态大语言模型的异构梯度检查点优化}{8}{subsection.1.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}论文组织结构}{9}{section.1.4}\protected@file@percent }
+\citation{brown2020gpt3,openai2023}
+\citation{vit2020}
+\citation{clip2021}
+\citation{clip2021}
+\citation{vit2020}
+\citation{brown2020gpt3,gpt2}
+\citation{llama3}
+\citation{t5}
+\citation{stable_diffusion}
+\citation{blip2}
+\citation{blip2}
+\citation{nextgpt}
+\citation{dreamllm}
+\citation{open_images}
+\citation{youtube8m}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}相关工作}{11}{chapter.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}多模态大语言模型}{11}{section.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}多模态大语言模型架构}{11}{subsection.2.1.1}\protected@file@percent }
+\citation{parameter_server,horovod,pytorch_ddp}
+\citation{pytorch_ddp}
+\citation{horovod}
+\citation{parallax}
+\citation{megatron2020}
+\citation{gpipe}
+\citation{megatron2020}
+\citation{gshard}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}多模态大语言模型训练数据}{12}{subsection.2.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}多模态大语言模型训练目标}{12}{subsection.2.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}并行与分布式训练基础}{12}{section.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}常见并行策略}{12}{subsection.2.2.1}\protected@file@percent }
+\citation{gpipe}
+\citation{pipedream2019}
+\citation{terapipe}
+\citation{megatron2020}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces 数据并行\relax }}{13}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:data_parallel}{{2.1}{13}{数据并行\relax }{figure.caption.12}{}}
+\citation{zero2020}
+\citation{mics2022}
+\citation{zeroplusplus}
+\citation{amsp}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces 张量并行\relax }}{14}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:tensor_parallel}{{2.2}{14}{张量并行\relax }{figure.caption.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}多维混合并行}{14}{subsection.2.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces 流水线并行\relax }}{15}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:pipeline_parallel}{{2.3}{15}{流水线并行\relax }{figure.caption.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces 零冗余优化器 ZeRO\relax }}{15}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:zero}{{2.4}{15}{零冗余优化器 ZeRO\relax }{figure.caption.15}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}异构 GPU 集群并行训练策略}{15}{section.2.3}\protected@file@percent }
+\citation{hetpipe2020}
+\citation{whale}
+\citation{amp2022}
+\citation{colossal_auto}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}梯度检查点优化}{17}{section.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}基于锐度比策略的自适应锐度正则化算法 SAMAR}{19}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}引言}{19}{section.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}SAMAR 算法设计与实现}{19}{section.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}锐度比策略设计}{19}{subsection.3.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}算法实现}{19}{subsection.3.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}SAMAR 算法的理论属性}{19}{section.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}基本假设}{19}{subsection.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}收敛性分析}{19}{subsection.3.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}实验验证}{19}{section.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}图像分类实验}{19}{subsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Hessian Spectrum 分析}{19}{subsection.3.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}损失曲面可视化}{19}{subsection.3.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}本章小结}{19}{section.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}基于退火策略的自适应锐度正则化算法 ARSO}{21}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}引言}{21}{section.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}ARSO 算法设计与实现}{21}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}退火策略}{21}{subsection.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}算法实现}{21}{subsection.4.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}锐度比策略与退火策略的比较}{21}{subsection.4.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}ARSO 算法的理论属性}{21}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}基本假设}{21}{subsection.4.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}收敛性分析}{21}{subsection.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}实验验证}{21}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}GLUE 基准测试}{21}{subsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}神经机器翻译实验}{21}{subsection.4.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}损失曲面可视化}{21}{subsection.4.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}本章小结}{21}{section.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}总结与展望}{23}{chapter.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}全文工作总结}{23}{section.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}主要创新点}{23}{subsection.5.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}研究的局限性}{23}{subsection.5.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}未来工作展望}{23}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}理论深化}{23}{subsection.5.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}应用拓展}{23}{subsection.5.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{致谢}{25}{chapter*.19}\protected@file@percent }
+\bibstyle{bstutf8}
+\bibdata{ref/refs}
+\bibcite{galvatron2022}{{1}{}{{}}{{}}}
+\bibcite{vaswani2017}{{2}{}{{}}{{}}}
+\bibcite{bert}{{3}{}{{}}{{}}}
+\bibcite{gpt2}{{4}{}{{}}{{}}}
+\bibcite{t5}{{5}{}{{}}{{}}}
+\bibcite{brown2020gpt3}{{6}{}{{}}{{}}}
+\bibcite{openai2023}{{7}{}{{}}{{}}}
+\bibcite{vit2020}{{8}{}{{}}{{}}}
+\bibcite{scaling_vit}{{9}{}{{}}{{}}}
+\bibcite{clip2021}{{10}{}{{}}{{}}}
+\bibcite{dalle2021}{{11}{}{{}}{{}}}
+\bibcite{blip2}{{12}{}{{}}{{}}}
+\bibcite{llava2023}{{13}{}{{}}{{}}}
+\bibcite{flamingo2022}{{14}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {chapter}{参考文献}{27}{section*.20}\protected@file@percent }
+\bibcite{minigpt4}{{15}{}{{}}{{}}}
+\bibcite{kaplan2020scaling}{{16}{}{{}}{{}}}
+\bibcite{deepseek2024}{{17}{}{{}}{{}}}
+\bibcite{qwen2024}{{18}{}{{}}{{}}}
+\bibcite{megatron2021}{{19}{}{{}}{{}}}
+\bibcite{megatron2020}{{20}{}{{}}{{}}}
+\bibcite{zero2020}{{21}{}{{}}{{}}}
+\bibcite{zero2021}{{22}{}{{}}{{}}}
+\bibcite{pytorch_ddp}{{23}{}{{}}{{}}}
+\bibcite{horovod}{{24}{}{{}}{{}}}
+\bibcite{gpipe}{{25}{}{{}}{{}}}
+\bibcite{pipedream2019}{{26}{}{{}}{{}}}
+\bibcite{gshard}{{27}{}{{}}{{}}}
+\bibcite{zeroplusplus}{{28}{}{{}}{{}}}
+\bibcite{mixed_precision2018}{{29}{}{{}}{{}}}
+\bibcite{colossal_auto}{{30}{}{{}}{{}}}
+\bibcite{whale}{{31}{}{{}}{{}}}
+\bibcite{hetpipe2020}{{32}{}{{}}{{}}}
+\bibcite{nvidia_a100}{{33}{}{{}}{{}}}
+\bibcite{nvidia_h100}{{34}{}{{}}{{}}}
+\bibcite{nvidia_blackwell}{{35}{}{{}}{{}}}
+\bibcite{llama3}{{36}{}{{}}{{}}}
+\bibcite{stable_diffusion}{{37}{}{{}}{{}}}
+\bibcite{unet}{{38}{}{{}}{{}}}
+\bibcite{nextgpt}{{39}{}{{}}{{}}}
+\bibcite{dreamllm}{{40}{}{{}}{{}}}
+\bibcite{adam}{{41}{}{{}}{{}}}
+\bibcite{open_images}{{42}{}{{}}{{}}}
+\bibcite{youtube8m}{{43}{}{{}}{{}}}
+\bibcite{megatron2023}{{44}{}{{}}{{}}}
+\bibcite{parameter_server}{{45}{}{{}}{{}}}
+\bibcite{parallax}{{46}{}{{}}{{}}}
+\bibcite{terapipe}{{47}{}{{}}{{}}}
+\bibcite{mics2022}{{48}{}{{}}{{}}}
+\bibcite{amsp}{{49}{}{{}}{{}}}
+\bibcite{amp2022}{{50}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {chapter}{作者在学期间取得的学术成果}{31}{chapter*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{公开评阅信息}{33}{chapter*.23}\protected@file@percent }
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\@writefile{toc}{\ttl@change@i {\@ne }{chapter}{0pt}{\vspace {0.25\baselineskip } \heiti \xiaosi [1.25]}{附录\,\thecontentslabel \quad }{}{\hspace {.5em}\titlerule *{.}\contentspage }\relax }
+\@writefile{toc}{\ttl@change@v {chapter}{}{}{}\relax }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}模板提供的希腊字母命令列表}{35}{appendix.A}\protected@file@percent }
+\ttl@finishall
+\gdef \@abspage@last{53}
