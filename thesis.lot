@@ -1,8 +1,8 @@
-\contentsline {table}{\numberline {2.1}{\ignorespaces 多模态大语言模型训练中常用的部分数据集规模示意\relax }}{16}{table.caption.12}%
-\contentsline {table}{\numberline {3.1}{\ignorespaces 实验用异构 GPU 集群配置\relax }}{39}{table.caption.46}%
-\contentsline {table}{\numberline {3.2}{\ignorespaces 实验用 MLLM 模块配置（模型参数）\relax }}{40}{table.caption.48}%
-\contentsline {table}{\numberline {4.1}{\ignorespaces Megatron-LM 激活重计算相关配置参数\relax }}{47}{table.caption.60}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Megatron selective 粒度下可配置的子模块（recompute\_modules）\relax }}{48}{table.caption.61}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces 4.2.2 节主要符号说明\relax }}{49}{table.caption.63}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces 单层 Transformer 中间激活量（元素个数；bf16 为 2 字节/元素，输入 $[B,S,H]$）\relax }}{51}{table.caption.64}%
+\contentsline {table}{\numberline {2.1}{\ignorespaces 多模态大语言模型训练中常用的部分数据集规模示意}}{16}{table.caption.12}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces 实验用异构 GPU 集群配置}}{42}{table.caption.46}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces 实验用 MLLM 模块配置（模型参数）}}{43}{table.caption.48}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Megatron-LM 重计算相关配置参数}}{51}{table.caption.60}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Megatron selective 粒度下可配置的子模块}}{52}{table.caption.61}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces 4.2.2 节主要符号说明}}{53}{table.caption.63}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces 单层 Transformer 中间激活量}}{56}{table.caption.66}%
 \contentsfinish 

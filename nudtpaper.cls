@@ -96,12 +96,12 @@
     \setmonofont{Courier New}
     %%%% Using Office Family Fonts
     \ifx\nudtfontpath\@empty
-      \setCJKmainfont[BoldFont={STZhongsong}]{SimSun}
+      \setCJKmainfont[BoldFont={SimHei}]{SimSun}
       \setCJKsansfont{SimHei}
-      \setCJKmonofont{FangSong_GB2312}
+      \setCJKmonofont{FangSong}
       \setCJKfamilyfont{song}{SimSun}
       \setCJKfamilyfont{hei}{SimHei}
-      \setCJKfamilyfont{fs}{FangSong_GB2312}
+      \setCJKfamilyfont{fs}{FangSong}
       \setCJKfamilyfont{kai}{KaiTi}
       \setCJKfamilyfont{times}{Times New Roman}
     \else
