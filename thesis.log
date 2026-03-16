@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  3 MAR 2026 22:01
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  15 MAR 2026 00:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -883,33 +883,229 @@ Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
 \rotheadsize=\dimen309
 \c@nlinenum=\count429
 \TeXr@lab=\toks56
+) (d:/texlive/2022/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (d:/texlive/2022/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (d:/texlive/2022/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (d:/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+\pgfutil@everybye=\toks57
+\pgfutil@tempdima=\dimen310
+\pgfutil@tempdimb=\dimen311
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.tex)) (d:/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box73
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (d:/texlive/2022/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+Package: pgfrcs 2021/05/15 v3.1.9a (3.1.9a)
+))
+Package: pgf 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty (d:/texlive/2022/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty (d:/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks58
+\pgfkeys@temptoks=\toks59
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex
+\pgfkeys@tmptoks=\toks60
+))
+\pgf@x=\dimen312
+\pgf@y=\dimen313
+\pgf@xa=\dimen314
+\pgf@ya=\dimen315
+\pgf@xb=\dimen316
+\pgf@yb=\dimen317
+\pgf@xc=\dimen318
+\pgf@yc=\dimen319
+\pgf@xd=\dimen320
+\pgf@yd=\dimen321
+\w@pgf@writea=\write4
+\r@pgf@reada=\read3
+\c@pgf@counta=\count430
+\c@pgf@countb=\count431
+\c@pgf@countc=\count432
+\c@pgf@countd=\count433
+\t@pgf@toka=\toks61
+\t@pgf@tokb=\toks62
+\t@pgf@tokc=\toks63
+\pgf@sys@id@count=\count434
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2021/05/15 v3.1.9a (3.1.9a)
+)
+Driver file for pgf: pgfsys-xetex.def
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-xetex.def
+File: pgfsys-xetex.def 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-dvipdfmx.def
+File: pgfsys-dvipdfmx.def 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2021/05/15 v3.1.9a (3.1.9a)
+)
+\pgfsys@objnum=\count435
+))) (d:/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfsyssoftpath@smallbuffer@items=\count436
+\pgfsyssoftpath@bigbuffer@items=\count437
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen322
+\pgfmath@count=\count438
+\pgfmath@box=\box74
+\pgfmath@toks=\toks64
+\pgfmath@stack@operand=\toks65
+\pgfmath@stack@operation=\toks66
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex))) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count439
+)) (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@picminx=\dimen323
+\pgf@picmaxx=\dimen324
+\pgf@picminy=\dimen325
+\pgf@picmaxy=\dimen326
+\pgf@pathminx=\dimen327
+\pgf@pathmaxx=\dimen328
+\pgf@pathminy=\dimen329
+\pgf@pathmaxy=\dimen330
+\pgf@xx=\dimen331
+\pgf@xy=\dimen332
+\pgf@yx=\dimen333
+\pgf@yy=\dimen334
+\pgf@zx=\dimen335
+\pgf@zy=\dimen336
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@path@lastx=\dimen337
+\pgf@path@lasty=\dimen338
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@shorten@end@additional=\dimen339
+\pgf@shorten@start@additional=\dimen340
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfpic=\box75
+\pgf@hbox=\box76
+\pgf@layerbox@main=\box77
+\pgf@picture@serial@count=\count440
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgflinewidth=\dimen341
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@pt@x=\dimen342
+\pgf@pt@y=\dimen343
+\pgf@pt@temp=\dimen344
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfarrowsep=\dimen345
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@max=\dimen346
+\pgf@sys@shading@range@num=\count441
+\pgf@shadingcount=\count442
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfexternal@startupbox=\box78
+)) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+))) (d:/texlive/2022/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfnodeparttextbox=\box79
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (d:/texlive/2022/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@nodesepstart=\dimen347
+\pgf@nodesepend=\dimen348
+) (d:/texlive/2022/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2021/05/15 v3.1.9a (3.1.9a)
+)) (d:/texlive/2022/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (d:/texlive/2022/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (d:/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (d:/texlive/2022/texmf-dist/tex/latex/pgf/math/pgfmath.sty (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)) (d:/texlive/2022/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
+\pgffor@iter=\dimen349
+\pgffor@skip=\dimen350
+\pgffor@stack=\toks67
+\pgffor@toks=\toks68
+)) (d:/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+Package: tikz 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@plot@mark@count=\count443
+\pgfplotmarksize=\dimen351
+)
+\tikz@lastx=\dimen352
+\tikz@lasty=\dimen353
+\tikz@lastxsaved=\dimen354
+\tikz@lastysaved=\dimen355
+\tikz@lastmovetox=\dimen356
+\tikz@lastmovetoy=\dimen357
+\tikzleveldistance=\dimen358
+\tikzsiblingdistance=\dimen359
+\tikz@figbox=\box80
+\tikz@figbox@bg=\box81
+\tikz@tempbox=\box82
+\tikz@tempbox@bg=\box83
+\tikztreelevel=\count444
+\tikznumberofchildren=\count445
+\tikznumberofcurrentchild=\count446
+\tikz@fig@count=\count447
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfmatrixcurrentrow=\count448
+\pgfmatrixcurrentcolumn=\count449
+\pgf@matrix@numberofcolumns=\count450
+)
+\tikz@expandcount=\count451
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+))) (d:/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex
+File: pgflibraryarrows.meta.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfarrowinset=\dimen360
+\pgfarrowlength=\dimen361
+\pgfarrowwidth=\dimen362
+\pgfarrowlinewidth=\dimen363
+) (d:/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
+File: tikzlibraryshapes.geometric.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+ (d:/texlive/2022/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex
+File: pgflibraryshapes.geometric.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)) (d:/texlive/2022/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
+File: tikzlibrarycalc.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 ) (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 63.
-LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 63.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 66.
+LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 66.
  (d:/texlive/2022/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 63.
-LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -955,7 +1151,7 @@ Package caption Info: longtable package is loaded.
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 )
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 63.
+Package hyperref Info: Link coloring OFF on input line 66.
  (d:/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
  (d:/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty
@@ -963,21 +1159,21 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ) (d:/texlive/2022/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count430
+\c@section@level=\count452
 )
-LaTeX Info: Redefining \ref on input line 63.
-LaTeX Info: Redefining \pageref on input line 63.
-LaTeX Info: Redefining \nameref on input line 63.
+LaTeX Info: Redefining \ref on input line 66.
+LaTeX Info: Redefining \pageref on input line 66.
+LaTeX Info: Redefining \nameref on input line 66.
  (./thesis.out) (./thesis.out)
-\@outlinefile=\write4
-\openout4 = `thesis.out'.
+\@outlinefile=\write5
+\openout5 = `thesis.out'.
 
  (d:/texlive/2022/texmf-dist/tex/latex/fmtcount/fc-english.def
 Invalid UTF-8 byte or sequence at line 10 replaced by U+FFFD.
 Invalid UTF-8 byte or sequence at line 22 replaced by U+FFFD.
 File: fc-english.def 2016/01/12
 )
-\c@lstlisting=\count431
+\c@lstlisting=\count453
 
 Package fontspec Info: Font family '仿宋_GB2312(0)' created for font '仿宋_GB2312'
 (fontspec)             with options
@@ -990,54 +1186,54 @@ Package fontspec Info: Font family '仿宋_GB2312(0)' created for font '仿宋_G
 (fontspec)             <->"[C:/Users/fanji/Desktop/nudt_thesis/ttf/仿宋_GB2312.ttf]/OT:script=hani;language=dflt;mapping=tex-text;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 
-LaTeX Font Info:    Calculating math sizes for size <10.53937> on input line 70.
+LaTeX Font Info:    Calculating math sizes for size <10.53937> on input line 73.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 70.
+(Font)              size <10.95> substituted on input line 73.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 70.
+(Font)              size <10.95> substituted on input line 73.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 70.
+(Font)              size <10.95> substituted on input line 73.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 70.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 73.
 (d:/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 70.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 73.
  (d:/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 9.48535pt on input line 70.
+(Font)              scaled to size 9.48535pt on input line 73.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 6.63971pt on input line 70.
+(Font)              scaled to size 6.63971pt on input line 73.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 4.74268pt on input line 70.
+(Font)              scaled to size 4.74268pt on input line 73.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 70.
+(Font)              size <10.95> substituted on input line 73.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 70.
+(Font)              size <10.95> substituted on input line 73.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 70.
+(Font)              size <10.95> substituted on input line 73.
 
 
-Overfull \hbox (0.988pt too wide) detected at line 70
+Overfull \hbox (0.988pt too wide) detected at line 73
  \TU/仿宋_GB2312(0)/m/n/10.53937 分 类 号 
  []
 
 
-Overfull \hbox (7.10143pt too wide) in paragraph at lines 70--70
+Overfull \hbox (7.10143pt too wide) in paragraph at lines 73--73
  [] 
  []
 
@@ -1053,57 +1249,53 @@ Package fontspec Info: Font family 'SimHei(0)' created for font 'SimHei' with
 (fontspec)             <->"[C:/Users/fanji/Desktop/nudt_thesis/ttf/SimHei]/OT:script=hani;language=dflt;mapping=tex-text;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 
-LaTeX Font Info:    Calculating math sizes for size <14.05249> on input line 70.
+LaTeX Font Info:    Calculating math sizes for size <14.05249> on input line 73.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 12.64714pt on input line 70.
+(Font)              scaled to size 12.64714pt on input line 73.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 8.85295pt on input line 70.
+(Font)              scaled to size 8.85295pt on input line 73.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 6.32356pt on input line 70.
+(Font)              scaled to size 6.32356pt on input line 73.
 [1
 
-] [2
-
 ]
-LaTeX Font Info:    Calculating math sizes for size <16.06> on input line 70.
+LaTeX Font Info:    Calculating math sizes for size <16.06> on input line 73.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <16.06> not available
-(Font)              size <17.28> substituted on input line 70.
+(Font)              size <17.28> substituted on input line 73.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <16.06> not available
-(Font)              size <17.28> substituted on input line 70.
+(Font)              size <17.28> substituted on input line 73.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <16.06> not available
-(Font)              size <17.28> substituted on input line 70.
+(Font)              size <17.28> substituted on input line 73.
 
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 14.45389pt on input line 70.
+(Font)              scaled to size 14.45389pt on input line 73.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 10.11768pt on input line 70.
+(Font)              scaled to size 10.11768pt on input line 73.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 7.22694pt on input line 70.
+(Font)              scaled to size 7.22694pt on input line 73.
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <16.06> not available
-(Font)              size <17.28> substituted on input line 70.
+(Font)              size <17.28> substituted on input line 73.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <16.06> not available
-(Font)              size <17.28> substituted on input line 70.
+(Font)              size <17.28> substituted on input line 73.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <16.06> not available
-(Font)              size <17.28> substituted on input line 70.
+(Font)              size <17.28> substituted on input line 73.
 
-[3
+[2
+
+] [3
 
 ] [4
-
-] [5
-
-] [6
 
 ] (./thesis.toc
 
@@ -1128,76 +1320,82 @@ LaTeX Font Warning: Font shape `TU/SimSun(1)/b/n' undefined
 
 
 ])
-\tf@toc=\write5
-\openout5 = `thesis.toc'.
+\tf@toc=\write6
+\openout6 = `thesis.toc'.
 
- [2] (./thesis.lot)
-\tf@lot=\write6
-\openout6 = `thesis.lot'.
+ [2] (./thesis.lot
+LaTeX Font Info:    Calculating math sizes for size <12.045> on input line 7.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.43146> not available
+(Font)              size <8> substituted on input line 7.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <8.43146> not available
+(Font)              size <8> substituted on input line 7.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <8.43146> not available
+(Font)              size <8> substituted on input line 7.
+
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 10.84042pt on input line 7.
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 7.58826pt on input line 7.
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 5.4202pt on input line 7.
+
+LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <8.43146> not available
+(Font)              size <8> substituted on input line 7.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <8.43146> not available
+(Font)              size <8> substituted on input line 7.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <8.43146> not available
+(Font)              size <8> substituted on input line 7.
+
+)
+\tf@lot=\write7
+\openout7 = `thesis.lot'.
 
  [3
 
 ] [4
 
-] (./thesis.lof)
-\tf@lof=\write7
-\openout7 = `thesis.lof'.
+] (./thesis.lof
+Underfull \vbox (badness 2343) has occurred while \output is active []
 
  [5
 
-] [6
+])
+\tf@lof=\write8
+\openout8 = `thesis.lof'.
 
-] (./data/abstract.tex [1
-
-
-
-] [2
-
-]) (./data/denotation.tex [3
+ [6] (./data/abstract.tex [1
 
 
-] [4
 
 ]
-LaTeX Font Info:    Calculating math sizes for size <12.045> on input line 17.
+Overfull \hbox (3.55667pt too wide) in paragraph at lines 11--12
+[]\TU/TimesNewRoman(0)/m/n/12.045 This thesis addresses the problem from two aspects: pipeline partitioning and schedul-
+ []
 
 
-LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 17.
+Overfull \hbox (1.38702pt too wide) in paragraph at lines 11--12
+\TU/TimesNewRoman(0)/m/n/12.045 framework: it uses demand-driven device topology identification, multi-granularity model
+ []
 
 
-LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 17.
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [2
 
 
-LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 17.
+]) (./data/denotation.tex [3]) [4
 
-LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 10.84042pt on input line 17.
-LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 7.58826pt on input line 17.
-LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 5.4202pt on input line 17.
-
-LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 17.
-
-
-LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 17.
-
-
-LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 17.
-
-) [5
-
-] [6
-
-]
-\c@blankpages=\count432
- (./data/chap01.tex
+] (./data/chap01.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [1
@@ -1210,100 +1408,343 @@ File: figures//fig01_mllm_components.png Graphic file (type bmp)
 
 
 LaTeX Font Warning: Font shape `TU/SimSun(0)/m/it' undefined
-(Font)              using `TU/SimSun(0)/m/n' instead on input line 73.
+(Font)              using `TU/SimSun(0)/m/n' instead on input line 88.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-File: figures//fig_nvidia_gpu_evolution.png Graphic file (type bmp)
-<figures//fig_nvidia_gpu_evolution.png>
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [4] [5]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [6]
-File: figures//fig02_megatron_mllm.png Graphic file (type bmp)
-<figures//fig02_megatron_mllm.png>
+ [4]
+File: figures//fig_nvidia_gpu_evolution.png Graphic file (type bmp)
+<figures//fig_nvidia_gpu_evolution.png>
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7] [8]) (./data/chap02.tex [9] [10
+ [5]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6] [7]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8]
+File: figures//fig02_megatron_mllm.jpg Graphic file (type bmp)
+<figures//fig02_megatron_mllm.jpg>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9] [10] [11]) (./data/chap02.tex [12] [13
+
+
+] [14]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15] [16]
+File: figures//mllm_training_stages.pdf Graphic file (type pdf)
+<use figures//mllm_training_stages.pdf>
+File: figures//fig03_data_parallel.pdf Graphic file (type pdf)
+<use figures//fig03_data_parallel.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [17]
+File: figures//fig04_tensor_parallel_left.pdf Graphic file (type pdf)
+<use figures//fig04_tensor_parallel_left.pdf>
+File: figures//fig04_tensor_parallel_right.pdf Graphic file (type pdf)
+<use figures//fig04_tensor_parallel_right.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [18]
+File: figures//fig05_pipeline_parallel.pdf Graphic file (type pdf)
+<use figures//fig05_pipeline_parallel.pdf>
+
+Underfull \vbox (badness 3323) has occurred while \output is active []
+
+ [19]
+File: figures//fig06_expert_parallel.pdf Graphic file (type pdf)
+<use figures//fig06_expert_parallel.pdf>
+File: figures//fig07_zero.png Graphic file (type bmp)
+<figures//fig07_zero.png>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [21]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [22]
+File: figures//fig08_recomputation.pdf Graphic file (type pdf)
+<use figures//fig08_recomputation.pdf>
+ [23] [24]) (./data/chap03.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [25] [26]
+File: figures//MMoH-figs/moti_MLLM.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/moti_MLLM.pdf>
+File: figures//MMoH-figs/moti_layer.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/moti_layer.pdf>
+ [27
+
+
+]
+File: figures//MMoH-figs/moti_e2e.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/moti_e2e.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [28]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [29]
+File: figures//MMoH-figs/overview.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/overview.pdf>
+
+Underfull \vbox (badness 3482) has occurred while \output is active []
+
+ [30]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [31] [32]
+File: figures//MMoH-figs/hybrid-granularity-merge.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/hybrid-granularity-merge.pdf>
+File: figures//MMoH-figs/hybrid-granularity-split.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/hybrid-granularity-split.pdf>
+ [33]
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/it' in size <8.43146> not available
+(Font)              size <8> substituted on input line 225.
+
+[34] [35]
+File: figures//MMoH-figs/freeze-optimization.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/freeze-optimization.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [36] [37]
+File: figures//chimera-hanayo.png Graphic file (type bmp)
+<figures//chimera-hanayo.png>
+ [38]
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/it' in size <10.53937> not available
+(Font)              size <10.95> substituted on input line 343.
+
+[39]
+File: figures//MMoH-figs/e2e_3B.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/e2e_3B.pdf>
+File: figures//MMoH-figs/e2e_12B.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/e2e_12B.pdf>
+ [40] [41]
+File: figures//MMoH-figs/load_balance.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/load_balance.pdf>
+File: figures//MMoH-figs/early_termination.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/early_termination.pdf>
+File: figures//MMoH-figs/ET-time.pdf Graphic file (type pdf)
+<use figures//MMoH-figs/ET-time.pdf>
+
+Underfull \vbox (badness 4353) has occurred while \output is active []
+
+ [42]) (./data/chap04.tex [43] [44
 
 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [11
+ [45
+
 
 ]
-File: figures//fig03_data_parallel.png Graphic file (type bmp)
-<figures//fig03_data_parallel.png>
- [12]
-File: figures//fig04_tensor_parallel.png Graphic file (type bmp)
-<figures//fig04_tensor_parallel.png>
+Underfull \hbox (badness 5548) in paragraph at lines 50--50
+[]|\TU/CourierNew(0)/m/n/10.53937 None $\OMS/cmsy/m/n/10.95 j$ \TU/CourierNew(0)/m/n/10.53937 full $\OMS/cmsy/m/n/10.95 j$
+ []
+
+
+Underfull \hbox (badness 1448) in paragraph at lines 50--51
+[]|\TU/SimSun(0)/m/n/10.53937 重 计 算 粒 度。| \TU/CourierNew(0)/m/n/10.53937 None \TU/SimSun(0)/m/n/10.53937 表 示 不 重 计 算；| \TU/CourierNew(0)/m/n/10.53937 full
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+\TU/SimSun(0)/m/n/10.53937 对 整 层 做 重 计 算；| \TU/CourierNew(0)/m/n/10.53937 selective \TU/SimSun(0)/m/n/10.53937 仅 对
+ []
+
+
+Underfull \hbox (badness 1888) in paragraph at lines 50--51
+\TU/CourierNew(0)/m/n/10.53937 recompute_modules \TU/SimSun(0)/m/n/10.53937 中 列 出 的 子 模 块 重
+ []
+
+
+Overfull \hbox (1.60976pt too wide) in paragraph at lines 51--51
+[]|\TU/CourierNew(0)/m/n/10.53937 recompute_method| 
+ []
+
+
+Overfull \hbox (7.93442pt too wide) in paragraph at lines 53--53
+[]|\TU/CourierNew(0)/m/n/10.53937 distribute_saved_| 
+ []
+
+
+Overfull \hbox (7.9344pt too wide) in paragraph at lines 54--54
+[]|\TU/CourierNew(0)/m/n/10.53937 recompute_modules| 
+ []
+
+
+Overfull \hbox (53.05386pt too wide) in paragraph at lines 67--70
+\TU/SimSun(1)/m/n/12.045 块 在 各 自 的 \TU/CourierNew(0)/m/n/12.045 forward \TU/SimSun(1)/m/n/12.045 中 根 据 配 置 项 \TU/CourierNew(0)/m/n/12.045 recompute_granularity \TU/SimSun(1)/m/n/12.045 与 \TU/CourierNew(0)/m/n/12.045 recompute_modules
+ []
+
+[46]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [47]
+Overfull \hbox (1.28691pt too wide) in paragraph at lines 131--131
+[]|$\OML/cmm/m/it/10.95 N[]$| 
+ []
+
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [13]
-File: figures//fig05_pipeline_parallel.png Graphic file (type bmp)
-<figures//fig05_pipeline_parallel.png>
-
+ [48]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [14]
-File: figures//fig06_zero.png Graphic file (type bmp)
-<figures//fig06_zero.png>
+ [49]
+Underfull \hbox (badness 10000) in paragraph at lines 181--181
+[]|\TU/CourierNew(0)/m/n/10.53937 selective
+ []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--182
+[]|\TU/CourierNew(0)/m/n/10.53937 selective
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+[]|\TU/CourierNew(0)/m/n/10.53937 selective
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+\TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 , \TU/CourierNew(0)/m/n/10.53937 mlp\TU/TimesNewRoman(0)/m/n/10.53937 ,
+ []
+
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 8.99994pt on input line 189.
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 6.29996pt on input line 189.
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 4.49997pt on input line 189.
+[50] [51] [52]) (./data/chap05.tex [53] [54
+
+] [55
+
+
+]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [15]) (./data/chap03.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
+ [56] [57]) (./data/ack.tex [58]) [59
 
- [16] [17] [18
-
-]) (./data/chap04.tex [19
-
-] [20
-
-]) (./data/chap05.tex [21
-
-] [22
-
-]) (./data/ack.tex [23
-
-] [24
-
-]) [25] [26
+] [60
 
 ] (./thesis.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [27
+ [61
+
 
 ]
+Underfull \hbox (badness 3884) in paragraph at lines 106--111
+[]\TU/TimesNewRoman(0)/m/n/12.045 Bai J, Bai S, Chu Y, et al. Qwen-VL: A Versatile Vision-Language
+ []
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [28]
-Underfull \hbox (badness 10000) in paragraph at lines 221--225
+ [62]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [63]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [64]
+Underfull \hbox (badness 10000) in paragraph at lines 374--378
 []\TU/TimesNewRoman(0)/m/n/12.045 NVIDIA Corporation. NVIDIA Blackwell Architecture and GPU
  []
 
 
-Underfull \hbox (badness 1742) in paragraph at lines 240--244
+Underfull \hbox (badness 1742) in paragraph at lines 387--391
 []\TU/TimesNewRoman(0)/m/n/12.045 Ronneberger O, Fischer P, Brox T. U-Net: Convolutional Networks for
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [29]) (./data/resume.tex [30]) (./data/reviewinfo.tex [31
+ [65]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-] [32
+ [66]
+
+Package fontspec Warning: Font "Times New Roman" does not contain requested
+(fontspec)                Script "CJK".
+
+
+Package fontspec Info: Font family 'TimesNewRoman(1)' created for font 'Times
+(fontspec)             New Roman' with options
+(fontspec)             [Mapping=tex-text,Script={CJK}].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.: <->"Times New
+(fontspec)             Roman/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: <->"Times New
+(fontspec)             Roman/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
+(fontspec)             - 'bold' (b/n) with NFSS spec.: <->"Times New
+(fontspec)             Roman/B/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: <->"Times
+(fontspec)             New
+(fontspec)             Roman/B/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
+(fontspec)             - 'italic' (m/it) with NFSS spec.: <->"Times New
+(fontspec)             Roman/I/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'italic small caps'  (m/scit) with NFSS spec.:
+(fontspec)             <->"Times New
+(fontspec)             Roman/I/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
+(fontspec)             - 'bold italic' (b/it) with NFSS spec.: <->"Times New
+(fontspec)             Roman/BI/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'bold italic small caps'  (b/scit) with NFSS spec.:
+(fontspec)             <->"Times New
+(fontspec)             Roman/BI/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
+
+
+Underfull \hbox (badness 2951) in paragraph at lines 542--548
+[]\TU/TimesNewRoman(0)/m/n/12.045 iCloud Lab, ECNU. Espresso: Cost-efficient Resource Provisioning for
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [67]
+Underfull \hbox (badness 2401) in paragraph at lines 708--712
+[]\TU/TimesNewRoman(0)/m/n/12.045 NVIDIA. Megatron-LM: Activation Recomputation [J]. NVIDIA Deep
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [68]
+Underfull \hbox (badness 1043) in paragraph at lines 720--725
+[]\TU/TimesNewRoman(0)/m/n/12.045 Li Z, Lin Z, Wang C, et al. Lynx: Efficient Memory Management for
+ []
+
+) (./data/resume.tex [69] [70
+
+]) (./data/reviewinfo.tex [71
+
+] [72
 
 ]
 Overfull \hbox (5.00531pt too wide) in paragraph at lines 5--20
@@ -1315,13 +1756,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 28--30
 
  []
 
-) [33] [34
+) [73
+
+] [74
 
 ] (./data/appendix01.tex)
-\tf@thm=\write8
-\openout8 = `thesis.thm'.
+\tf@thm=\write9
+\openout9 = `thesis.thm'.
 
- [35
+ [75
+
 
 
 ] (./thesis.aux)
@@ -1333,15 +1777,15 @@ LaTeX Font Warning: Size substitutions with differences
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: F163A42F40AF1260555D0FF73F1DB1A7;7779.
+(rerunfilecheck)             Checksum: A463DAF56A7AABCF40114CDE9D217C06;7950.
  ) 
 Here is how much of TeX's memory you used:
- 24750 strings out of 476179
- 498833 string characters out of 5813072
- 899190 words of memory out of 5000000
- 44990 multiletter control sequences out of 15000+600000
- 499163 words of font info for 203 fonts, out of 8000000 for 9000
+ 36592 strings out of 476179
+ 787312 string characters out of 5813072
+ 1124871 words of memory out of 5000000
+ 56560 multiletter control sequences out of 15000+600000
+ 504434 words of font info for 239 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 125i,15n,120p,1077b,730s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 125i,16n,120p,2286b,997s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (53 pages).
+Output written on thesis.pdf (89 pages).

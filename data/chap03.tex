@@ -1,34 +1,500 @@
-\chapter{基于锐度比策略的自适应锐度正则化算法 SAMAR}
+\chapter{MMoH：多模态大语言模型在异构 GPU 集群上的高效混合并行}
+
+第二章指出，多模态大语言模型（MLLMs）在结构上由编码器、投影层与 LLM Backbone、解码器（可选）等\emph{异构模块}组成，
+训练时又广泛采用\emph{分阶段冻结}策略，致使各层计算量与显存需求随模块类型与参数训练状态呈现显著差异；
+在异构 GPU 集群上若直接沿用面向同构集群或传统大语言模型（LLM）设计的并行策略，
+易产生负载不均衡与资源利用率低下。针对上述问题，本章介绍 MMoH（Multimodal large language model training on Heterogeneous clusters）
+框架\cite{mmoh2025}：通过\emph{需求驱动的设备拓扑}与\emph{复合粒度模型划分}，
+在异构集群上为 MLLMs 自动生成近似最优的模型划分和设备映射；并引入\emph{冻结感知的提前终止调度器}，
+在冻结场景下识别并消除冗余的反向计算与流水级间通信，在保证训练收敛性的前提下提升训练吞吐。
+本节首先给出问题背景与动机，随后概述 MMoH 的整体架构与各组件职能。
 
 \section{引言}
-% 正文内容
 
-\section{SAMAR 算法设计与实现}
+\subsection{问题与动机}
 
-\subsection{锐度比策略设计}
-% 正文内容
+传统大语言模型由结构相同的 Transformer 层堆叠而成，各层在计算开销（如 FLOPs）与显存占用上随层索引变化相对均匀，
+因此面向 LLM 的异构并行方法（如 Whale\cite{whale}、Espresso\cite{espresso2025}）
+多基于“层数”或“设备计算能力”按比例将层划分至不同设备，即可获得较为均衡的负载分布。
+然而，多模态大语言模型在架构上与之存在本质差异。如图~\ref{fig:chap3_moti_a} 所示，典型 MLLMs 由三部分构成：
+（1）\emph{编码器}（Encoder），负责将图像、视频等多模态输入编码为特征表示，多采用视觉 Transformer 或轻量卷积网络；
+（2）\emph{投影层}（Projector），将编码特征映射至与 LLM 词嵌入空间对齐的语义空间，常见形式为线性层或 Q-Former\cite{blip2}；
+（3）\emph{LLM Backbone}，承担主要的语言理解与生成计算，由参数量巨大的 Transformer 层组成\cite{blip2,llava2023}。
+编码器单层参数量与序列长度通常远小于 LLM Backbone，投影层则为小型模块，
+因此 MLLMs 各“层”在计算量（如 GFLOPs）与显存占用上的差异可达数十倍。
 
-\subsection{算法实现}
-% 正文内容
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\linewidth]{MMoH-figs/moti_MLLM}
+  \caption{主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。}
+  \label{fig:chap3_moti_a}
+\end{figure}
 
-\section{SAMAR 算法的理论属性}
+若仍采用与 LLM 相同的单一“层”粒度进行划分，将导致部分流水级过载而其他流水级空闲，
+整体迭代时间由瓶颈流水级主导，异构设备的算力与显存无法得到有效利用。
+图~\ref{fig:chap3_moti_b} 对比了 LLM(LLaMA-3B) 与 MLLM-3B 在各层计算开销与显存占用上的变化趋势：LLM 各层较为均匀，而 MLLMs 随模块类型与冻结场景（NF 表示不冻结，FB 表示编码器与 LLM 均冻结）呈现显著差异。
 
-\subsection{基本假设}
-% 正文内容
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\linewidth]{MMoH-figs/moti_layer}
+  \caption{LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。}
+  \label{fig:chap3_moti_b}
+\end{figure}
 
-\subsection{收敛性分析}
-% 正文内容
+另一方面，MLLMs 训练普遍采用\emph{冻结}（freeze）技术\cite{blip2}：
+在预训练或模态对齐的训练阶段，仅更新投影层或部分 LLM 层，而编码器与 LLM Backbone保持冻结，
+以利用已有预训练权重、降低过拟合并节省优化器状态与显存。冻结后，冻结参数不参与梯度计算与参数更新，
+对应流水级的反向计算量与梯度同步开销显著降低，其计算—显存需求与“全参数训练”时截然不同。
+现有异构并行策略大多假设所有参数在整个训练过程中均处于激活状态，
+无法随\emph{参数训练状态}（冻结与激活）的动态变化而调整划分与调度；
+在“仅冻结编码器”（freeze-encoder）、“仅冻结 LLM”（freeze-LLM）或“同时冻结编码器与 LLM”（freeze-both）等场景下，
+若继续采用为“全参数”场景设计的策略，相较针对当前冻结状态专门优化后的策略，
+迭代时间可落后约 13\%--21\%\cite{mmoh2025}，如图~\ref{fig:chap3_moti_c} 中不同策略在两种冻结场景下的迭代时间对比所示。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.55\linewidth]{MMoH-figs/moti_e2e}
+  \caption{不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间，MMoH1/MMoH2 为 MMoH 规划器针对各场景得到的策略。}
+  \label{fig:chap3_moti_c}
+\end{figure}
+
+此外，最优并行策略并非静态不变，
+而需随训练流水级中冻结状态的演变而动态调整，现有工作尚未系统考虑该需求。
+
+从形式化角度，可将上述挑战概括为两类约束。\textbf{负载不均衡}：设各流水级的迭代时间为 $t_1, \ldots, t_s$，
+在同步流水线下一轮迭代时间由 $\max_j t_j$ 决定，若划分不当则瓶颈流水级拉高整体时间，其余设备空闲；
+\textbf{冻结导致的反向与通信不对称}：记冻结流水级集合为 $\mathcal{F}$，则 $\mathcal{F}$ 内流水级的反向计算与梯度同步开销近似为零，
+而未冻结流水级仍需完整反向与 P2P 通信，若划分与调度未显式考虑 $\mathcal{F}$，则无法利用“冻结前缀”带来的冗余剪枝机会，
+也难以在划分阶段将更多计算量置于冻结流水级以平衡各 stage 的有效负载。
+
+综上所述，要在异构 GPU 集群上高效训练 MLLMs，需同时兼顾两点：
+（1）MLLMs 的\emph{混合模块结构}所导致的层间计算与显存需求非均匀性；
+（2）\emph{参数训练状态}随训练流水级变化对最优划分与调度的影响。
+MMoH 针对上述两点，设计了\emph{MMoH 并行策略规划器}与\emph{提前终止调度器}，
+在给定异构集群规格与 MLLMs 配置下自动生成近似最优的模型划分与设备映射，
+并在冻结场景下消除不必要的反向计算与流水级间通信，从而提升训练效率且不影响模型收敛性。
+
+\subsection{MMoH 框架概览}
+
+MMoH 由两大核心组件构成：\emph{MMoH 并行策略规划器}（MMoH parallel strategy planner）
+与\emph{提前终止调度器}（early-termination scheduler）。二者协同工作，分别负责离线（或按流水级）的
+策略生成与在线训练过程中的调度优化。图~\ref{fig:chap3_overview} 给出了 MMoH 的整体架构：
+规划器以 MLLMs 配置与异构集群规格为输入，经需求驱动拓扑识别、复合粒度抽象与冻结感知划分得到并行策略；
+调度器在训练中利用冻结特性减少冗余计算与通信。
+规划器的\emph{输入}包括：异构集群规格（各 GPU 的算力、显存及节点内/间互联带宽）、
+MLLMs 的模型结构与参数量、以及当前训练阶段对应的冻结状态（如编码器与 LLM 是否冻结）；
+\emph{输出}为设备拓扑（各流水级与 GPU 的对应关系）、模型的划分策略（每个流水级包含哪些模型层）、以及建议的 DP/TP 配置。
+调度器根据模型当前训练阶段的冻结状态，优化流水线调度策略，从而在冻结场景下消除不必要的反向计算与流水级间通信。
+与 Whale\cite{whale}、Espresso\cite{espresso2025} 等仅按显存或算力比例做层划分、且不区分模块类型与冻结状态的方法相比，
+MMoH 显式建模 MLLMs 的模块异构与冻结状态，从而在多种冻结场景下获得更优的划分与更高的训练吞吐。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{MMoH-figs/overview.pdf}
+  \caption{MMoH 框架总览。MMoH 包含并行策略规划器与提前终止调度器：规划器根据 MLLMs 配置与异构集群规格生成最优并行策略；调度器在训练中利用冻结技术减少不必要的计算与通信。}
+  \label{fig:chap3_overview}
+\end{figure}
+
+\paragraph{并行策略规划器。}
+规划器以异构集群规格（各 GPU 的算力、显存及互联拓扑）与 MLLMs 配置（模型结构、参数量、当前冻结状态）为输入，
+依次执行三个步骤。\textbf{第一步}为\emph{需求驱动的设备拓扑识别}：根据 MLLMs 各模块的计算与显存需求趋势，
+与异构设备组内各设备的算力—显存供给趋势进行匹配，筛选出若干候选设备拓扑
+（即设备组内各流水级与 GPU 的对应关系），使需求与供给在趋势上尽可能一致。
+\textbf{第二步}为\emph{复合粒度抽象}：针对编码器、投影层与 LLM Backbone的结构差异，
+采用多级粒度将模型重组为\emph{模型块}（model chunk）列表——编码器采用子模块级粒度（将连续多层层合并为一块），
+LLM Backbone采用子层粒度（将单层拆分为注意力块与 FFN 块），非 Transformer 层（嵌入、输出、投影）各自作为独立块，
+从而在划分复杂度与负载均衡之间取得折中。\textbf{第三步}为\emph{冻结感知的模型划分}：
+在候选拓扑与模型块列表基础上，将“把块分配到各流水级”形式化为整数规划（Integer Programming, IP）问题，
+在满足显存约束与主流水级约束的前提下，最小化单次迭代时间（其中通信时间显式依赖各流水级的冻结状态），
+求解得到各流水级所包含的块及与设备的映射。训练时，每个设备组内采用流水线并行（PP），
+组间采用数据并行（DP）与张量并行（TP）以扩展规模与批量大小。
+
+\paragraph{提前终止调度器。}
+调度器针对冻结技术带来的冗余进行计算与通信剪枝。在流水线并行中，若某流水级及其之前所有流水级均为冻结流水级，
+则该流水级无需再执行“对输出的梯度”的反向计算，也无需接收后续流水级的梯度或向后续流水级发送激活；
+相应的 P2P 通信与中间张量存储可安全省略，且不改变梯度传播的数学等价性。调度器在 1F1B（One-Forward-One-Backward）
+等流水线调度基础上，识别从流水线首端开始的连续冻结流水级并对其提前终止反向与通信，
+从而在 freeze-encoder、freeze-both 等场景下进一步缩短迭代时间。下文将分别对规划器的三个步骤与调度器的设计进行形式化描述与讨论。
+
+\section{异构设备映射与复合粒度模型划分}
+
+本节形式化描述 MMoH 并行策略规划器的三个核心步骤：需求驱动的设备拓扑识别、复合粒度抽象与冻结感知的模型划分，
+并给出相应的数学模型与约束条件。
+
+\subsection{需求驱动的设备拓扑识别}
+
+在异构设备组内，不同 GPU 的算力与显存容量存在差异；若将算力与显存均较强的设备分配给计算与显存需求均较高的流水级，
+则能更好地匹配需求与供给，减少瓶颈流水级并降低 OOM 风险。为此，MMoH 规划器首先对 MLLMs 进行\emph{剖析}（profiling），
+在代表设备上测得各层的计算量（以 FLOPs 计）与显存占用；
+由于 FLOPs 与显存占用在同一模型结构下与具体设备型号关系不大，每类层仅需剖析一次。
+随后，规划器枚举设备组内所有可能的设备排列（即\emph{设备拓扑}），
+对每种拓扑计算“需求趋势”与“供给趋势”的匹配度，并据此筛选候选拓扑。
+设备组内共有 $s$ 张 GPU，分属 $k$ 种异构型号，各型号数量记为 $n_1,\ldots,n_k$（满足 $n_1+\cdots+n_k=s$）；则不同设备拓扑的数目为 $s!/(n_1!\cdots n_k!)$（同型号 GPU 视为不可区分，即多重组合数）。枚举后对每种排列计算 MD，
+按 MD 降序排序并仅保留前一半作为候选，以在后续整数规划阶段控制求解次数，
+在匹配质量与计算开销之间取得折中。
+
+\paragraph{符号与假设。}
+记 MLLMs 总层数为 $l$（即编码器、投影层与 LLM Backbone中所有可单独计层的单元之和），
+第 $i$ 层的计算量与显存占用分别为 $L_i$、$M_i$（$i = 0, 1, \ldots, l-1$）。
+设备组内流水线并行度（即流水级数）记为 $s$；在某一给定拓扑下，第 $j$ 个流水级所对应设备的算力与显存容量记为 $P_j$、$Q_j$
+（$j = 0, 1, \ldots, s-1$）。首先，按“计算均衡”原则将 $l$ 层划分为 $s$ 个连续流水级，
+使各流水级所分配层的总 FLOPs 与各设备算力成比例，得到各流水级的总 FLOPs 与显存占用 $R_j$、$T_j$。
+
+\paragraph{需求趋势与供给趋势。}
+定义\emph{需求趋势}为各流水级“单位显存下的计算量”之比构成的序列，用于刻画各流水级对算力—显存比的需求相对关系：
+\begin{equation}
+  \mathrm{Demand} = \left\{ \frac{R_1/T_1}{R_0/T_0}, \frac{R_2/T_2}{R_1/T_1}, \ldots, \frac{R_{s-1}/T_{s-1}}{R_{s-2}/T_{s-2}} \right\}.
+\end{equation}
+类似地，定义\emph{供给趋势}为各设备算力—显存比之比构成的序列：
+\begin{equation}
+  \mathrm{Supply} = \left\{ \frac{P_1/Q_1}{P_0/Q_0}, \frac{P_2/Q_2}{P_1/Q_1}, \ldots, \frac{P_{s-1}/Q_{s-1}}{P_{s-2}/Q_{s-2}} \right\}.
+\end{equation}
+
+\paragraph{匹配度度量。}
+为量化某一设备拓扑下需求与供给的匹配程度，定义\emph{匹配度}（Matching Degree, MD）为两趋势序列的负指数平方误差：
+\begin{equation}
+  \mathrm{MD}(\mathrm{Demand}, \mathrm{Supply}) = \exp\left( -\frac{1}{s-1} \sum_{j=1}^{s-1} (x_j - y_j)^2 \right),
+\end{equation}
+其中 $x_j$、$y_j$ 分别为 $\mathrm{Demand}$ 与 $\mathrm{Supply}$ 的第 $j$ 个分量。MD 取值于 $(0, 1]$，
+越大表示该拓扑下各流水级的计算—显存需求与各设备能力在趋势上越一致。规划器对所有候选拓扑按 MD 降序排序，
+保留 MD 较高的前一半作为后续\emph{冻结感知的模型划分}的候选拓扑，以在保证匹配质量的前提下控制求解规模。
+
+直观上，\emph{需求趋势}刻画的是“从流水级 0 到 $s-1$，单位显存下所需算力的相对变化”：
+若某段流水级对应 LLM 的注意力与 FFN 块，则 $R_j/T_j$ 往往较大；若对应编码器合并块，则相对较小。
+\emph{供给趋势}则刻画“从设备 0 到 $s-1$，算力—显存比的相对变化”；将高 $P_j/Q_j$ 的设备分配给高 $R_j/T_j$ 的流水级，
+可使各 stage 在各自设备上均接近满负载，减少瓶颈并降低 OOM 风险\cite{load_balance_heterogeneous}。
+该步骤使设备拓扑的选取由 MLLMs 的实际计算—显存需求驱动，而非仅按显存或算力单一维度排序，
+从而更好地适应“编码器轻、LLM 重”的非均匀结构以及冻结带来的需求变化。
+
+\subsection{复合粒度抽象}
+
+若对整网采用统一的“Transformer 层”粒度进行划分，将面临两难：编码器单层计算与显存较小，
+按层划分会导致块数过多、划分搜索空间过大且对负载均衡帮助有限；LLM 单层计算与显存很大，
+按层划分在异构设备上易造成单流水级过载或 OOM。因此 MMoH 提出\emph{复合粒度抽象}，
+将模型重组为若干\emph{模型块}（model chunk）的列表，不同模块采用不同划分粒度，
+在划分精度与搜索效率之间取得平衡，如图~\ref{fig:chap3_hybrid} 所示。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[b]{0.52\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{MMoH-figs/hybrid-granularity-merge}
+    \caption*{(a) 编码器子模块粒度（合并因子为 2）}
+  \end{minipage}\hfill
+  \begin{minipage}[b]{0.34\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{MMoH-figs/hybrid-granularity-split}
+    \caption*{(b) LLM Backbone子层粒度}
+  \end{minipage}
+  \caption{复合粒度抽象示意。（a）编码器：将连续多层层合并为编码器层块；（b）LLM Backbone：将单层拆分为注意力块与 FFN 块，不增加流水级间通信量。}
+  \label{fig:chap3_hybrid}
+\end{figure}
+
+\paragraph{编码器。}
+编码器内 Transformer 层参数量与序列长度相对较小，单层计算与显存较低。采用\emph{子模块级}粒度：
+将连续多层层合并为一个“编码器层块”（encoder-layers chunk）。合并因子由剖析结果确定，
+使得每个编码器层块的计算量与显存占用均不超过 LLM 中单个注意力块或 FFN 块，
+从而在划分时可将多个块置于同一流水级而不会造成该流水级过载。该粒度既减少了块的数量、降低了后续 IP 的变量规模，
+又避免了编码器部分划分过细带来的冗余。
+
+\paragraph{LLM Backbone。}
+LLM 单层参数量大、序列长，若整层作为一块易导致某流水级显存或算力瓶颈。采用\emph{子层}粒度：
+将每一 Transformer 层拆分为“注意力块”（Attention chunk）与“FFN 块”（FFN chunk），
+划分时以块为单位分配到流水级。该分解不改变层间数据流，因此不增加流水级间通信量（块边界与层边界一致）；
+同时使划分粒度更细，便于在异构设备间更精细地平衡负载，并有效缓解低显存设备上的 OOM 风险。
+
+\paragraph{非 Transformer 层。}
+嵌入层、输出层与投影层等结构各异、计算与显存差异较大，采用\emph{层级}粒度，
+各自作为独立块（embedding chunk、output chunk、projector chunk），以准确反映其资源需求。
+
+经复合粒度抽象后，MLLMs 被表示为一个长度为 $N$ 的模型块列表；$N$ 及各块的大小随具体模型与冻结状态变化，
+为后续冻结感知的模型划分提供既不过粗也不过细的决策单元。
+以本文实验中的 MLLM-3B 为例：编码器约 24 层，按合并因子 2 得到约 12 个编码器层块；
+投影层为 1 个独立块；LLM Backbone 12 层，每层拆为注意力块与 FFN 块，共 24 块；
+加上嵌入与输出等，总块数 $N$ 约在 40 量级。该粒度下，单块计算与显存与典型异构单卡能力相匹配，
+既避免块数过多导致 IP 变量空间过大，又避免块过粗导致划分无法细粒度平衡负载。
+
+\subsection{冻结感知的模型划分}
+
+在得到候选设备拓扑与模型块列表后，规划器将“把块分配到各流水级”形式化为整数规划问题，
+目标是最小化单次迭代时间，并显式考虑冻结对反向计算与梯度同步的影响。
+
+\paragraph{决策变量与目标。}
+记块列表长度为 $N$，设备组内流水级数为 $S$。划分方案表示为序列 $P = (p_1, p_2, \ldots, p_S)$，
+其中 $p_i$ 为第 $i$ 个流水级所分配的块数，满足 $\sum_{i=1}^S p_i = N$。
+对给定拓扑与 $P$，可估计各流水级前向时间列表 $\mathit{FT} = (F_1, \ldots, F_S)$ 与反向时间列表 $\mathit{BT} = (B_1, \ldots, B_S)$
+（由各块在对应设备上的执行时间累加得到）。记主流水级（master stage）索引为 $K$，micro-batch 数为 $M$。
+在 1F1B 调度下，单次迭代时间 $T^*$ 可写为前向、反向与通信时间之和；其中\emph{通信时间}与各流水级是否需要梯度同步有关：
+若某流水级内所有块均为冻结参数，则该流水级不产生梯度同步开销。规划器将通信时间建模为各流水级“非可重叠”的同步开销的最大值，
+且冻结流水级对应的同步开销为 0。形式化地，记主流水级索引为 $K$、micro-batch 数为 $M$，则
+\begin{equation}
+  T^* = \sum_{i=1}^{K-1}(F_i+B_i) + 2\sum_{i=K+1}^{S}(F_i+B_i) + \bigl(M-(S-K)\bigr)(F_K+B_K) + \mathrm{COMM},
+\end{equation}
+其中第一项为 warm-up 阶段前 $K-1$ 个流水级的前向与反向时间之和，第二项为 cool-down 阶段后 $S-K$ 个流水级各执行两次前向与反向的贡献，
+第三项为主流水级在稳态阶段对 $M-(S-K)$ 个 micro-batch 的计费，$\mathrm{COMM}$ 为通信时间。通信时间取各流水级不可与前向/反向重叠的梯度同步开销的最大值：
+\begin{equation}
+  \mathrm{COMM} = \max_{i=1,\ldots,S} \left( AR_i - \sum_{j=1}^{i-1} B_j \right),
+\end{equation}
+其中 $AR_i$ 为第 $i$ 个流水级的梯度同步（如 All-Reduce）开销，可由该流水级内\emph{激活参数}数量估计；
+若第 $i$ 个流水级内所有块均为冻结，则 $AR_i = 0$。由此得到 $T^*$ 关于 $P$ 的显式表达式（含冻结感知的通信项），规划器以最小化 $T^*$ 为目标在约束下求解 $P$。
+
+\paragraph{约束条件。}
+划分问题需满足以下约束：（1）\textbf{完整性约束}：$\sum_{i=1}^S p_i = N$，即所有块恰好分配完毕；
+（2）\textbf{主流水级约束}：非主流水级的前向与反向时间之和不超过主流水级，即 $F_i + B_i \leq F_K + B_K$（$\forall i \neq K$），
+以保证 1F1B 等调度下主流水级不成为瓶颈；（3）\textbf{显存约束}：各流水级模型状态与激活显存之和不超过所分配设备的显存容量，
+防止训练过程中发生 OOM。规划器使用 CPLEX 等整数规划求解器在候选拓扑上分别求解最小化 $T^*$ 的 $P$，
+并取所有候选拓扑中使 $T^*$ 最小的划分与拓扑作为最终并行策略。
+
+主流水级 $K$ 的选取方式为：在给定 $P$ 与拓扑下，计算各流水级的 $F_i + B_i$（冻结流水级的 $B_i$ 按提前终止规则置零），
+取使 $F_i + B_i$ 最大的流水级索引作为 $K$，以保证 1F1B 下瓶颈估计正确。
+显存估计中，各流水级占用包含模型参数与优化器状态（仅对可训练参数）、激活（与 micro-batch 大小及序列长度相关）、
+以及梯度与临时缓冲区；冻结流水级不存储该部分参数的优化器状态与梯度，通信缓冲区也可相应省略，故通信项中其同步开销置零。
+在实验环境中，单次 IP 求解在候选拓扑上的耗时通常在秒级，整体规划时间可接受；
+若某拓扑下无可行解（如显存约束无法满足），规划器可放宽主流水级约束或尝试更大 TP 后重新求解。
+
+通过将冻结状态纳入成本模型与通信项，同一 MLLMs 在不同训练流水级（如 no-freeze、freeze-encoder、freeze-both）
+会得到不同的最优划分与设备拓扑，从而随训练流水级动态适配，提升异构集群上的训练效率。
+相关研究已表明，将流水线骨架映射到异构平台的最优划分问题在一般意义下为 NP-难，
+本节的整数规划形式化在给定拓扑与块列表下求取近似最优划分，在实践中可取得良好效果。
+
+\section{提前终止流水线调度策略}
+
+流水线并行广泛采用 1F1B 等调度策略：各流水级依次对多个 micro-batch 执行前向与反向，
+反向时需接收来自后续流水级的输出梯度并回传输入梯度至前序流水级。当 MLLMs 中部分模块被冻结时，
+冻结参数不参与梯度更新，但仍需为前序层计算“对输入的梯度”；然而，若某流水级及其\emph{之前所有}流水级均为冻结流水级，
+则其输出梯度的计算与回传对前序流水级已无贡献，可安全省略。本节基于该观察，形式化描述 MMoH 的提前终止调度器，
+并说明其对成本模型与划分策略的影响。
+
+\subsection{冗余识别与剪枝规则}
+
+在反向传播中，每个流水级需完成两类计算：\textbf{对参数的梯度}（用于更新该流水级参数）与\textbf{对输入的梯度}（用于向上一流水级传递梯度）。
+对于冻结流水级，对参数的梯度无需计算；但对输入的梯度在一般情况下仍须计算，以驱动前序流水级的反向。
+若流水级 $i$ 及其之前所有流水级（$1, \ldots, i-1$）均为冻结流水级，则流水级 $i$ 的输出不再被任何激活参数使用，
+因此流水级 $i$ 无需计算其对输出的梯度，也无需接收来自流水级 $i+1$ 的梯度或向流水级 $i+1$ 发送激活；
+相应的 P2P 通信与为存储中间激活/梯度所分配的显存可一并省略，且不改变损失函数对可训练参数的梯度，
+即保持数学等价性与收敛性。
+
+MMoH 的\emph{提前终止调度器}在 1F1B 调度基础上，识别从流水线首端开始的连续冻结流水级（记为前 $D$ 个流水级），
+对这些流水级在完成前向计算后不再调度其“对输出的梯度”的反向计算及与之相关的接收/发送通信；
+后续非冻结流水级仍按原有依赖关系执行反向与通信。该优化在 freeze-encoder、freeze-both 等场景下可显著减少计算与通信量，
+实验表明可带来约 8\%--19\% 的额外吞吐提升\cite{mmoh2025}。
+“连续冻结前缀”的判定流程为：从流水级 0 开始顺序扫描，直至遇到第一个包含可训练参数的流水级，记其索引为 $D$，
+则流水级 $0, \ldots, D-1$ 构成连续冻结前缀，调度器对这 $D$ 个流水级在完成前向后不再调度反向及与后续 stage 的 P2P。
+在 1F1B 下，每个 micro-batch 依次经过各 stage 的前向与反向；对前 $D$ 个 stage 而言，前向完成后即不再参与该 micro-batch 的反向与通信，
+因此其设备可在后续 micro-batch 的前向中尽早复用，从而缩短整轮迭代时间。图~\ref{fig:chap3_et} 给出了 4 流水级、4 个 micro-batch 下，
+前两流水级为冻结流水级时，标准 1F1B、仅考虑冻结后反向时间变化的情形与采用提前终止调度器的对比。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{MMoH-figs/freeze-optimization}
+  \caption{提前终止调度器效果示意。4 流水级流水线、4 个 micro-batch，前两流水级为冻结流水级。（a）标准 1F1B；（b）考虑冻结后反向时间变化；（c）提前终止调度器：跳过前两流水级对输入的梯度计算及相应 P2P 通信与张量存储。}
+  \label{fig:chap3_et}
+\end{figure}
+
+\subsection{对成本模型与划分策略的影响}
+
+在存在连续冻结前缀（前 $D$ 个流水级）的情况下，迭代时间 $T^*$ 的表达式需相应调整。采用提前终止后，
+前 $D$ 个流水级仅计前向时间、反向与梯度同步开销置零，故
+\begin{equation}
+  T^* = \sum_{i=1}^{D} F_i + \sum_{i=D+1}^{K-1}(F_i+B_i) + 2\sum_{i=K+1}^{S}(F_i+B_i) + \bigl(M-(S-K)\bigr)(F_K+B_K) + \mathrm{COMM}.
+\end{equation}
+其中 $D$ 为流水线首端连续冻结流水级的个数，$K$ 修订为\emph{非冻结}流水级中计算时间 $F_i+B_i$ 最大的流水级索引；
+$\mathrm{COMM}$ 仍取各流水级不可重叠的梯度同步开销的最大值，且对前 $D$ 个流水级有 $AR_i=0$，
+便于在 1F1B 下正确估计瓶颈。进一步地，该修订使规划器在划分时倾向于将较多的计算量分配给前 $D$ 个冻结流水级
+（因其反向被跳过，不会拉长迭代时间），从而减轻非冻结流水级的负载，进一步平衡各流水级计算时间。
+提前终止调度器与冻结感知的模型划分相结合，可在冻结场景下同时优化“划分”与“调度”，
+实现更高的训练吞吐。
+
+提前终止调度思想不仅适用于 1F1B，也可与 Chimera、Hanayo 等其它流水线调度机制结合。图~\ref{fig:chap3_chimera_hanayo} 示意在 Chimera（双向流水线）与 Hanayo（波式流水线）下，对前段连续冻结流水级同样可提前终止反向与通信，以进一步缩短迭代时间。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chimera-hanayo.png}
+  \caption{提前终止在其它流水线调度机制上的适用性。左：Chimera；右：Hanayo。前向时间假设各流水级一致，反向时间差异来自冻结流水级；提前终止可同样应用于连续冻结前缀。}
+  \label{fig:chap3_chimera_hanayo}
+\end{figure}
+
+\subsection{实现要点}
+
+MMoH 的规划器与调度器可与 Megatron-LM\cite{megatron2020} 及 PyTorch 分布式后端集成：规划器在给定集群与模型配置下离线输出设备拓扑与块—流水级映射，
+训练脚本据此构建 PP 通信组与各 rank 上的子模块；调度器在运行时根据各流水级的冻结标记决定是否调度反向与 P2P。
+Profiling 在代表设备上以“层”或“块”为粒度测量前向/反向 FLOPs 与显存占用，结果缓存在配置文件中供规划器重复使用。
+整数规划采用 CPLEX 求解；若某拓扑下无可行解，可放宽主流水级约束或增大 TP 后重新求解，作为回退策略\cite{mmoh2025}。
 
 \section{实验验证}
 
-\subsection{图像分类实验}
-% 正文内容
+本节从实验设置、实验结果与实验分析三方面对 MMoH 进行验证，并与 Megatron-LM、Whale、Espresso 等基线方法进行对比。
 
-\subsection{Hessian Spectrum 分析}
-% 正文内容
+\subsection{实验设置}
 
-\subsection{损失曲面可视化}
-% 正文内容
+\paragraph{实验平台与异构集群配置。}
+实验在两种异构 GPU 集群上进行。\textbf{Cluster-S} 包含 4 个节点、共 16 张 GPU：
+1 个节点配备 4 张 NVIDIA RTX 3090，2 个节点各配备 4 张 RTX 2080 Ti，1 个节点配备 4 张 RTX 2080，
+单机总显存约 216\,GB。\textbf{Cluster-L} 包含 8 个节点、共 32 张 GPU：
+4 个节点为 RTX 3090、2 个节点为 RTX 2080 Ti、2 个节点为 RTX 2080，单机总显存约 536\,GB。
+节点间通过 100\,Gbps InfiniBand 互联；RTX 3090 节点内 GPU 通过 PCIe 4.0 互联，RTX 2080/2080 Ti 节点内通过 PCIe 3.0 互联；
+各节点均为双路 Intel Xeon 4310@2.10\,GHz、128\,GB DDR4 内存。软件环境为 Ubuntu 18.04、CUDA 11.8、cuDNN 8.7.0、NCCL 2.19.3 与 PyTorch 2.2。
+表~\ref{tab:chap3-cluster} 汇总两种异构集群的节点与显存配置。
+
+\begin{table}[htbp]
+  \centering
+  \caption{实验用异构 GPU 集群配置}
+  \label{tab:chap3-cluster}
+  \begin{tabular}{clcc}
+    \toprule
+    集群类型（GPU 数） & 节点编号 & GPU 型号（每节点张数） & 总显存（GB） \\
+    \midrule
+    \multirow{3}{*}{Cluster-S (16)} & 1 & RTX 3090 (4) & \multirow{3}{*}{216} \\
+    & 2, 3 & RTX 2080 Ti (4) & \\
+    & 4 & RTX 2080 (4) & \\
+    \midrule
+    \multirow{3}{*}{Cluster-L (32)} & 1--4 & RTX 3090 (4) & \multirow{3}{*}{536} \\
+    & 5, 6 & RTX 2080 Ti (4) & \\
+    & 7, 8 & RTX 2080 (4) & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{模型与数据集。}
+为验证 MMoH 在不同规模与结构下的表现，构建两种 MLLMs。\textbf{MLLM-3B} 由 ViT 编码器（约 0.2B 参数、24 层）、
+MLP-S 投影层（约 73M 参数）与 Mistral 2.8B Backbone（12 层）组成；\textbf{MLLM-12B} 由 InternViT 编码器（约 6B 参数、45 层）、
+MLP-L 投影层（约 149M 参数）与 Yi 6B Backbone（20 层）组成。MLLM-3B 在 Cluster-S 上训练，MLLM-12B 在 Cluster-L 上训练，
+以与集群总显存规模相匹配。训练数据采用 LLaVA Visual Instruct 数据集（约 60 万条图文指令数据），
+用于模态对齐与指令微调；训练时采用与 LLaVA 类似的采样与数据混合策略\cite{llava2023}。
+关键超参数方面：MLLM-3B 的 global batch size 为 64、micro-batch size 为 2、最大序列长度 2048；
+MLLM-12B 的 global batch size 为 32、micro-batch size 为 1、最大序列长度 2048，
+以在异构集群显存约束下尽可能提高有效批量并避免 OOM。表~\ref{tab:chap3-module} 汇总两种 MLLM 各模块的参数量与层数配置。
+
+\begin{table}[htbp]
+  \centering
+  \caption{实验用 MLLM 模块配置（模型参数）}
+  \label{tab:chap3-module}
+  \renewcommand{\arraystretch}{0.95}
+  \setlength{\tabcolsep}{6pt}
+  \begin{tabular}{c|cccc}
+    \toprule
+    \multicolumn{1}{c}{MLLM} & 模块 & 类型 & 参数量 & 层数 \\
+    \midrule
+    \multirow{3}{*}{MLLM-3B}
+    & ViT      & 编码器     & 0.2B  & 24 \\
+    & MLP-S    & 投影层     & 73M   & 2 \\
+    & Mistral  & LLM Backbone & 2.8B  & 12 \\
+    \midrule
+    \multirow{3}{*}{MLLM-12B}
+    & InternViT & 编码器    & 6B    & 45 \\
+    & MLP-L     & 投影层    & 149M  & 2 \\
+    & Yi        & LLM Backbone & 6B    & 20 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{对比方法与评价指标。}
+对比方法包括：（1）\textbf{Megatron-LM}\cite{megatron2020}，面向同构集群的流水线划分框架，
+在异构环境下沿用 Whale 的设备拓扑以缓解 OOM；（2）\textbf{Whale}\cite{whale}，按显存与算力组织设备并做层级划分；
+（3）\textbf{Espresso}\cite{espresso2025}，基于计算—显存比（CMR）的流水级放置与 Whale 式划分相结合。
+评价指标为\emph{训练吞吐}（samples/s）。每种配置进行 10 轮预热与 50 轮测量，取稳定流水级的平均吞吐作为报告值；
+若发生 OOM，则尝试提高 TP、降低 DP，若 TP=4 仍 OOM 则记为不可行。
+
+\subsection{实验结果}
+
+在 no-freeze、freeze-encoder、freeze-LLM、freeze-both 四种冻结场景下，MMoH 在两种集群与两种模型上均取得最高吞吐，
+且在不同场景下均能自动调整设备拓扑与划分策略。图~\ref{fig:chap3_e2e} 给出了两种集群与两种 MLLMs 下的端到端吞吐对比，
+柱长表示吞吐（samples/s），OOM 表示该配置下发生显存溢出无法训练。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[b]{\linewidth}
+    \centering
+    \includegraphics[width=0.85\linewidth]{MMoH-figs/e2e_3B}
+    \caption*{(a) MLLM-3B 在 Cluster-S 上}
+  \end{minipage}\\[0.5em]
+  \begin{minipage}[b]{\linewidth}
+    \centering
+    \includegraphics[width=0.85\linewidth]{MMoH-figs/e2e_12B}
+    \caption*{(b) MLLM-12B 在 Cluster-L 上}
+  \end{minipage}
+  \caption{四种冻结场景下 MMoH 与基线在两种异构集群上的训练吞吐对比。柱越长表示吞吐越高，OOM 表示显存溢出。}
+  \label{fig:chap3_e2e}
+\end{figure}
+
+\paragraph{MLLM-3B 在 Cluster-S 上。}
+相对 Whale 与 Espresso，MMoH 在 no-freeze 下分别达到约 1.22$\times$ 与 1.07$\times$ 的加速；
+在 freeze-both 下优势更明显，可达约 1.18$\times$--1.72$\times$。Megatron 在所有场景下吞吐最低，
+因其同构假设导致负载不均；在部分场景下需将 TP 升至 4 方能训练，频繁的 TP 通信进一步限制性能。
+
+\paragraph{MLLM-12B 在 Cluster-L 上。}
+在 no-freeze 与 freeze-LLM 下，Megatron 因粗粒度划分导致的负载不均而出现 OOM，无法完成训练；
+Whale 与 Espresso 通过异构感知的拓扑与划分避免了 OOM，但 MMoH 仍取得最高吞吐。
+在 no-freeze 下，MMoH 相对 Espresso 与 Whale 分别约 1.04$\times$ 与 1.26$\times$；
+在 freeze-encoder、freeze-both 下，提前终止调度器带来显著增益，MMoH 相对 Megatron、Whale、Espresso 可达约 1.19$\times$--1.77$\times$ 的加速。
+上述结果说明，MMoH 的复合粒度划分与冻结感知策略在不同规模与冻结场景下均能有效提升异构集群上的训练效率。
+
+\subsection{实验分析}
+
+\paragraph{划分策略对比。}
+Whale 与 Espresso 采用单一“层”粒度划分并扩展到 MLLMs；MMoH 采用复合粒度（编码器合并为块、LLM 拆分为注意力/FFN 块）。
+在相同冻结场景下，MMoH 得到的设备拓扑与各流水级块数分布随冻结状态变化：例如 freeze-encoder 时前段计算需求下降，
+MMoH 会将较弱 GPU 置于首流水级；freeze-LLM 时后段需求下降，设备顺序相应调整，与需求—供给匹配度一致。
+该动态调整能力是现有方法所不具备的，也是 MMoH 在多种场景下均能取得较优性能的重要原因。
+
+\paragraph{负载均衡。}
+在 MLLM-12B 上对比各流水级前向计算时间分布可知，MMoH 的划分使各流水级计算时间分布更集中、峰值更低，
+迭代时间由瓶颈流水级主导的程度减轻，说明复合粒度与冻结感知划分有效平衡了异构设备上的负载（图~\ref{fig:chap3_load}）。
+在 no-freeze 与 freeze-LLM 等场景下，MMoH 在流水级 5--7 等位置采用更细粒度划分，平滑了负载尖峰，
+相较 Espresso 进一步缩短了迭代时间。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{MMoH-figs/load_balance}
+  \caption{MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。}
+  \label{fig:chap3_load}
+\end{figure}
+
+\paragraph{提前终止调度器消融。}
+为隔离提前终止调度器的贡献，将 MMoH 的调度器接入 Espresso（记为 Espresso+）或从 MMoH 中移除（记为 MMoH-），
+在 freeze-encoder、freeze-both 下对比。结果表明：Espresso+ 相对 Espresso 有明显提升，
+MMoH 相对 MMoH- 也有约 8\%--11\% 的提升；完整 MMoH（规划器 + 调度器）相对仅使用规划器的 MMoH- 可再提升约 8\%--19\% 吞吐。
+这表明该调度器在冻结场景下能有效消除冗余计算与通信，且与规划器协同可进一步放大收益；
+同时，将调度器接入 Espresso 也能带来增益，说明提前终止策略具有较好的可移植性。图~\ref{fig:chap3_early} 给出了
+freeze-encoder 与 freeze-both 下 Espresso、Espresso+、MMoH- 与完整 MMoH 的吞吐对比及计算开销分布。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[b]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{MMoH-figs/early_termination}
+    \caption*{(a) 端到端吞吐}
+  \end{minipage}\hfill
+  \begin{minipage}[b]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{MMoH-figs/ET-time}
+    \caption*{(b) 计算开销分布}
+  \end{minipage}
+  \caption{提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。}
+  \label{fig:chap3_early}
+\end{figure}
+
+\paragraph{局限与扩展。}
+MMoH 当前在 1F1B 等同步流水线调度下验证；与 Zero-Bubble 等异步或重叠通信的流水线调度\cite{zerobubble2024}、
+以及 DualPipe 等双向流水线\cite{dualpipe2025} 的结合，有望在通信密集型场景下进一步缩短迭代时间，留作未来工作。
+此外，规划器依赖离线或按阶段 profiling，若训练过程中动态改变 batch size 或序列长度，需重新求解划分；
+第四章将介绍的激活重计算优化与 MMoH 的划分与调度正交，可在同一流水线策略下叠加使用，实现显存与计算—通信的联合优化。
 
 \section{本章小结}
-% 正文内容
+
+本章介绍了面向异构 GPU 集群的多模态大语言模型高效混合并行框架 MMoH。针对 MLLMs 的混合模块结构与分流水级冻结带来的
+计算—显存需求非均匀性与动态变化，MMoH 通过\emph{需求驱动的设备拓扑识别}、\emph{复合粒度模型抽象}与\emph{冻结感知的整数规划划分}，
+在给定集群与模型配置下自动生成与当前训练流水级相匹配的流水线并行策略；
+通过\emph{提前终止调度器}在连续冻结前缀流水级省略不必要的反向计算与 P2P 通信，在保持收敛性的前提下进一步提升吞吐。
+在两种异构集群（Cluster-S、Cluster-L）与两种规模 MLLMs（MLLM-3B、MLLM-12B）上的实验表明，
+MMoH 相对 Megatron-LM、Whale、Espresso 等现有方法可获得最高约 1.77$\times$ 的加速，
+且在不同冻结场景下均能自适应地调整设备拓扑与划分策略。
+本章将问题形式化为迭代时间由瓶颈流水级主导、以及冻结集合导致的反向与通信不对称，
+并通过规划器（需求驱动拓扑、复合粒度、冻结感知 IP）与提前终止调度器的协同，
+在异构集群上实现了与训练阶段相匹配的划分与调度；
+后续工作可将提前终止与 Zero-Bubble、DualPipe 等调度结合，并与第四章的激活重计算优化叠加，
+为多模态大模型在资源受限与异构环境下的高效训练提供完整方案。
+
+\makeatletter
+\ifodd\c@page\else\null\thispagestyle{empty}\clearpage\fi
+\makeatother

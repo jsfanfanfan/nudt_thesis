@@ -1,0 +1,10 @@
+\contentsline {figure}{\numberline {1.1}{\ignorespaces 多模态大语言模型的核心组成部分\relax }}{2}{figure.caption.8}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces NVIDIA GPU 架构与代表性产品演进\relax }}{4}{figure.caption.9}%
+\contentsline {figure}{\numberline {1.3}{\ignorespaces 使用 Megatron 训练多模态大语言模型（同构假设下的典型配置）\relax }}{7}{figure.caption.10}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces MLLM 多阶段训练中典型模块冻结与更新关系示意\relax }}{13}{figure.caption.13}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces 数据并行示意\relax }}{13}{figure.caption.15}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces 张量并行示意\relax }}{14}{figure.caption.17}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces 流水线并行示意\relax }}{15}{figure.caption.19}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces 序列并行（SP）/上下文并行（CP）与专家并行（EP）的划分维度示意\relax }}{15}{figure.caption.21}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces 零冗余优化器 ZeRO 示意\relax }}{16}{figure.caption.22}%
+\contentsfinish 

@@ -1,0 +1,1853 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+% old
+% \usepackage{cite}
+% yqhao 
+\usepackage[numbers,sort&compress]{natbib}  % 修改后参考格式 [1,2] [1-3]
+\usepackage[font=footnotesize]{caption}
+\usepackage{hhline}
+% \usepackage[UTF8]{ctex}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{subcaption} % 支持子图标题
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{makecell}
+\usepackage{stackengine}
+\usepackage{booktabs} % 专业表格线
+\usepackage{array} % 增强表格功能
+\usepackage{colortbl} % 表格背景色
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{etoolbox}
+\usepackage[top=0.75in, bottom=1.05in, left=0.75in, right=0.75in]{geometry}
+\newcommand\xrowht[2][0]{\addstackgap[.5\dimexpr#2\relax]{\vphantom{#1}}}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% \usepackage{hyperref}
+% \hypersetup{
+% colorlinks=true,
+% linkcolor=black,
+% anchorcolor=black,
+% citecolor=black
+% }
+% 自定义高亮命令
+\newcommand{\highlightline}[1]{%
+  \tikz[remember picture, overlay]{
+    \fill[gray!20,rounded corners] 
+      ($(pic cs:#1)+(0,-0.4ex)$) 
+      rectangle 
+      ($(pic cs:#1)+(1\linewidth,1.6ex)$);
+  }
+}
+
+\begin{document}
+
+\title{MMoH: Efficient Training of Multimodal Large Language Models on Heterogeneous Clusters
+% \thanks{Identify applicable funding agency here. If none, delete this.}
+}
+
+\author{\IEEEauthorblockN{Jinshan Fan, Zhiquan Lai$^*$\thanks{$^*$ Corresponding author}, Weijie Liu, Shengwei Li, Wei Wang, Yanqi Hao, Dongsheng Li}
+\IEEEauthorblockA{\textit{National Key Laboratory of Parallel and Distributed Computing(PDL)} \\
+\textit{College of Computer Science and Technology, National University of Defense Technology}\\
+Changsha, China \\
+{\{fanjinshan,zqlai,liuweijie,swli,wwking,yqhao,dsli\}}@nudt.edu.cn}
+}
+
+
+% \author{\IEEEauthorblockN{Anonymous Authors}}
+% \author{\IEEEauthorblockN{1\textsuperscript{st} Given Name Surname}
+% \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+% \textit{name of organization (of Aff.)}\\
+% City, Country \\
+% email address or ORCID}
+% }
+
+\maketitle
+
+\begin{abstract}
+% Multimodal large language models (MLLMs) have demonstrated impressive performance across various AI applications, but their training remains computationally intensive.
+% With the rapid development of the hardware, heterogeneous clusters have become a common choice for MLLM training.
+% However, existing approaches overlook the hybrid-module structure and the varying parameter training states of MLLMs, resulting in suboptimal training performance.
+% In this paper, we present \textit{MMoH}, an efficient approach for training MLLMs on heterogeneous clusters.
+% It comprises an \textit{MMoH} parallel strategy planner and an early-termination scheduler.
+% The \textit{MMoH} planner jointly considers the hybrid-module structure of MLLMs, device heterogeneity, and the parameter training states to determine the optimal parallel strategy.
+% Initially, it identifies potential device topologies by matching the computational and memory requirements of different modules with the capabilities of devices.
+% Subsequently, it employs a novel hybrid-granularity abstraction to divide the model into a list of model chunks.
+% Finally, it partitions the MLLM into pipeline stages based on the identified device topology and the list of model chunks, and then assigns these stages to devices.
+% The early-termination scheduler further optimizes the training process by recognizing and eliminating redundant computations and communications during training.
+% Experimental results demonstrate that \textit{MMoH} accelerates the training of MLLMs on heterogeneous clusters by up to 1.77$\times$ compared to state-of-the-art training approaches.
+Multimodal large language models (MLLMs) achieve strong performance across diverse AI applications but remain costly to train. 
+With advancing hardware, heterogeneous clusters are increasingly used for MLLM training. 
+However, existing methods often ignore MLLMs’ hybrid-module structure and varying parameter states, leading to suboptimal performance.
+We propose MMoH, an efficient training approach for MLLMs on heterogeneous clusters. 
+MMoH consists of a parallel strategy planner and an early-termination scheduler. The planner jointly considers model structure, device heterogeneity, and parameter states to select optimal parallel strategies. 
+It first matches module requirements with device capabilities to identify feasible topologies.
+Then, using a hybrid-granularity abstraction, it divides the model into chunks and assigns pipeline stages accordingly.
+The scheduler further reduces overhead by eliminating redundant computation and communication.
+Experiments show that MMoH accelerates MLLM training on heterogeneous clusters by up to 1.77× over state-of-the-art methods.
+
+\end{abstract}
+\begin{IEEEkeywords}
+heterogeneous clusters, multimodal large language models, parallel strategy generation
+\end{IEEEkeywords}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MMoH parallel strategy planner/generator
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Intro 和 moti需要改的点:
+% Intro:
+% 1. 第一段需要润色, 语句不够连贯, 需要引并结合图1(a)阐述 (ok)
+% 2. 第二段无关内容有点多, 可以去除TP和DP, 说一下PP是常用的方法, 然后说建立这样的parallel strategy 需要做什么(现在的3个step), 然后再说异构 ok
+% 3. 第三段motivation段落结构不清晰, However后的结构改成: However... as followings: (i) 总结fristly这句并加粗. 当前firstly的内容, 结合图1(b)和(c)说明, 此处对图1(b)和(c)简写 . (ii) 总结secondly这句并加粗. 当前secondly的内容, 结合图1(b)和(c)说明, 此处对图1(b)和(c)简写. (ok)
+% 其中注意目前的moti和图1(b)和(c)的关系, 图1(b)中LLM和MLLM的区别是moti1(MLLM), mllm(NF)和 mllm(FB)的区别是moti2(Freeze), 图1(c)中no-freeze bar之间的区别是moti1, no-freeze 和 freeze-all bar的区别是moti2
+% moti和方法的关系: 方法1解决两个moti, 方法2进一步解决moti2
+% 4. 第四段方法1基本ok, 润色一下, 再检查一下用词(ok)
+% 5. 第五段方法2需要结合一些流水线并行, 将方法2阐述为流水线的调度方法, 加入一些为什么当前流水线并行的调度不适用freeze, 然后你的调度是怎么和freeze有关的(ok)
+% Moti:
+% 在moti这边的两段, 详细展开图1(b)和(c)的数据, 逻辑改成intro类似, 图1(b)中LLM和MLLM的区别是moti1, mllm(NF)和 mllm(FB)的区别是moti2, 图1(c)中no-freeze bar之间的区别是moti1, no-freeze 和 freeze-all bar的区别是moti2.
+% 当前moti只有moti1展开了图1(c), 需要展开图1(b)的moti1部分, moti2没有对图片进行展开
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 图1 高度字号调一下，b,c太高了, bc太丑了, 而且看不太懂
+% 图2 字号太混乱(尽力了，只有10号和9号两种大小的字体了)
+% 图7a 图例把柱子盖住了, caption文字丰富一下, 比如ET是啥 (over)
+
+% 1. pp提前， 异构单独一段
+% 2. moti+challenge
+% structure放ii，pp放i
+% frozen 多阶段
+% 表头补充
+% 实验结果先总结
+\section{Introduction}
+% singlemodal--> multimodal --> PP
+
+% single modality
+% While large language models (LLMs)~\cite{brown2020language, devlin2019bert} have achieved remarkable success across a wide range of domains, their single-modality focus inherently limits multimodal comprehension.
+Large language models (LLMs)~\cite{brown2020language, devlin2019bert} have achieved significant success in many areas, but their single-modality nature limits their ability to understand multimodal information. 
+% li2023blip, dong2023dreamllm
+% Multimodal large language models (MLLMs)~\cite{li2022blip, liu2024improved, wu2024next} further extend LLMs' capability to learn the relationship and generate content from multiple modalities, demonstrating significant advancements in handling complex tasks including visual question answering~\cite{antol2015vqa}, cross-modal translation~\cite{sulubacak2020multimodal}, and comprehensive content understanding~\cite{team2023gemini}.
+Multimodal large language models (MLLMs)~\cite{li2022blip, liu2024improved, wu2024next} extend LLMs to learn from and generate content across multiple modalities, improving performance on tasks such as visual question answering~\cite{antol2015vqa}, cross-modal translation~\cite{sulubacak2020multimodal}, and integrated content understanding~\cite{team2023gemini}.
+The substantial parameters of MLLMs necessitate parallel training with multiple devices.
+% liu2023hanayo
+Pipeline parallelism (PP)~\cite{huang2019gpipeefficienttraininggiant, narayanan2019pipedream}, partitioning model layers across devices and orchestrating the training process in a pipeline manner, is widely adopted.
+% PP splits the mini-batch into micro-batches, employs a model partitioning to allocate model layers across devices, and orchestrates the training process in a pipeline manner~\cite{huang2019gpipeefficienttraininggiant, narayanan2019pipedream, li2021chimera, liu2023hanayo}.
+% 冻结的引入
+% Unlike conventional DL training approaches, MLLMs predominantly employ the frozen technique~\cite{tsimpoukelli2021multimodal} for both the encoder and LLM backbone.
+
+% fig:moti
+\begin{figure*}[t]
+    \vspace{2mm}
+    \centering
+    % 左图
+    \hspace{0.01\textwidth}
+    \begin{subfigure}[b]{0.44\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/moti_MLLM.pdf}
+        \caption{}
+        \label{fig:mllm}
+    \end{subfigure}
+    % \hspace{0.01\textwidth}
+    \hfill
+    % 中图
+    \begin{subfigure}[b]{0.26\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/moti_layer.pdf}
+        \caption{}
+        \label{fig:layer}
+    \end{subfigure}
+    % 右图
+    \hfill
+    \begin{subfigure}[b]{0.22\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/moti_e2e.pdf}
+        % \captionsetup{aboveskip=8.0pt, belowskip=0pt}
+        \caption{}
+        \label{fig:gap}
+    \end{subfigure}
+    % \hspace{0.01\textwidth}
+    \caption{Background and motivation. (a) shows he structure of popular MLLMs. MLLMs use encoders to extract features, project them into text space via a projector, and feed them into the LLM backbone to generate responses. The encoder and the LLM can be frozen to utilize off-the-shelf checkpoints. (b) compares the varying tendency of computational overhead and memory consumption across model layers between LLMs and the evaluated MLLM-3B. NF and FB denote the no-freeze and freeze-both, respectively. 
+    % For LLMs, these metrics are uniform and predictable across layers. In contrast, MLLMs exhibit significant variation depending on module size and freezing scenarios. 
+    (c) shows the iteration time for training MLLM-3B using different parallel strategy planners under two frozen scenarios. 
+    % We utilize three heterogeneous GPU nodes: one RTX 3090, one RTX 2080 Ti, and one RTX 2080, each containing 4 identical GPUs. 
+    MMoH1 and MMoH2 represent the parallel strategies for the respective frozen scenarios identified by the MMoH parallel strategy planner.}
+    \label{fig:moti}
+    \vspace{-2mm}
+\end{figure*}
+
+% heterogeneous clusters -> current approaches
+% Meanwhile, with the rapid evolution of hardware, privately deployed clusters comprising multiple types of devices have become increasingly common for distributed training~\cite{epoch2022trendsingpupriceperformance, jeon2019analysis, yun2025jabas}.
+% For researches using cloud computing resources, the queuing time for heterogeneous devices is significantly shorter than that for homogeneous setups on mainstream cloud platforms~\cite{weng2022mlaas}.
+% Even worse, many researchers only have access to a variety of consumer-grade, lower-end devices~\cite{song2024powerinfer}.
+% These factors collectively make training MLLMs on heterogeneous clusters an inevitable trend.
+Driven by hardware diversification, distributed model training on heterogeneous clusters has emerged as a practical and cost-efficient solution.
+This trend is supported by superior price-performance in mixed-device deployments~\cite{epoch2022trendsingpupriceperformance, jeon2019analysis}, reduced queuing delays for heterogeneous allocations on cloud platforms~\cite{weng2022mlaas}, and the widespread reliance on consumer-grade GPUs in academic research~\cite{song2024powerinfer}.
+Unfortunately, the distinct computational performance and memory capacity of training devices in heterogeneous clusters pose significant challenges in effective parallel training.
+Recent efforts~\cite{park2020hetpipe,jia2022whale,zhouespresso} have explored optimizing PP strategies to enhance the LLM training on heterogeneous clusters.
+However, these approaches are poorly suited for training MLLMs on heterogeneous clusters due to the following two characteristics of MLLMs.
+% PP requires careful stage mapping strategies to balance workloads across pipeline stages for efficient distributed training.
+% Since DP and TP allocate uniform workload to devices (i.e., the replica or the sharded tensor), PP requires careful stage mapping strategies to balance workloads across pipeline stages for efficient distributed training.
+% Compared to DP and TP, which allocate uniform workload to devices (i.e., the replica or the sharded tensor), PP requires careful stage mapping strategies to balance workloads across pipeline stages for efficient distributed training.
+% Furthermore, the increasing demand for computation performance of DL models with rapidly growing numbers of parameters has also driven the continuous upgrade of GPU accelerators\cite{epoch2022trendsingpupriceperformance}. 
+% The high cost of purchasing new advanced GPUs has resulted in most existing model training clusters consisting of heterogeneous GPUs from different generations. 
+% Many researchers only have access to some different consumer-grade, lower-end GPUs\cite{song2024powerinfer}. 
+% On various cloud services, the queueing time for acquiring heterogeneous GPUs resources is also significantly shorter than that for homogeneous GPUs\cite{jeon2019analysis},\cite{weng2022mlaas}. 
+% In such scenarios, efficiently leveraging heterogeneous and low-end GPU resources for MLLM training can reduce the entry barrier and accelerate innovation in the development of the MLLM algorithm.
+% Meantime, with the rapid evolution of devices, heterogeneous clusters that consist of multiple types of devices become prevalent for distributed training~\cite{epoch2022trendsingpupriceperformance, yun2025jabas, song2024powerinfer}.
+
+
+% moti 1 + challenge 1
+\textbf{Non-uniform model structure of MLLMs.}
+% hybrid-module -> moti 1
+Unlike LLMs composed of identical transformer layers~\cite{vaswani2017attention}, MLLMs typically comprise three core modules with distinct structures as demonstrated in Fig. \ref{fig:mllm}: a modality-specific encoder, a task-oriented projector, and an LLM backbone.
+% However, most existing works are tailored for LLMs with stacked identical transformer layers~\cite{vaswani2017attention}, disregarding the hybrid-module structure of MLLMs.
+% Current works disregard this hybrid-module structure of MLLMs.
+% 用图片说 moti1
+% As illustrated in Fig. \ref{fig:layer}, LLMs exhibit uniform computational overhead and predictable memory consumption across layers. 
+% In contrast, MLLMs demonstrate significant variation in these specifications depending on the specific modules.
+% The hybrid-module structure of MLLMs exacerbates the complexity of parallel training strategy design on heterogeneous clusters.
+% Applying existing heterogeneous parallel training approaches~\cite{jia2022whale,zhouespresso} to MLLMs training results in considerable inefficiencies.
+% As shown in Fig. \ref{fig:gap}, current strategies fall short of the optimal parallelization scheme by up to 13.4\%.
+As shown in Fig. \ref{fig:layer}, LLMs show consistent computational cost and memory usage per layer. In contrast, MLLMs vary greatly in these aspects depending on the module.
+Their hybrid architecture complicates parallel training strategy design on heterogeneous clusters. Using existing heterogeneous training methods~\cite{jia2022whale,zhouespresso} for MLLMs leads to major inefficiencies. Current approaches perform up to 13.4\% worse than the optimal parallelization scheme (Fig. \ref{fig:gap}).
+
+% parallel strategy NP-hard -> challenge 1
+% However, identifying the optimal parallel strategy is highly challenging, which has been proven to be an NP-hard problem~\cite{benoit2008mapping}.
+% Designing an effective parallel strategy generally involves three steps: 1) determining the device topology based on hardware specifications such as computation performance or memory capacity; 2) partitioning the model into pipeline stages; and 3) placing pipeline stages on devices in order.
+% The hybrid-module structure of MLLMs, further exacerbates the complexity of parallel training strategy design on heterogeneous clusters.
+% for training traditional MLLMs on heterogeneous clusters
+
+
+% moti 2 + challenge 2
+\textbf{Varying parameter training states of MLLMs.}
+% 多阶段冻结的参数状态变化 -> moti 2
+% Unlike conventional LLM pre-training, 
+% MLLM pre-training is predominantly implemented through multi-stage training~\cite{li2023blip, chen2024lion, dong2023dreamllm, li2024lego, wu2024next, jin2023unified}.
+The \textit{frozen}~\cite {tsimpoukelli2021multimodal} technique is employed in the pre-training process of MLLMs, which bridges the modality gap, preserves valuable pretrained knowledge, and prevents overfitting.
+This technique results in a mixture of parameter training states—that is, the coexistence of frozen and active parameters.
+% Only active parameters are updated during training.
+% This multi-stage training paradigm, combined with parameter freezing, helps bridge the modality gap, preserves valuable pretrained knowledge, and prevents overfitting.
+% 用图片说 moti 2
+% However, the frozen parameters show different computational overhead and memory consumption from the active parameters.
+% Fig. \ref{fig:layer} demonstrates that the same MLLM exhibits varying computational overhead and memory consumption patterns when the parameters within the encoder and the LLM backbone are frozen.
+% This mixture of parameter training states finally affects the optimal parallel strategy.
+% As shown in Fig.~\ref{fig:gap}, current strategies fall behind the optimal strategy by up to 21.2\% when we freeze the parameters within the encoder and the LLM. 
+% Furthermore, the optimal parallel strategy is not static and must be dynamically adjusted because the parameter training state evolves across training phrases.
+The heterogeneity between frozen and active parameters in their computational overhead and memory consumption (Fig. \ref{fig:layer}) means that the optimal parallel strategy is determined by the current mixture of parameter training states.
+Consequently, existing strategies are suboptimal, exhibiting performance gaps of up to 21.2\% under common freezing scenarios (Fig. \ref{fig:gap}).
+Finally, the continual evolution of parameter states necessitates the dynamic adjustment of the parallel strategy across training phases.
+% These results expose the inefficiency of current works and highlight the necessity of dynamically adapting the parallel strategy to accommodate varying parameter states during training.
+% param state need parallel strategy alters -> challenge 2
+Unfortunately, existing approaches assume all parameters are always active during the overall training process, resulting in significant training inefficiencies.
+% As demonstrated in Fig. \ref{fig:gap}, existing approaches fail to identify the optimal parallel strategy under \textit{freeze-all} scenario, leading to a performance degradation of up to 21\%.
+% This notable performance degradation motivates us to explore more effective stage mapping strategies for training MLLMs on heterogeneous GPU clusters.
+
+% our approach
+To fill this gap, we propose \textit{MMoH}, an efficient parallel training framework for MLLM training on heterogeneous clusters.
+% \textit{MMoH} not only designs high-performance parallel strategies but also incorporates the unique characteristics of the frozen techniques.
+% 要不创造一个 multi-stage frozen training 新短语hh
+We introduce \textit{MMoH parallel strategy planner} to generate the optimal parallel strategy, accounting not only for structural differences between LLMs and MLLMs but also for the varying parameter training states.
+% 换到 challenge
+Identifying the optimal parallel strategy is challenging, which has been proven to be an NP-hard problem\cite{benoit2008mapping}.
+% The hybrid-module structure of MLLMs, together with the varying parameter states, further exacerbates this complexity.
+% The \textit{MMoH} planner first introduces a \textit{demand-driven device topology} method.
+% This method determines potential device topologies by jointly considering the structural differences of MLLMs with the capacities of devices in heterogeneous clusters.
+% Then the planner proposes a \textit{hybrid-granularity abstraction} targeted for the hybrid-module structure of MLLMs.
+% This abstraction employs multiple granularities to partition the MLLM, effectively balancing partitioning complexity and load distribution.
+% Finally, the planner applies \textit{frozen-aware model partitioning}, which incorporates varying parameter training states to determine the optimal parallel strategy based on the identified topologies.
+To address this problem, we propose \textit{MMoH parallel strategy planner}.
+The \textit{MMoH} planner first proposes a \textit{demand-driven device topology} method that identifies feasible topologies by co-optimizing the structure of MLLMs and the capabilities of heterogeneous devices.
+It then introduces a \textit{hybrid-granularity abstraction} tailored to MLLMs' modular design, using multi-level partitioning to balance complexity and load balance.
+Finally, the planner performs \textit{frozen-aware model partitioning}, which accounts for dynamic parameter states to select the best parallel strategy under each topology.
+% planner的效果
+% Through this three-step process, our planner identifies a more efficient parallelization strategy for the given MLLM than those achieved by state-of-the-art methods through more balanced load distribution and explicit consideration of the frozen parameters.
+Through this three-step process, our planner identifies an efficient parallel strategy through balanced load distribution and explicit consideration of the frozen parameters.
+
+% To fill this gap, we propose \textit{MMoH}, an efficient approach for training MLLMs on heterogeneous clusters.
+% \textit{MMoH} accounts not only for structural differences of LLMs and MLLMs but also for the varying parameter states introduced by frozen training techniques to generate the optimal parallel strategy.
+% Identifying the optimal parallel strategy is challenging, which has been proven to be an NP-hard problem\cite{benoit2008mapping} for training LLMs on heterogeneous clusters~\cite{zhouespresso, jia2022whale}.
+% % Designing an effective parallel strategy generally involves three steps: 1) determining the device topology based on hardware specifications such as computation performance or memory capacity; 2) partitioning the model into pipeline stages; and 3) placing pipeline stages on devices in order.
+% % The hybrid-module structure of MLLMs, together with the varying parameter states, further exacerbates this complexity.
+% To address this problem, we propose \textit{MMoH parallel strategy planner}.
+% The planner first introduces a demand-driven device-topology algorithm.
+% This algorithm determines potential device topologies by jointly considering the architecture differences between LLMs and MLLMs with the capacities of heterogeneous devices.
+% Then the planner proposes a hybrid-granularity abstraction targeted for the hybrid-module structure of MLLMs.
+% This abstraction employs multiple granularities to partition the MLLM, effectively balancing partitioning complexity and load balance.
+% Finally, the planner applies frozen-aware model partitioning, which incorporates varying parameter states to determine the optimal parallel strategy based on the identified topologies and generated chunk list.
+
+% Pipeline parallelism (PP) in distributed training typically involves four key operations: (1) forward computation, (2) backward computation, (3) parameter updates, and (4) inter-stage communication.
+% However, the backward computation of frozen parameters is different when the frozen technique is adopted.
+% Unfortunately, existing pipeline scheduling mechanisms are suboptimal for the frozen technique as they assume all parameters of the MLLM are active, resulting in significant training inefficiencies. 
+% To further accommodate the varying parameter training states of MLLMs, we introduce the \textit{early-termination scheduler}, which intelligently eliminates redundant operations when the frozen technique is employed.
+% PP typically involves three key operations: (1) forward computation, (2) backward computation, and (3) inter-stage communication.
+% Our \textit{scheduler} identifies and removes unnecessary backward computation and superfluous communications caused by the varying parameter training state.
+% This optimization yields substantial improvements in training efficiency while maintaining mathematical convergence guarantees.
+To better handle the varying training states of parameters in MLLMs, we propose an \textit{early-termination scheduler}.
+This component detects and skips redundant operations when frozen parameters are present.
+Typically, pipeline parallelism (PP) involves three operations: (1) forward pass, (2) backward pass, and (3) inter-stage communication.
+Our scheduler removes unnecessary backward computations and redundant communications introduced by frozen parameters, significantly improving training efficiency without compromising convergence.
+% 5. 第五段方法2需要结合一些流水线并行, 将方法2阐述为流水线的调度方法, 加入一些为什么当前流水线并行的调度不适用freeze, 然后你的调度是怎么和 freeze 有关的(over)
+% Pipeline parallelism (PP) in distributed training typically involves four key operations: (1) forward computation, (2) backward computation, (3) parameter updates, and (4) inter-stage communication.
+% However, the backward computation of frozen parameters is different when the frozen technique is adopted.
+% Unfortunately, existing pipeline scheduling mechanisms are suboptimal for the frozen technique as they assume all parameters of the MLLM are active, resulting in significant training inefficiencies. 
+
+% Moreover, we observe that certain computations and communications become redundant when employing the frozen technique.
+% To eliminate these inefficiencies, \textit{MMoH} introduces an \textit{early-termination scheduler}. This scheduler identifies and discards unnecessary backward computation, peer-to-peer (P2P) communications, and tensor storage operations without compromising convergence correctness, thereby further improving training efficiency.
+% For example, for the first pipeline stage, if parameters are frozen, the backward computation together with the \textit{all-reduce} communication are removed by the scheduler as these operations has no effect on the correctness of convergence.
+
+% Deep Learning (DL) models have achieved remarkable success across various domains. 
+% However, previous deep learning models primarily focused on single-modal data, such as language models GPT-3\cite{brown2020language}, BERT\cite{devlin2019bert}, vision model ViT\cite{dosovitskiy2020image}, and audio model Whisper\cite{radford2023robust}. This single-modality focus limits the types of data DL models can process, preventing them from reaching the level of Artificial General Intelligence (AGI) that is widely anticipated.
+% In 2022, BLIP\cite{li2022blip} marked a turning point by integrating the image classification model ViT with the language model BERT, enabling DL models to comprehend visual information. 
+% We refer to these revolutionary hybrid models which integrate DL models that process different modalities of data, thus enabling more complex perception, reasoning, and generation tasks, as multimodal large language models (MLLMs). 
+% Following this development, MLLMs with similar structures to BLIP have quickly attracted widespread attention from major tech companies and academic institutions, leading to the emergence of massive new MLLMs, including BLIP-2\cite{li2023blip}, LLaVA\cite{liu2024improved}, NextGPT\cite{wu2024next}, DreamLLM\cite{dong2023dreamllm}, among others, the demand for training MLLMs has surged accordingly.
+
+% Recent advancements have proposed various optimizations for model training in heterogeneous clusters, such as Whale\cite{jia2022whale} and Espresso\cite{zhouespresso}. 
+% However, these approaches were designed primarily for language models such as GPT and BERT, which are stacked with identical transformer\cite{vaswani2017attention} layers. 
+% These researches predominantly concentrate on strategies for partitioning a specified number of homogeneous transformer layers across heterogeneous GPUs, overlooking the fact that MLLMs typically consist of diverse transformer layers, in addition to certain neural network layers that are not of the transformer type. 
+% % frozen training 这里没有概念
+% Moreover, existing scheduling mechanisms overlook the unique characteristics of frozen training in MLLMs, leading to unnecessary computations and communications. 
+% As a result, directly applying these existing heterogeneous cluster training frameworks to MLLMs fails to fully improve training efficiency and maximize the performance of heterogeneous computing resources.
+
+% To address the aforementioned issues, we propose \textit{MMoH}, an efficient method for training multimodal large language models on heterogeneous clusters. 
+% Even when considering the simplified case of language models composed entirely of homogeneous transformer layers, the problem of determining the optimal partitioning of the model into stages and mapping each stage onto a heterogeneous GPU cluster to minimize iteration time, which we refer to stage mapping, remains NP-hard\cite{benoit2008mapping}. 
+% The stucture of MLLMs is significantly more complex than that of traditional language models, which makes the stage mapping for MLLMs on heterogeneous clusters particularly thorny to solve. 
+% In \textit{MMoH}, we address it in three steps. 
+% First, \textit{MMoH} introduces a Demand-Driven device topology Algorithm that explores the computational and memory requirements of specific MLLMs, thereby selecting appropriate GPU topologies. \textit{MMoH} then proposes hybrid-granularity Abstraction for the complex multi-module structure of MLLMs. 
+% The model is partitioned into individual chunks, and then \textit{MMoH} introduces a novel model partitioninging algorithm to find the optimal stage mapping strategy that minimizes iteration time at the chunk granularity instead of typical transformer-layer granularity. 
+% Besides, \textit{MMoH} introduces an Early-Termination Scheduler that leverages the unique characteristics of frozen training to eliminate unnecessary computations and communications in existing scheduling mechanisms, not only reducing iteration time but also alleviating memory bottlenecks.
+
+In summary, the contributions of this paper are as follows: 
+\begin{itemize}
+% \item To the best of our knowledge, this is the first work to introduce targeted optimizations for training MLLMs on heterogeneous clusters.
+% 合并 abstraction 和 partitioning
+\item We construct an \textit{MMoH parallel strategy planner}.
+This planner performs joint optimization over the MLLM's structural characteristics, the resource capacities of heterogeneous devices, and the varying parameter states to determine the optimal parallel strategy.
+% It employs a demand-driven device-topology algorithm that selects appropriate heterogeneous device topologies tailored to the specific requirements of MLLMs.
+% It further introduces a hybrid-granularity abstraction for MLLMs to cope with the multi-module stucture of MLLMs.
+% Building upon this abstraction, the designer adopts an innovative model partitioninging algorithm aimed at identifying the stage mapping strategy that minimizes iteration time.
+% \item We propose a demand-driven device topology algorithm that selects appropriate heterogeneous GPU topologies for specific MLLMs.
+% \item We introduce a hybrid-granularity abstraction for MLLMs, offering a novel perspective on model partitioninging. Building upon this abstraction, we develop an innovative model partitioninging algorithm aimed at identifying the strategy that minimizes iteration time.
+\item We propose an \textit{early-termination scheduler} tailored to the \textit{frozen} technique in MLLMs.
+It further reduces iteration time by identifying and eliminating unnecessary computations and communications.
+\item We conduct experiments using MLLMs of different sizes on two differently configured heterogeneous clusters. Experimental results demonstrate that \textit{MMoH} achieves performance improvements of up to 1.77× compared to prevalent training approaches.
+% Compared to Megatron, the speedup reaches 1.49$\times$ to 1.77$\times$. When compared to the state-of-the-art heterogeneous training methods, Whale and Espresso, the speedups are 1.18$\times$ to 1.28$\times$ and 1.04$\times$ to 1.19$\times$ respectively.
+\end{itemize}
+
+\section{Background and Motivation}
+
+\subsection{Multimodal Large Language Models}
+\label{section:2-a}
+% Traditional DL models can only handle specific single-modal data, which makes them work well on simple tasks merely, such as conversational question answering\cite{brown2020language},\cite{devlin2019bert}, image classification\cite{dosovitskiy2020image},  and speech recognition\cite{radford2023robust}.
+% But for more sophisticated missions like image comprehension and speech generation, we utilize a kind of more powerful models called multimodal large language models (MLLMs) to deal with them. 
+% MLLMs usually integrate advanced language models for processing textual data with models for handling other modalities such as image data or audio data, enabling models that originally could only understand textual information to comprehend images or audio information.
+
+
+
+%=========wwang+chat===========
+% Traditional Deep Learning (DL) models are typically tailored for single-modal data, limiting their effectiveness to tasks such as conversational question answering \cite{brown2020language, devlin2019bert}, image classification \cite{dosovitskiy2020image}, and speech recognition \cite{radford2023robust}. Consequently, addressing more sophisticated missions such as cross-modal retrieval necessitates more powerful stuctures.
+%Multimodal Large Language Models(MLLMs) fulfill this requirement by integrating models handling various data modalities, including texture, image, and audio.
+
+% \begin{figure}[t]
+% \centerline{\includegraphics{MLLM2.drawio.pdf}}
+% \caption{The stucture of popular MLLMs. MLLMs use encoders to extract patch-level features, project them into text space via a projector, and feed them into the LLM backbone to generate responses.}
+% \label{arch:mllm}
+% \end{figure}
+
+
+% Multimodal large language models (MLLMs) extend large language models (LLMs) by incorporating multiple modalities (e.g., visual and auditory inputs), enabling multimodal understanding.
+% The stucture of popular MLLMs is illustrated in Fig.~\ref{arch:mllm}. There are usually three main modules: Encoder, Projector, and LLM Backbone.\cite{li2023blip,liu2024improved,wu2024next, dong2023dreamllm, jin2023unified, li2024lego, chen2024lion}. 
+As shown in Fig.~\ref{fig:mllm}, a typical MLLM comprises three core modules\cite{li2023blip,liu2024improved,wu2024next,dong2023dreamllm}: an encoder, a projector, and an LLM.
+% transformer-based\cite{vaswani2017attention}
+The encoder processes non-textual modality data to extract patch-level grid features and generates a modality feature embedding.
+% that contains specialized semantics. 
+% Then, the projector receives this embedding and projects it to a semantic space that the LLM can understand. 
+Subsequently, the projector projects this embedding into a text semantic space that the LLM can comprehend. 
+% Most existing MLLMs employ Transformer-based\cite{vaswani2017attention} multimodal encoders to extract patch-level grid features (e.g., from images, audio, or video). These multimodal features are then projected into the text feature space via a projector, enabling the LLM backbone to interpret them effectively.
+% Finally, the LLM backbone receives the output embedding of the projector linked with a text embedding and generates answers leveraging its ability to understand text.
+% Finally, the LLM backbone integrates the projected embedding with the input text embedding to produce the output leveraging its ability to understand text.
+Finally, the LLM integrates the projected embedding with the input text embedding to produce the output.
+
+
+\textit{Frozen}~\cite{tsimpoukelli2021multimodal} is a common technique employed during MLLM training.
+This technique differs fundamentally from the pre-training of LLMs. The MLLM training is typically performed in multiple stages, during which different modules are selectively frozen as illustrated in Fig. \ref{fig:mllm}.
+% This multi-stage training approach enhances convergence stability, promotes modular specialization, and enables more effective alignment across modalities.
+% which diverges from conventional LLM training
+As a result of this distinctive training procedure, four typical training scenarios emerge:
+1) \textit{no-freeze}: neither the encoder nor the LLM backbone, along with the projector, are frozen;
+2) \textit{freeze-enc.}: only the encoder is frozen;
+3) \textit{freeze-llm}: only the LLM backbone is frozen;
+4) \textit{freeze-both}: both the encoder and LLM backbone are frozen.
+
+\subsection{Distributed Training on Heterogeneous Clusters}
+
+Due to the substantial computational and memory requirements of LLMs, distributed training has become a prevalent approach.
+To enhance its efficiency, parallel strategies such as data parallelism (DP), tensor parallelism (TP) and pipeline parallelism (PP), are proposed.
+DP replicates the model across devices, splits the input data into mini-batches, and feeds each model replica with distinct mini-batches.
+During training, the \textit{all-reduce} communication is invoked to average gradients across devices.
+TP partitions the tensors in the model into non-overlapping tensor shards and distributes these shards across devices.
+However, this approach necessitates frequent collective communications (e.g., \textit{all-reduce} and \textit{all-gather}), resulting in a substantial demand for network bandwidth.
+PP splits the mini-batch into micro-batches, employs a model partitioning to allocate model layers across devices, and orchestrates the training process in a pipeline manner~\cite{huang2019gpipeefficienttraininggiant, narayanan2019pipedream}.
+% liu2023hanayo
+% Specifically, model partitioning includes determining the device topology, partitioning model layers into stages, and placing stages on devices in order.
+% During model training in PP, data communication is mainly limited to adjacent stages.
+% Compared to DP, PP maintains consistency through peer-to-peer (\textit{p2p}) communications between adjacent stages, imposing lower demands on network bandwidth.
+Compared to DP and TP, PP only requires peer-to-peer (\textit{p2p}) communications between adjacent pipeline stages, imposing lower demands on network bandwidth.
+% Current PP methods typically split small mini-batches into smaller micro-batches and orchestrate their execution through pipelines to maximize GPU utilization\cite{huang2019gpipeefficienttraininggiant, narayanan2019pipedream, li2021chimera, liu2023hanayo}.
+% TP partitions the huge tensors of model layers into non-overlapping tensor shards, which are distributed across multiple GPUs.
+% Each GPU is responsible for computing a specific shard for each partitioned layer and engages in frequent synchronous communication with other GPUs.
+% However, this approach necessitates frequent collective communications (e.g., \textit{all-reduce} and \textit{all-gather}) to ensure consistency, resulting in a substantial demand for network bandwidth.
+
+Heterogeneous clusters, comprising multiple types of devices, are widely used for distributed training~\cite{Lai2023, yun2025jabas, zhouespresso}.
+% Given the distinct computational performance and memory capacity of devices in these clusters, an appropriate parallel strategy is crucial for efficient distributed training.
+Megatron~\cite{shoeybi2019megatron}, however, ignores these variations and uniformly partitions model layers across devices, leading to suboptimal training performance on heterogeneous clusters.
+% To enhance performance, recent studies~\cite{ jia2022whale, zhouespresso} focus on optimizing stage mapping to balance computation overhead across stages while ensuring that memory requirements do not exceed the capacity of the devices to which the stages are assigned.
+% These studies organize devices into virtual workers (VWs), partition model layers into stages, and map these stages to devices in a VW.
+% Whale xxx 
+% Espresso xxx
+% The scarcity of large homogeneous GPU clusters and the prevalence of heterogeneous GPUs highlight the need for efficient training methods tailored to heterogeneous environments.  
+% HetPipe\cite{park2020hetpipe} organizes GPUs with comparable performance into Virtual Workers (VWs), performs model layer partitioning within each VW using pipeline parallelism, and leverages data parallelism across VWs to facilitate efficient training.
+% Unlike traditional homogeneous training frameworks such as Megatron\cite{shoeybi2019megatron}, which evenly split model layers across GPUs, effective stage mapping is essential for training on heterogeneous clusters, as uniform layer partitioning results in multiple pipeline bubbles due to the computational imbalance introduced by heterogeneous GPU performance.
+% Furthermore, varying memory sizes of different GPUs also restrict the stage mapping strategy. 
+% In highly heterogeneous clusters, especially those containing low-end GPUs with limited computation performance and memory capacity, the stage mapping strategy must be meticulously designed to fully exploit the computational potential of the heterogeneous environment.
+% Current heterogeneous training frameworks take a further step in optimizing stage mapping strategies.
+% Whale~\cite{jia2022whale} assigns GPUs with larger memory capacities to earlier stages and partitions model layers based on the performance of different GPUs. 
+% Whale~\cite{jia2022whale} assigns devices with larger memory capacities to earlier stages and partitions model layers based on the performance of different devices. 
+To tackle this issue, Whale~\cite{jia2022whale} assigns devices with larger memory capacities to earlier stages within a device group and partitions model layers into stages based on the computation performance of the assigned device.
+% Espresso~\cite{zhouespresso} orders devices according to their compute-to-memory ratio (CMR) and adopts Whale's layer partitioning strategy.
+Espresso~\cite{zhouespresso} introduces a compute-to-memory ratio (CMR) metric to order devices within each device group.
+It employs Whale’s layer partitioning strategy while complying with memory constraints.
+
+% \subsection{Gaps and Opportunities} \label{section:2-c}
+% Although HetPipe fully considers the performance of each Virtual Worker (VW), it overlooks the ordering of GPUs within individual VWs. 
+% HPH\cite{duan2022hph} arranges the heterogeneous GPUs within VWs in ascending order of computational capability, allowing posterior pipeline stages to accommodate more model layers and overlap their communication time with the computation time of anterior stages. 
+% In contrast, Whale\cite{jia2022whale} proposes sorting VW's heterogeneous GPUs in descending order of memory capacity, as earlier pipeline stages need to store more intermediate activation and thus have higher memory demands\cite{kim2023bpipe}. 
+% The latest work, Espresso\cite{zhouespresso}, takes both computation performance and memory capacity into consideration and proposes ordering the devices based on the compute-memory ratio (CMR). 
+% Existing research, including Whale and Espresso, follows the pattern of hybrid parallelism, which organizes GPUs with comparable performance into Virtual Workers (VWs), performs model layer partitioning within each VW using pipeline parallelism, and leverages data parallelism across VWs to facilitate efficient training\cite{park2020hetpipe}.
+% They take this approach a step further by focusing on optimizing the stage mapping strategy within VWs, aiming to improve training efficiency and resource utilization.
+% However, these stage mapping strategies are specifically designed for language models composed of stacked transformer layers with identical structures.
+% Specifically, the computational demand of language models is highly uniform, and memory requirements also follow a front-heavy distribution, gradually decreasing in later stages. 
+% Existing works exploit these patterns to perform targeted optimizations.
+% Unfortunately, the computational and memory demands of MLLMs do not follow this pattern, leading to suboptimal performance when training MLLMs on heterogeneous GPUs using off-the-shelf stage mapping strategies.
+
+% 做个实验说明现有的 topo 是不适合的，贴一个 GPU-topo 影响迭代时间的图
+% To investigate how the training performance of MLLMs is affected by the stage mapping strategy, we evaluate 16 different stage mapping plans based on combinations of 4 GPU topologies, 2 partitioning strategies (Whale and an optimal strategy derived via exhaustive search), and 2 training scenarios: \textit{no-freeze} and \textit{freeze-both}. 
+% In the \textit{no-freeze} scenario, we employ a parallel training configuration with a PP size of 3, DP size of 2, and TP size of 2. In contrast, the \textit{freeze-both} scenario uses a PP size of 3, and a DP size of 4, and disables tensor parallelism. 
+% Both configurations utilize a total of three heterogeneous nodes, with each node comprising four homogeneous GPUs, as detailed in Table~\ref{config:gpu}. 
+% As illustrated in Fig.~\ref{fig2}, when no modules are frozen, the [B, A, C] GPU topology(\textit{i.e.,} [RTX2080 Ti, RTX3090, RTX2080]), combined with the optimal partitioning plan, reduces the iteration time to 3217.5 ms. 
+% This represents an improvement over the 3516.1 ms achieved with the [C, B, A] GPU topology(\textit{i.e.,} [RTX2080, RTX2080, RTX3090]), under the Whale partitioning plan, yielding a nearly 10\% reduction. 
+% Under freeze-both scenario, the [B, A, C] GPU topology with the optimal partitioning plan further reduces the iteration time to 1784.1 ms, compared to 2180.4 ms with the [C, B, A] GPU topology under the Whale partitioning plan, achieving a substantial 23\% improvement. 
+% This notable performance enhancement motivates us to explore more effective stage mapping strategies for training MLLMs on heterogeneous GPU clusters.
+
+% 现在异构工作都是单一 transfromer-layer 粒度的层划分
+% The straightforward stucture of language models, which stack homogeneous transformer layers, makes partitioning them at the transformer-layer granularity a natural approach.
+% However, these methods are inadequate for MLLMs due to their complex stuctures, which include heterogeneous transformer layers of varying sizes, as well as additional neural network components such as embedding and projection layers. Existing model partitioninging approaches for heterogeneous clusters are not well-suited to handle this level of architectural diversity.
+% This complexity raises a critical research question: \textit{What is the optimal granularity for partitioning MLLMs?} Specifically, is transformer-layer granularity still a viable strategy, or do the heterogeneous layers in MLLMs demand a more nuanced partitioning scheme?
+% To accommodate the hybrid-module stucture of MLLMs, it is essential to explore a hybrid-granularity abstraction that enables the partitioning of heterogeneous model layers with varying sizes.
+
+% 现在的调度机制没有考虑冻结
+% During different training phases of MLLMs, varying modules may be frozen.
+% Frozen training paradigm fundamentally changes the communication pattern by altering the \textit{all-reduce} gradient synchronization requirements. In conventional pipeline parallelism combined with data parallelism, stages with more model layers typically exhibit longer computation times and consequently higher communication overhead. However, under frozen training, computationally intensive stages may completely omit gradient synchronization, as their parameters remain fixed. This characteristic invalidates traditional communication-computation overlapping strategies, rendering them suboptimal for frozen training scenarios.
+% Furthermore, since frozen modules produce tensors without gradients, their parameters require no updates. While this presents opportunities to skip unnecessary backward computation for some stages entirely, current pipeline scheduling strategies fail to leverage this characteristic of MLLM training, resulting in unnecessary computation and memory overhead.
+
+% Device topology is not suitable for MLLMs
+% Reason: Consider only the heterogeneous devices, ignore the stucture of models. 
+% The partition algorithm is not suitable
+% Reason: Consider only the heterogeneous devices, ignore the stucture of models.
+
+% Frozen training modes bring new opportunities.
+% \textit{1) The ignorance of structural differences between LLMs and MLLMs:} Recent studies~\cite{jia2022whale, zhouespresso} consider the computational performance and memory capacity of devices when determining parallel strategies.
+% These approaches are effective for traditional language models, as the computational and memory demands for a device are proportional to the number of layers assigned, making them predictable.
+% These approaches are effective for traditional LLMs, as the computational and memory demands of the pipeline stages are strictly proportional to the number of layers assigned.
+% However, as shown in Fig.~\ref{fig:mllm}, MLLMs consist of independently configurable modules.
+% This structural difference leads to distinct computational and memory demands across model layers, resulting in suboptimal performance when training MLLMs on heterogeneous clusters.
+% As illustrated in Fig.~\ref{fig:layer}, within MLLMs, the computational overhead between model layers can vary by up to 20.4$\times$, while the memory consumption differences can reach up to 11.7$\times$.
+% As shown in Fig.~\ref{fig:gap}, MMoH1 achieves 11.6\% and 13.4\% higher throughput compared to Whale and Espresso respectively under the \textit{no-freeze} scenario.
+% These consistent gains motivate us to explore the underlying reasons.
+% In the evaluated MLLM, encoder layers are lightweight, requiring minimal computation, while later LLM layers are much heavier.
+% Despite holding the most activations, the first pipeline stage has limited memory overhead due to the encoder's small size.
+% Similarly, the last stage, with few activations, also has a low memory footprint.
+% Thus, the second stage, processing most intermediate layers, tends to face the highest memory overhead.
+% Overall, the MLLM’s computational demand increases and then stabilizes, while its memory demand follows an increase-then-decrease trend across pipeline stages.
+% \textit{M1} and \textit{2} likely perform better since their device topologies match these trends.
+
+
+
+% As illustrated in Fig.~\ref{fig:moti}, under the \textit{no-freeze} scenario, \textit{Mapping 1} achieves the best performance, improving throughput by 13.4\% compared to Whale, while \textit{Mapping 2} ranks second with a 9.7\% improvement over Whale.
+% When the frozen pattern shifts to \textit{freeze-both}, \textit{Mapping 2} delivers the best performance, surpassing Whale and Espresso by 21.1\% and 17.3\%, respectively, while \textit{Mapping 1} ranks second, achieving 16\% and 8\% improvements over Whale and Espresso.
+% The high efficiency and robustness of the two stage mapping strategies under different frozen scenarios motivate us to find the underlying reason.
+% We observe a pattern: in both Mapping 1 and Mapping 2, the computation performance and memory capacity exhibit an increase-then-decrease trend across stages, whereas other mappings show an approximately monotonic increasing or decreasing trend.
+% According to the structure of the MLLM we evaluate, the encoder layers need minimum computation resources due to their small size while the later LLM layers need a lot of computation resources.
+% So the computational demand of the MLLM tends to increase initially and then stabilize across stages.
+% If the PP is set to 3, most encoder layers are assigned to the first pipeline stage, the last pipeline stage mainly accommodates LLM layers, and the remaining layers are grouped into the second pipeline stage.
+% Due to the relatively small size of the encoder layers, the first pipeline stage, despite storing the largest number of intermediate activations, experiences limited memory overhead.
+% The last pipeline stage, which stores the fewest activations, also maintains a relatively low memory footprint.
+% Consequently, the second stage, which processes the remaining model layers, becomes the stage with the highest memory overhead most likely.
+% Overall, the MLLM's memory demand across stages follows an increase-then-decrease pattern.
+% \textit{Mapping 1} and \textit{Mapping 2} perform better likely because their variation trends of computation performance and memory capacity across the three stages of their device topologies align with the MLLM's demand.
+% Also, we observe that the optimal stage mapping strategy varies with different frozen scenarios,
+% as the same MLLM exhibits different computational and memory demand trends under varying frozen settings.
+
+
+
+% During distributed training, four main operations exist: 1) forward computation; 2) backward computation; 3) parameter update; 4) communications. 
+% However, in frozen training scenarios, the backward computation changes to part of it.
+% Specifically, previous studies~\cite{oh2022out, unnikrishnan2021layerpipe} figure out that the backward computation can be divided into two parts: backward computation for output and backward computation for weight.
+% The backward computation for weight calculates gradients of parameters, which is not needed for frozen parameters and can be removed.
+% The backward computation for output is necessary for frozen parameters, as it calculates the gradients of input that will be used by the front parameters.
+% This new type of computation, which is ignored by exist studies~\cite{jia2022whale, jia2022whale} during distributed training, provides new opportunities for optimizing distributed training performance.
+% Distributed training typically involves four primary operations: 1) forward computation, 2) backward computation, 3) parameter update, and 4) communication.
+% However, the backward computation of frozen parameters is different when the frozen technique is adopted.
+% \textit{2) The ignorance of varying parameter training states during training MLLMs:}
+% Previous studies~\cite{oh2022out} have shown that backward computation consists of two parts: gradient computation for parameters and for inputs.
+% For frozen parameters, gradient computation can be skipped, while input gradients are still needed for preceding parameters.
+% Additionally, gradient and optimizer states are no longer required for frozen parameters, thereby reducing memory usage.
+% As illustrated in Fig.~\ref{fig:layer}, freezing the parameters within both the encoder and LLM backbone significantly alters the computational overhead and memory consumption.
+% % This distinctive characteristic, which has been overlooked by existing studies~\cite{narayanan2019pipedream, shoeybi2019megatron, huang2019gpipeefficienttraininggiant}, presents new opportunities for optimizing the distributed training performance of MLLMs.
+%  % (i.e., the coexistence of frozen and active parameters)
+% Existing works entirely overlook the diverse parameter training states(i.e., the coexistence of frozen and active parameters), resulting in a notable degradation in performance.
+% As shown in Fig.~\ref{fig:gap}, under the \textit{freeze-both} scenario, parallel strategy MMoH2 delivers a 21.1\% and 17.3\% speedup over Whale and Espresso, respectively.
+% % This result exposes the inefficiency of current approaches while the frozen technique is employed.
+% Furthermore, MMoH2 achieves the highest throughput, outperforming MMoH1, which highlights the necessity of dynamically adapting the parallel strategy when the parameter training states vary.
+
+\section{MMoH Design}
+
+\subsection{Overview}
+
+% 提出了 \textit{MMoH}
+% We propose \textit{MMoH} to address the problems outlined in Section \ref{section:2-c}.
+Fig.~\ref{fig2} illustrates the overview of \textit{MMoH}, which consists of a \textit{MMoH parallel strategy planner} (\textbf{Section \ref{section:3-b}}) and an \textit{early-termination scheduler} (\textbf{Section \ref{section:3-c}}).
+
+% Given the heterogeneous cluster and MLLM configurations as input, the \textit{MMoH} planner employs a \textit{demand-driven device topology} approach to identify suitable device topologies that align with the MLLM's computational and memory demands.
+% Then, the planner introduces the \textit{hybrid-granularity abstraction} to accommodate the hybrid-module structure of MLLMs, applying different partition granularities to different modules.
+% After that, the planner employs a \textit{frozen-aware model partitioning}, which formulates the model partitioning as an integer programming (IP) task to determine the optimal partitioning scheme.
+% To enable scalable and efficient training, \textit{MMoH} trains each model replica using PP within each device group while employing DP and TP across device groups.
+% The scheduler can support the \textit{frozen} technique better in training MLLMs.
+% It identifies the varying parameter training states across different training phases of MLLMs, allowing it to eliminate redundant tensor storage, skip unnecessary computations, and reduce peer-to-peer communication overhead.
+The \textit{MMoH} planner takes cluster and model configurations as input. It first uses a \textit{demand-driven device topology} method to find hardware setups that match the MLLM's needs. It then applies a \textit{hybrid-granularity abstraction} to partition different modules appropriately. Next, \textit{frozen-aware model partitioning} treats this as an integer programming (IP) problem to find the optimal scheme. For training, \textit{MMoH} uses pipeline parallelism (PP) within device groups and data (DP) or tensor parallelism (TP) across groups. Additionally, its scheduler efficiently supports training with frozen parameters by identifying their states across phases, thereby eliminating redundant storage, computation, and communication.
+
+
+% overview of \textit{MMoH}
+\begin{figure}[t]
+\centerline{\includegraphics[width=\linewidth]{figs/overview.pdf}}
+\caption{The overview of \textit{MMoH}. \textit{MMoH} comprises two key components: \textit{MMoH parallel strategy planner} and \textit{early-termination scheduler}. The MMoH planner takes the MLLM configuration and heterogeneous cluster specifications as input and determines the optimal parallel strategy. The scheduler leverages the characteristics of the frozen technique to further improve performance by reducing unnecessary computation and communication overhead.}
+\label{fig2}
+\vspace{-5mm}
+\end{figure}
+
+\subsection{MMoH parallel strategy planner}
+\label{section:3-b}
+% Stage mapping strategy involves partitioning variable model layers into pipeline stages and assigning each stage to optimally selected heterogeneous GPUs within VWs.
+% This task can be formulated as a traveling salesman problem (TSP), an NP-hard combinatorial optimization problem\cite{benoit2008mapping}. To address this problem, \textit{MMoH} employs a three-step strategy:
+% First, we propose \textit{demand-driven device topology} algorithm, which dynamically aligns computational / memory requirements of different stages with the capabilities of heterogeneous devices.
+% Then, we invent \textit{hybrid-granularity abstraction}, which reorganizes the varying model layers into individual model chunks at multiple levels of granularity.
+% Finally, we introduce a novel \textit{Frozen-aware model partitioning} that partitions the MLLM at the chunk level and maps the resulting stages onto the heterogeneous device topology for efficient training.
+% 展示出两个部分：demand-driven device topology + hybrid-granularity model partitioning
+% Previous studies on parallel strategy generation overlook the hybrid-module structure of MLLMs, leading to suboptimal performance.
+% To achieve higher efficiency, we propose \textit{MMoH parallel strategy planner}.
+% First, the planner proposes a new metric to identify appropriate device topologies of the given MLLM.
+% Then, the planner reorganizes the varying model layers into individual model chunks at multiple-level granularity by \textit{hybrid-granularity abstraction}.
+% Finally, a novel \textit{frozen-aware model partitioning} is introduced, leveraging a cost model to determine the optimal model partitioning.
+Prior work on parallel training strategies fails to account for the hybrid-module structure of MLLMs, resulting in suboptimal performance.
+To improve efficiency, we propose the MMoH parallel strategy planner.
+Our planner first introduces a new metric to identify suitable device topologies for a given MLLM.
+It then uses a hybrid-granularity abstraction to reorganize diverse model layers into multi-level model chunks.
+Finally, a frozen-aware partitioning scheme is applied, which uses a cost model to select the optimal partition strategy.
+
+% Dynamically aligns computational/memory requirements of model stages with heterogeneous GPU capabilities;
+% Decomposes the TSP-like search space into tractable subproblems by leveraging structural similarities across MLLM layers;
+% Partitioning Algorithm
+
+% \textbf{demand-driven device topology Algorithm.}
+% Traditional language models exhibit uniform computational demands across layers, with each layer requiring similar computational workloads. 
+% Their memory consumption follows a predictable pattern: earlier pipeline stages necessitate storing more intermediate activation tensors, resulting in a monotonic decrease in memory requirements across successive stages.
+
+% However, MLLMs are not simply composed of identical, stacked Transformer blocks. 
+% Their complex and heterogeneous layer structures lead to computational and memory requirements that differ markedly from those of traditional language models. 
+% As a result, applying GPU topology strategies originally designed for language models to train MLLMs can lead to inefficient resource allocation and suboptimal performance.
+
+% For instance, the initial encoder layers in an MLLM often contain relatively few parameters and require minimal computational resources. 
+% While they may store more intermediate activations, their overall memory footprint remains low. 
+% According to Whale’s recommendation, the first pipeline stage should be assigned to the GPU with the largest memory capacity, which typically also offers the highest computational performance.
+% However, this allocation strategy leads to inefficient resource utilization—high-performance GPUs are assigned to layers with low computational and memory demands, whereas layers with significantly higher resource requirements are placed on less capable GPUs. 
+% This mismatch between resource supply and demand ultimately degrades training efficiency.
+% demand 和 supply 的用词问题
+\textbf{Demand-driven device topology.}
+% Inspired by the high efficiency and robustness of parallel strategy MMoH1 and MMoH2 illustrated in Fig.~\ref{fig:gap}, an effective device topology within device groups for MLLM training should account for the varying computational and memory demands of different model layers to ensure optimal utilization of heterogeneous resources.
+Inspired by the efficiency of MMoH1 and MMoH2 (Fig. \ref{fig:gap}), an effective device topology must accommodate the varying computational and memory demands of different MLLM layers to ensure optimal use of heterogeneous resources.
+% To address this, we propose a demand-driven GPU Topology Algorithm, which explores the model’s resource requirements and strategically allocates heterogeneous GPUs to maximize overall system performance.
+% To be more specific, \textit{MMoH} dynamically aligns the computational and memory requirements of model stages with heterogeneous GPU capabilities.
+% the computational and memory demands 计算和显存需求
+To achieve this, the MMoH planner first profiles the computational overhead and memory consumption of model layers.
+% To reduce profiling overhead, we reuse results for identical layers.
+% Since these characteristics exhibit minimal variation across heterogeneous devices, profiling on a single representative GPU is sufficient.
+We profile each unique layer once on a representative device since their computational cost measured in floating point operations(FLOPs) and memory consumption are consistent across repeated layers and show negligible variation across different heterogeneous devices.
+% (e.g., TP size, PP size, micro-batch size (MBS), and freezing status). 
+% Let the encoder consist of \( l_{\text{encoder}} \) layers, the projector contains \( l_{\text{projector}} \) layers, and the LLM backbone module includes \( l_{\text{llm}} \) layers. Then, the total number of layers is given by \( L = l_{\text{encoder}} + l_{\text{projector}} + l_{\text{llm}} \). 
+% Let the encoder consist of $l_e$ layers, the projector contains $l_p$ layers, and the LLM backbone includes $l_l$ layers. 
+% Then, the total number of layers is given by $L = l_e + l_p + l_l$.
+The total number of layers of the MLLM is denoted by $l$, which represents the sum of layers across its three modules.
+% The computation and memory demand lists are represented as:
+% \begin{equation}
+%     L_{comp}=\{f_0,\cdots,f_{l-1}\}, L_{mem}=\{m_0,\cdots,m_{l-1}\},
+% \end{equation}
+% Let $L_i$ and $M_i$, for $0\leq i \leq l-1$, denote the floating point operations and memory consumption of the $i$-th model layer, respectively.
+Let $L_i$ and $M_i$ denote the FLOPs and memory consumption of the $i$-th model layer, respectively.
+% For each heterogeneous GPU permutation, the computation and memory supply lists can be represented as:
+% \begin{equation}
+%     D_{comp}=\{F_0,\cdots,F_{s-1}\}, D_{mem}=\{M_0,\cdots,M_{s-1}\},
+% \end{equation}
+Within each device group, we denote $P_j$ and $Q_j$, for $0\leq j \leq s-1$, as the computational capability and memory capacity of the $j$-th device for each possible heterogeneous device permutation, where $s$ equals to the PP degree.
+% where $F_j$,$M_j$ is the FLOPS (Floating-point Operations Per Second) and memory capacity of $j$-th GPU, $s$ equals PP degree. 
+We then partition the model layers into $s$ pipeline stages in proportion to the computational capabilities of the devices.
+This process results in two lists that reflect the total FLOPs and memory usage for each stage under a compute-balanced partitioning scheme, and we denote $R_j$, and $T_j$ as the total FLOPs and memory consumption of $j$-th stage, respectively. 
+% \begin{equation}
+%     S_{mem}=\{M_0,\cdots,M_{S-1}\},
+% \end{equation}
+% where $M_i$ is the memory demand of $i$-th stage, which should be the sum of a sublist of $L_{mem}$. 
+% We then compute the ratio of computational demand to memory usage for each pipeline stage under this hypothetical partitioning and the heterogeneous GPU topology supplement:
+% Next, we propose a metric, \textit{MD}, to quantify the matching degree between the computational and memory demands of each pipeline stage under this hypothetical load distribution and the capabilities supplied by the candidate device topology.
+% The \textit{MD} metric is computed as follows:
+To quantify the matching degree between the computational and memory demands of each pipeline stage under this hypothetical load distribution and the capabilities supplied by the candidate device topology, we propose a metric, \textit{MD}, which is computed as follows:
+% \begin{equation}
+%     \text{CMR}_{\text{demand}}=\{d_0,\cdots,d_{S-1}\}, 
+% \end{equation}
+% \begin{equation}
+%     \text{CMR}_{\text{supply}}=\{s_0,\cdots,s_{S-1}\},
+% \end{equation}
+\vspace{-1mm}
+\begin{equation}
+    \text{demand}=\{x_1, x_2, \cdots, x_{s-1}\}=\{\frac{a_1}{a_0},\frac{a_2}{a_1},\cdots,\frac{a_{s-1}}{a_{s-2}}\},
+\end{equation}
+\begin{equation}
+    \text{supply}=\{y_1, y_2, \cdots, y_{s-1}\}=\{\frac{b_1}{b_0},\frac{b_2}{b_1},\cdots,\frac{b_{s-1}}{b_{s-2}}\},
+\end{equation}
+\begin{equation}
+    MD_{\text{(demand, supply)}} = e^{-\frac{1}{s-1}\sum_{j=1}^{s-1}(x_j-y_j)^2},
+\end{equation}
+where $a_j$ equals the ratio of $R_j$ to $T_j$, $b_j$ equals the ratio of $P_j$ and $Q_j$.
+We rank all candidate device topologies in descending order based on their MD scores and retain only the top half as final candidates.
+
+
+\textbf{Hybrid-granularity abstraction.}
+% The straightforward stucture of language models, which stack homogeneous transformer layers, makes partitioning them at the transformer-layer granularity a natural approach. 
+% However, MLLMs typically comprise more complex neural networks, incorporating diverse transformer variants with differing computational and memory requirements. 
+% This complexity raises a critical research question: \textit{What is the optimal granularity for partitioning MLLMs?} Specifically, is transformer-layer granularity still a viable strategy, or do the heterogeneous layers in MLLMs demand a more nuanced partitioning scheme?
+% In most MLLMs, the transformer layers in the encoder are smaller—they have fewer parameters and handle shorter sequences than those in the LLM backbone.
+% This means each encoder layer uses relatively little computation and memory, so splitting these layers across stages doesn’t affect iteration time much.
+% In contrast, LLM transformer layers are much larger and deal with longer sequences. Splitting even one of these layers across stages can cause serious load imbalance, leading to longer iteration times and possibly out-of-memory (OOM) errors, especially on weaker devices.
+% Other model components—like embedding layers, output layers, or the projector module (e.g., linear layers or Q-Former)—also vary a lot in size and resource demands, which makes model partitioning even more complex.
+% Given this architectural diversity, using the same partitioning strategy for all transformer layers doesn’t work well.
+% It’s too fine-grained for encoder layers (creating unnecessary overhead) and not detailed enough for LLM layers (causing imbalance and OOM risks).
+% It also ignores non-transformer layers, limiting its ability to handle the structure of MLLMs.
+In most MLLMs, encoder transformer layers are smaller—with fewer parameters and shorter sequences—than those in the LLM backbone. As a result, each encoder layer consumes relatively little computation and memory, so distributing them across stages has minimal impact on iteration time.
+In contrast, LLM transformer layers are significantly larger and process longer sequences. Partitioning even a single LLM layer across devices can lead to severe load imbalance, increasing iteration time and risking out-of-memory (OOM) errors, particularly on less capable devices.
+Other components—such as embedding layers, projectors (e.g., Q-Former), and output layers—also vary widely in size and resource requirements, further complicating partitioning.
+Due to this structural diversity, applying a uniform partitioning strategy to all transformer layers is ineffective: it is too fine-grained for encoders (introducing overhead) and too coarse for LLM layers (causing imbalance and OOM). It also fails to account for non-transformer modules, limiting its applicability to MLLMs.
+% Given this architectural diversity, employing a uniform transformer-layer granularity for model partitioning proves insufficient: it is unnecessarily fine-grained for the encoder layers, introducing excessive searching overhead, yet inadequately coarse for LLM, leading to load imbalance or even OOM errors.
+% Moreover, this approach overlooks non-transformer layers, further limiting its effectiveness in handling the hybrid-module structure of MLLMs.
+
+
+
+% In this work, \textit{MMoH} proposes a hybrid-granularity abstraction designed to address the structural complexity of MLLMs.
+% Our approach decomposes and reorganizes model layers into individual model chunks.
+
+To address this, the planner introduces a hybrid-granularity abstraction that reorganizes diverse model layers into individual chunks.
+As shown in Fig. \ref{fig:hybrid}(a), smaller encoder transformer layers are grouped into larger encoder-layer chunks using sub-module granularity.
+For larger LLM transformer layers, sub-layer granularity~\cite{liu2022autopipe} is applied—each layer is split into an Attention chunk and an FFN chunk (Fig. \ref{fig:hybrid}(b)), improving load balancing and reducing OOM risk on limited-memory devices.
+The number of encoder layers merged per chunk is determined through empirical profiling, ensuring that each encoder chunk does not exceed the computational or memory cost of a single Attention or FFN chunk.
+Non-transformer layers (e.g., embeddings, projectors, output layers) are treated at layer-level granularity, each assigned to a separate chunk based on its specific requirements.
+
+% To tackle this challenge, the planner proposes the hybrid-granularity abstraction, which decomposes and reorganizes varying model layers into individual model chunks.
+% As illustrated in Fig. \ref{fig:hybrid}(a), for small transformer layers within the encoder, 
+% We use sub-module granularity to partition the encoder by grouping several consecutive layers into larger, combined encoder chunks.
+% For the large transformer layers in the LLM, we use sub-layer granularity, breaking each layer into smaller, fine-grained computation units.
+% Specifically, we separate each layer into an Attention chunk and an FFN chunk~\cite{liu2022autopipe} as demonstrated in Fig. \ref{fig:hybrid}(b).
+% This decomposition enables more efficient load allocation across heterogeneous devices and effectively mitigates the risk of OOM errors on memory-constrained devices.
+% The merging factor (i.e. how many encoder transformer layers are merged into an encoder-layer chunk) is determined by empirical profiling of computational overhead and memory consumption.
+% Each encoder-layer chunk is constrained to have no greater computational overhead and memory consumption than either an individual Attention chunk or an FFN chunk.
+% For non-transformer layers (like embeddings, output layers), we use layer-level granularity, assigning each of them to its own chunk based on their distinct compute and memory demands.
+% For other non-transformer model layers, we adopt layer-level granularity due to their unique computational and memory characteristics, including a dedicated embedding chunk, an output chunk, and a projector chunk.
+% Whether the projector should be split into multiple Projector chunks depends on its specific size and the impact on inter-stage communication.
+
+% \begin{itemize}
+% \item For large LLM transformer layers, We decompose these into fine-grained computational blocks, separating self-attention networks (Attention Blocks) and feed-forward networks (FFN Blocks) to optimize resource allocation. A finer-grained partitioning than ours can improve load balancing slightly; however, it also increases inter-stage communication overhead and incurs greater search complexity.
+% \item For small encoder transformer layers, given their smaller parameter size, we aggregate multiple consecutive encoder layers into consolidated Encoder-Layers Blocks, with the merging factor determined by empirical profiling of computation time, memory requirements, and heterogeneous GPU capacities. The memory and computational overhead of a merged Encoder-Layers Block should not exceed that of either an individual Attention Block or FFN Block. \textit{MMoH} supports splitting an encoder transformer layer into two parts, which means that we partition one layer into Attention and FFN and merge them with other two layers respectively. 
+% \item For other layers, We maintain distinct partitioning for model components with unique computational characteristics, including a dedicated Embedding Block for input representations and a Projector Block (e.g., Linear transformations, Q-Former modules, or transformer layers),  for cross-modal feature alignment. Whether the projector should be split into multiple Projector Blocks depends on its specific size and the impact on inter-stage communication.
+% \end{itemize}
+
+% Through comprehensive profiling of each layer under specified configurations, including tensor parallelism (TP), micro batch size (MBS), and parameter freezing states, we measure execution times across heterogeneous GPU setups while recording per-layer memory footprints(which remain largely consistent across devices). 
+% This empirical characterization allows us to decompose the architecturally complex MLLM into a homogeneous set of computational chunks, where each chunk possesses deterministic memory requirements and predictable execution time for each type of GPU.
+
+\begin{figure}[t]
+    \vspace*{2mm}
+    \centering
+    % 左图
+    \begin{subfigure}[b]{0.27\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/hybrid-granularity-merge.pdf}
+        \caption{Sub-module granularity for the encoder when the merge factor is 2.}  % 左图的标题
+        \label{fig:left}
+    \end{subfigure}
+    \hspace{0.01\textwidth}  % 控制两张图之间的间距
+    % 右图
+    \begin{subfigure}[b]{0.17\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/hybrid-granularity-split.pdf}
+        \caption{Sub-layer granularity for the LLM backbone. }  % 右图的标题
+        \label{fig:right}
+    \end{subfigure}
+    \caption{The illustration of hybrid-granularity abstraction. For the encoder, two encoder transformer layers are merged into an encoder-layers chunk. For the LLM, a single transformer layer is split into an attention chunk and an FFN chunk without introducing any influence on the communication volume.}
+    \label{fig:hybrid}
+    \vspace*{-5mm}
+\end{figure}
+
+\textbf{Frozen-aware model partitioning.}
+% Following hybrid-granularity abstraction, the designer transforms the diverse layers of an MLLM into a chunk list representation.
+% Then it develops a frozen-aware model partitioning algorithm to distribute these chunks across heterogeneous devices within VWs optimally. 
+% The allocation process leverages GPU topologies generated by our \textit{demand-driven device topology} algorithm to ensure efficient heterogeneous resource utilization.
+% Following hybrid-granularity abstraction, the designer transforms the diverse layers of the MLLM into a chunk list.
+% Based on the chunk list and candidate demand-driven device topologies, the planner develops a frozen-aware model partitioning algorithm to distribute these chunks across heterogeneous devices optimally. 
+% During training, frozen parameters eliminate update requirements, leading to gradient synchronization time of different pipeline stages based on their freezing status rather than scaling proportionally with total parameters.
+% To account for this, \textit{MMoH} introduces an innovative frozen-aware model partitioning algorithm.
+% This partitioning algorithm integrates these dynamics into a comprehensive cost model, enabling optimized model partitioning that minimizes iteration time.
+Based on the chunk list and candidate device topologies, the planner employs a frozen-aware model partitioning algorithm to optimally distribute chunks across heterogeneous devices.
+During training, frozen parameters require no updates. As a result, gradient synchronization time depends on the freezing status of each pipeline stage rather than the total number of parameters.
+To address this, \textit{MMoH} introduces a novel frozen-aware partitioning algorithm. This method incorporates these dynamics into a cost model to optimize model partitioning and minimize iteration time.
+
+% Given a model chunks list of length N, we need to split it into S stages. 
+Assuming the length of the chunk list is $N$, and the number of devices within a group is $S$.
+% At this point, we have obtained, through profiling, the memory footprint, intermediate activation size, and execution time of each chunk on different GPUs. 
+We represent the partition scheme as a sequence $P=\{p_1,p_2, ..., p_S\}$, where $p_i$ is the number of chunks for $i$-th pipeline stage. 
+With a candidate device topology, we can attain forward time list $\text{FT} = \{F_1, F_2, \cdots F_S\}$ and backward time list $\text{BT} = \{B_1, B_2, \cdots B_S\}$ for any partition scheme, where $F_i, B_i$ can be estimated by summing up the execution time of individual chunks with a negligible error~\cite{um2024metis}.
+% Let \( K \) is the index of the master stage (the pipeline stage with the longest forward and backward propagation time, indexed from \( 1 \) to \( S \)). 
+% We denote $M$ as the number of micro-batches. 
+Let \( K \) as the index of the master stage~\cite{liu2022autopipe}, and $M$ as the number of micro-batches. 
+% To account for the impact of the frozen parameters on gradient synchronization overhead, we augment our cost model of iteration time with frozen-aware communication analysis. 
+To account for the impact of the frozen parameters, we augment our cost model with frozen-aware communication analysis. 
+Specifically, we estimate the iteration time as:
+\vspace{-1mm}
+\begin{equation}
+\begin{split}
+T^* &= \sum_{i = 1}^{K - 1}({F_i+B_i})+2 \sum_{i=K+1}^S(F_i+B_i) \\
+    &\quad + (M - (S - K))(F_K + B_K) + \text{COMM}_{time},
+\end{split}
+\end{equation}
+where the communication time corresponds to the maximum non-overlappable synchronization overhead across all pipeline stages, which we formally define as:
+% \vspace{mm}
+\begin{equation}
+\text{COMM}_{time} = max_{i=1}^{S} (AR_i - \sum_{j=1}^{i - 1} B_i),
+\end{equation}
+where $AR_i$ means the communication overhead of $i$-th pipeline stage, which can be calculated by the number of active parameters within the $i$-th pipeline stage, if all chunks within a pipeline stage are frozen, this stage incurs no gradient synchronization overhead.
+
+Therefore, we can get an optimal partition scheme by minimizing the iteration time under the following constraints:
+% \begin{equation}
+% \begin{align}
+%     & \min T^* \\
+%     & \text{s.t.} \sum_{i=1}^{S} m_i = N \\
+%     & M_{\theta}(L_{i-1}, m_{i}) + (S - i + 1) M_{a}(L_{i-1}, m_{i}) \leq D_{i} \\
+%     & f(L_{i-1}, m_{i}) \leq f(L_{k-1}, m_{k}), \quad \forall i \neq k
+% \end{align}
+% \end{equation}
+\begin{equation}
+    \underset{P=\{p_1, p_2,...p_S\}}{\arg\min} \;\; T^*
+\end{equation}
+\begin{equation} \label{cons:chunk}
+    \text{s.t.} \sum_{i=1}^{S} p_i = N
+\end{equation}
+\begin{equation} \label{cons:k}
+    F_i+ B_i \leq F_K + B_K, \quad \forall i \neq k
+\end{equation}
+\begin{equation} \label{cons:mem}
+    C_i^m + (S - i + 1) C_{i}^a \leq D_i^m.
+\end{equation}
+
+% Equation~\ref{cons:chunk} ensures that each model chunk is assigned to exactly one pipeline stage. 
+% Inequation~\ref{cons:k} designates stage $K$ as the master pipeline stage.
+% Inequation~\ref{cons:mem} enforces memory constraints to prevent OOM errors during training, where $C_i^m $ and $C_i^a$ denote the memory consumption for model states of chunks and the memory consumption for activations of chunks in pipeline stage $i$, respectively.
+We employ the high-performance mathematical solver CPLEX\cite{cplex2009v12} to solve this IP problem with negligible computational overhead.
+% The workflow of \textit{MMoH} parallel strategy planner is summarized as Algorithm~\ref{alg:stage_mapping}.
+
+% \begin{algorithm}[tb]
+%     \caption{MMoH planner workflow.}
+%     \label{alg:stage_mapping}
+%     \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+%     \renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+%     \begin{algorithmic}[1]  % 启用行号
+%         \REQUIRE Model Config, Cluster Info
+%         \ENSURE GPU Topology $G$, Partition Scheme $P$
+ 
+%         \STATE $G \leftarrow \emptyset$, $P \leftarrow \emptyset$, $EstimateCost \leftarrow \infty$
+%         \STATE $(\text{Comp\_info}, \text{Mem\_info}) \leftarrow$ \textit{Profiler} (Model Config, Cluster Info)
+%         \STATE Candidate Topologies $G^* \leftarrow$ \textit{demand-driven device topology} (Mem\_info, Comp\_info, Cluster Info)
+%         \STATE model chunks list $C \leftarrow$ \textit{hybrid-granularity abstraction} (Mem\_info, Comp\_info, Model Config)
+
+%         \FOR{each $g \in G^*$}
+%             \STATE ($T^*$, $p$) $\leftarrow$ \textit{Frozen-aware model partitioning} ($g$, $C$)
+%             \IF{$T^* < EstimateCost$}
+%                 \STATE $G \leftarrow g$
+%                 \STATE $P \leftarrow p$
+%                 \STATE $EstimateCost \leftarrow T^*$
+%             \ENDIF
+%         \ENDFOR
+
+%         \RETURN $G$, $P$
+%     \end{algorithmic}
+% \end{algorithm}
+
+
+
+\subsection{Early-termination scheduler}
+\label{section:3-c}
+% During the training of MLLMs, the encoder and the LLM backbone may be frozen, while others (e.g., the projector) typically remain trainable.
+% The selection of frozen components depends on specific downstream objectives. 
+% When a model layer is frozen, gradient computation for its outputs is still required, however, gradient computation for its weights is disabled, eliminating the need to store gradients or maintain optimizer states (e.g., first- and second-order moments in Adam). 
+% As a result, the backward computation for frozen layers incurs lower computational overhead compared to unfrozen layers. 
+% We define pipeline stages that contain only frozen parameters as frozen pipeline stages.
+% While backward computation for the input of a frozen pipeline stage is still required, backward computation for the weight is disabled, resulting in lower computational overhead.
+% A non-frozen pipeline stage cannot initiate its backward computation until it receives the gradient of its output tensor from the subsequent pipeline stage.
+% Upon completing its own backward computation, it then transmits the gradient of its input tensor to the preceding pipeline stage, enabling that pipeline stage to compute the gradient of its own input tensor.
+% Our key observation is that if all preceding pipeline stages of a frozen pipeline stage are also frozen, the gradient computation for the input of this pipeline stage can be eliminated.
+% Furthermore, this frozen pipeline stage no longer needs to receive the gradient of its output tensor from the subsequent pipeline stage, allowing us to eliminate associated communication.
+% Since both input and output tensors are no longer involved in backward computation, their storage can be discarded as well to reduce memory overhead. 
+We observe that if all stages before a frozen stage are also frozen, the backward computation for its input can be skipped. This stage also no longer requires gradient signals from later stages, eliminating associated communication. Since both input and output tensors are unused in backward passes, their memory can be freed. These optimizations reduce computation, communication, and memory overhead without affecting model accuracy. However, existing pipeline schedulers overlook these opportunities, still treating MLLMs as fully trainable and using fixed scheduling patterns.
+% Model accuracy remains unaffected since these optimizations work in coordination without introducing any numerical difference.
+% However, conventional pipeline scheduling mechanisms fail to account for these dynamics, persistently treating MLLMs as fully trainable language models and maintaining identical computation/communication scheduling patterns.
+
+
+% \begin{itemize}
+%     \item Some P2P communications and backpropagation are unnecessary so we can discard them.
+%     \item Certain input and output tensors do not need to be stored, reducing memory usage and alleviating memory bottlenecks in heterogeneous GPU clusters.
+%     \item Model accuracy remains unaffected despite these optimizations since these optimizations make no differences to the parameter update of MLLMs.
+% \end{itemize}
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1.0\linewidth]{figs/freeze-optimization.pdf}
+\caption{The effectiveness of early-termination scheduler. We demonstrate a 4-stage pipeline with 4 micro-batches labeled $0\sim3$, and the first two pipeline stages are frozen pipeline stages. Variations in forward and backward execution times result from the distribution of computational overhead and the heterogeneous computational performance.}
+\label{fig4}
+\vspace{-5mm}
+\end{figure}
+
+% \begin{figure*}[t]
+% \centerline{\includegraphics[width=1.0\linewidth]{chimera-hanayo.drawio.pdf}}
+% \caption{Early-Termination on other common pipeline schedule mechanisms. The left is Chimera, the right is Hanayo. We assume that the forward execution time remains consistent across stages, while variations in backward execution time are attributed to the presence of frozen stages.}
+% \label{fig5}
+% \end{figure*}
+Fig.~\ref{fig4}(a) shows the standard 1F1B schedule in a 4-stage pipeline with 4 micro-batches.
+Fig.~\ref{fig4}(b) illustrates its behavior when the first two stages are frozen.
+Fig.~\ref{fig4}(c) introduces our \textit{early-termination scheduler}, which detects frozen stages (e.g., the first two) and skips gradient computation for their inputs.
+Although omitted for clarity, the scheduler also eliminates output tensor sends from frozen stages and prevents gradient receives from downstream stages, removing redundant peer-to-peer (p2p) communication.
+Furthermore, input and output tensors in frozen stages are freed from memory, as they are not needed for backpropagation.
+Together, these optimizations significantly improve training efficiency without affecting accuracy.
+% Fig.~\ref{fig4}(a) illustrates the widely used One-Forward-One-Backward (1F1B) scheduling mechanism in a 4-stage pipeline with 4 micro-batches.
+% If the first two pipeline stages are frozen, it will orchestrate the computation as illustrated in Fig.~\ref{fig4}(b).
+% Fig.~\ref{fig4}(c) presents our proposed \textit{early-termination scheduler}.
+% When the first two stages are frozen pipeline stages, the scheduler can recognize this frozen scenario, eliminating the gradient computation for the input of the first two pipeline stages.
+% Omitted for clarity in Fig.~\ref{fig4}(c), the first two pipeline stages are no longer need to send output tensors to subsequent pipeline stages.
+% Additionally, these two pipeline stages no longer need to receive gradients from subsequent pipeline stages.
+% So we can safely discard these useless \textit{p2p} communications.
+% The devices assigned to the frozen pipeline stages are no longer need to store the input tensors and output tensors to perform backward computation for the input tensor.
+% By leveraging these optimizations, the system achieves improved training efficiency.
+
+In such frozen configurations, we modify the cost model as follows:
+\begin{equation}
+\begin{split}
+T^* &= \sum_{i = 1}^{D}{F_i} + \sum_{i = D+1}^{K - 1}({F_i+B_i})+2 \sum_{i=K+1}^S(F_i+B_i) \\
+    &\quad + (M - (S - K))(F_K + B_K) + \text{COMM}_{time},
+\end{split}
+\end{equation}
+where $D$ denotes the number of consecutive frozen pipeline stages at the front of the pipeline, the definition of $K$ is revised to represent the index of the non-frozen pipeline stage with the longest computation time.
+This adjustment motivates a model partitioning strategy where frozen pipeline stages are assigned relatively heavier computational workloads, thereby reducing the burden on non-frozen stages and improving overall training efficiency.
+
+% Our early-termination scheduling optimization is compatible not only with the 1F1B scheduling mechanism but also with other advanced pipeline parallelism approaches, such as Chimera\cite{li2021chimera} and Hanayo\cite{liu2023hanayo}, as demonstrated in Fig.~\ref{fig5}. 
+% Inspired by Zero Bubble Pipeline Parallelism\cite{qi2023zero}, we plan to decouple the backward computation into two distinct phases—computing gradients with respect to the outputs and computing gradients with respect to the parameters. Furthermore, we aim to overlap the cool-down phase of the current iteration with the warm-up phase of the next iteration. This scheduling optimization is part of our future work and is expected to further reduce the overall iteration time.
+
+\section{Evaluation}
+% In this section, we evaluate \textit{MMoH} by conducting a series of experiments on various heterogeneous clusters. We answer the following questions in this evaluation:
+% \begin{itemize}
+%     \item How much performance improvement does \textit{MMoH} achieve compared to state-of-the-art (SOTA) methods across various heterogeneous device clusters and diverse MLLMs? \textbf{(Section \ref{section:4-b})}
+    
+%     \item What is the effectiveness of \textit{MMoH} parallel strategy planner compared to SOTA? (\textbf{Section \ref{section:4-c})}
+    
+%     \item Can \textit{MMoH} schedule the operations during training more efficiently while employing the frozen technique? \textbf{(Section \ref{section:4-d})}
+% \end{itemize}
+
+
+\subsection{Experimental setups}
+% \textbf{Testbed.} We evaluate \textit{MMoH} on a cluster of up to 8 physical machines (32 GPUs), interconnected via 100 Gbps InfiniBand. Each machine is equipped with four homogeneous GPUs, two Intel Xeon 4310@2.10GHz, and 128 GB of DDR4 RAM. All servers run 64-bit Ubuntu 18.04, along with CUDA 11.8, cuDNN 8.5.0, NCCL 2.10.3, and PyTorch 2.2. \textit{MMoH} is implemented on top of Megatron v0.9.0. In our experiments, we differentiate the servers based on their GPU types.
+
+% We construct two distinct heterogeneous GPU clusters, as outlined in Table~\ref{config:cluster}. 
+% Each cluster configuration incorporates all three GPU types listed in Table~\ref{config:gpu}. 
+% Due to the varying memory demands of MLLMs under different frozen conditions, our parallelism strategy dynamically adapts based on which modules are frozen.
+
+% \textbf{Experimental Platform.} Our experiments employ two heterogeneous clusters, as detailed in Table~\ref{config:cluster}. 
+% Cluster A comprises 4 nodes, including 1 NVIDIA RTX 3090 node, 2 NVIDIA RTX 2080 Ti nodes, and 1 NVIDIA RTX 2080 node, each equipped with 4 homogeneous GPUs, dual Intel Xeon 4310@2.10GHz processors, 128 GB of DDR4 RAM, and interconnected via 100 Gbps InfiniBand, resulting in a total memory size of 147 GB. 
+% Cluster B, in contrast, consists of 8 nodes, including 4 NVIDIA RTX 3090 nodes, 2 NVIDIA RTX 2080 Ti nodes, and 2 NVIDIA RTX 2080 nodes, with a total memory size of 536 GB. 
+% Each node in this cluster maintains the same GPU, CPU, RAM, and interconnect configuration as cluster A. 
+% Within 3090 nodes, four GPUs are interconnected via a 16-lane PCIe 4.0, while within 2080 and 2080 Ti nodes, four GPUs are interconnected via a 16-lane PCIe 3.0
+% Both clusters operate on 64-bit Ubuntu 18.04, along with CUDA 11.8, cuDNN 8.5.0, NCCL 2.14.3, and PyTorch 2.2.
+
+% yqhao begin
+\textbf{Experimental platform.} Our experiments are conducted on two heterogeneous GPU clusters, as summarized in Table~\ref{config:cluster}. 
+Cluster-S has four NVIDIA nodes: one with RTX 3090s, two with RTX 2080 Tis, and one with RTX 2080s. Each node contains four GPUs, totaling 216 GB of GPU memory. All nodes use dual Intel Xeon 4310 CPUs (2.10 GHz), 128 GB of DDR4 RAM, and are connected via 100Gbps InfiniBand.
+Cluster-L consists of eight NVIDIA nodes: four with RTX 3090s, two with RTX 2080 Tis, and two with RTX 2080s. Its CPU, memory, and network setup matches Cluster-S. RTX 3090 nodes use PCIe 4.0 for GPU interconnectivity, while RTX 2080/Ti nodes use PCIe 3.0. Both clusters run Ubuntu 18.04 with CUDA 11.8, cuDNN 8.7.0, NCCL 2.19.3, and PyTorch 2.2.
+% Cluster-S consists of four NVIDIA-based nodes: one with RTX 3090 GPUs, two with RTX 2080 Ti GPUs, and one with RTX 2080 GPUs. 
+% Each node is equipped with four identical GPUs, resulting in a total GPU memory capacity of 216 GB.
+% Additionally, all nodes feature dual Intel Xeon 4310 processors (2.10 GHz) and 128 GB of DDR4 RAM.
+% These heterogeneous nodes are interconnected through an InfiniBand link, operating at 100Gbps.
+% Cluster-L, on the contrary, comprises eight NVIDIA-based nodes: four with RTX 3090 GPUs, two with RTX 2080 Ti GPUs, and two with RTX 2080 GPUs.
+% The CPU, RAM, and interconnect configurations are identical to those of Cluster-S. 
+% Within 3090 nodes, GPUs are interconnected via a 16-lane PCIe 4.0, whereas in 2080 and 2080 Ti nodes, GPUs are interconnected via a 16-lane PCIe 3.0. 
+% Both clusters operate on 64-bit Ubuntu 18.04 LTS, and are configured with CUDA 11.8, cuDNN 8.7.0, NCCL 2.19.3, and PyTorch 2.2.
+% yqhao end
+
+% \begin{table}[htbp]
+% \begin{center}
+% \centering
+%     \caption{Configuration of heterogeneous clusters} \label{six}
+%     \vspace{-1mm}
+%     \setlength{\tabcolsep}{6pt}
+%     \setlength{\arrayrulewidth}{1pt}
+%     \begin{tabular}{c|c|c|c}
+%         \hline\xrowht{15pt}
+%         \makecell{Config\\Name} & Servers & \makecell{Total memory \\ size(GB)} & \makecell{Parallelism scheme\\(PP$\times$TP)} \\
+%         \hline\xrowht{35pt}
+%         config A  & \makecell[l]{1*3090 \\ 2*2080 Ti \\ 1*2080} & 147GB & \makecell[l]{4 * 1(freeze-both) \\
+%         4 * 1(freeze-llm) \\ 4 * 2(freeze-enc) \\ 4 * 2(no-freeze)}  \\
+%         \hline\xrowht{35pt}
+%         config B &  \makecell[l]{4*3090 \\ 2*2080 Ti \\ 2*2080} & 536GB & \makecell[l]{8 * 1(freeze-both) \\
+%         8 * 2(freeze-llm) \\ 8 * 2(freeze-enc.) \\ 8 * 4(no-freeze)} \\
+%         \hline
+%     \end{tabular}
+% \label{config:cluster}
+% \end{center}
+% \end{table}
+
+\begin{table}[ht]
+\begin{center}
+\centering
+    \caption{Configuration of heterogeneous clusters}
+    % \vspace{-1mm}
+    % \setlength{\tabcolsep}{6pt}
+    \renewcommand{\arraystretch}{0.5}  % 默认是 1.0，<1 更紧凑
+    \setlength{\arrayrulewidth}{1pt}
+    \begin{tabular}{cccc}
+    \toprule
+    \begin{tabular}[c]{@{}c@{}}Type\\ (\# of GPUs)\end{tabular} & Index & GPU (\# per node) & \begin{tabular}[c]{@{}c@{}}Total memory\\ size (GB)\end{tabular} \\ 
+    \midrule
+    \multirow{3}{*}{Cluster-S (16)} & 1 & 3090 (4) & \multirow{3}{*}{216} \\
+     & 2,3 & 2080 Ti (4) &  \\
+     & 4 & 2080 (4) &  \\ 
+    \midrule
+    \multirow{3}{*}{Cluster-L (32)} & 1,2,3,4 & 3090 (4) & \multirow{3}{*}{536} \\
+     & 5,6 & 2080 Ti (4) &  \\
+     & 7,8 & 2080 (4) &  \\ 
+     \bottomrule
+    \end{tabular}
+\label{config:cluster}
+\end{center}
+\end{table}
+
+% \documentclass{article}
+% \usepackage{stackengine}
+% \newcommand\xrowht[2][0]{\addstackgap[.5\dimexpr#2\relax]{\vphantom{#1}}}
+% \begin{document}
+% 	\begin{table}[h]
+% 		\centering
+% 		\begin{tabular}{|c|l|}
+% 			\hline
+% 			col1 & col2 \\
+% 			\hline\xrowht[()]{10pt}
+% 			1 & 2g \\
+% 			\hline\xrowht{20pt}
+% 			3 & 4 \\
+% 			\hline\xrowht{30pt}
+% 			5 & 6 \\
+% 			\hline\xrowht{40pt}
+% 			7 & 8 \\
+% 			\hline
+% 		\end{tabular}
+% 	\end{table}
+% \end{document}
+
+% \begin{table}[t]
+% \begin{center}
+% \centering
+%     \caption{Configuration of MLLMs}
+%     \vspace{-4mm}
+%     \setlength{\tabcolsep}{7pt}
+%     \setlength{\arrayrulewidth}{1pt}
+%     \begin{tabular}{c|c|l|l|l}
+%         \hline\xrowht{15pt}
+%         Model Name & Clusters & encoder & projector & llm backbone \\
+%         \hline\xrowht{15pt}
+%         MLLM-3B  & config A & ViT(0.2B) & Linear & Mistral(2.8B) \\
+%         \hline\xrowht{15pt}
+%         MLLM-12B &  config B & InternViT(6B) & Linear & Yi(6B) \\
+%         \hline
+%     \end{tabular}
+% \label{config:model}
+% \end{center}
+% \end{table}
+
+% 这个表感觉可以不要了
+% \begin{table}[t]
+% \begin{center}
+% \centering
+%     \caption{Configuration of MLLMs}
+%     \setlength{\arrayrulewidth}{1pt}
+%     \begin{tabular}{ccccc}
+%     \toprule
+%     Model & \begin{tabular}[c]{@{}c@{}}Cluster \\ type\end{tabular} & \begin{tabular}[c]{@{}c@{}}Encoder \\ module\end{tabular} & Projector & \begin{tabular}[c]{@{}c@{}}LLM backbone \\ module\end{tabular} \\ 
+%     \midrule
+%     MLLM-3B & A & ViT & MLP-S & Mistral \\ 
+%     \midrule
+%     MLLM-12B & B & InternViT & MLP-L & Yi \\
+%     \bottomrule
+%     \end{tabular}
+% \label{config:model}
+% \end{center}
+% \end{table}
+
+
+
+
+% \begin{table}[t]
+% \begin{center}
+% \centering
+%     \caption{Module specification}
+%     \vspace{-1mm}
+%     \setlength{\tabcolsep}{5pt}
+%     \setlength{\arrayrulewidth}{1pt}
+%     \begin{tabular}{cccccc}
+%         \hline\xrowht{14pt}
+%         \makecell{Module \\ Name} & \makecell{layer\\num} & \makecell{sequence\\length} & \makecell{hidden\\size} & \makecell{ffn hidden\\size} & \makecell{attention\\head num} \\
+%         \hline\xrowht{12pt}
+%         ViT & 24 & 576 & 1024 & 4096 & 16\\
+%         \hline\xrowht{12pt}
+%         Mistral & 12 & 1024 & 4096 & 14334 & 32\\
+%          \hline\xrowht{12pt}
+%         InternViT & 45 & 576 & 4096 & 14334 & 32\\
+%          \hline\xrowht{12pt}
+%         Yi & 20 & 1024 & 4096 & 10240 & 32\\
+%         \hline
+%     \end{tabular}
+% \label{config:module}
+% \end{center}
+% \end{table}
+
+% 三个表直接合成一个表
+\vspace{-3mm}
+\begin{table}[ht]
+\begin{center}
+\centering
+    \caption{Configuration of Modules}
+    \renewcommand{\arraystretch}{0.9}
+    \setlength{\tabcolsep}{5pt}
+    \setlength{\arrayrulewidth}{1pt}
+    \begin{tabular}{c|cccc}
+    \toprule
+    \multicolumn{1}{c}{MLLM} & Module & Type & \#Params & \#Layers \\  
+    \midrule
+    \multirow{3}{*}{MLLM-3B} 
+        & ViT      & Encoder       & 0.2B  & 24 \\
+        & MLP-S    & Projector     & 73M   & 2 \\
+        & Mistral  & LLM Backbone  & 2.8B  & 12 \\
+    \midrule
+    \multirow{3}{*}{MLLM-12B} 
+        & InternViT & Encoder       & 6B    & 45 \\
+        & MLP-L     & Projector     & 149M  & 2 \\
+        & Yi        & LLM Backbone  & 6B    & 20 \\
+    \bottomrule
+    \end{tabular}
+\label{config:module}
+\end{center}
+\vspace{-3mm}
+\end{table}
+
+% \begin{table}[t]
+% \begin{center}
+% \centering
+%     \caption{Configuration of Modules}
+%     \renewcommand{\arraystretch}{1.5}
+%     \setlength{\arrayrulewidth}{1pt}
+%     \begin{tabular}{cccccc}
+%     \toprule
+%     Module & \#Param. & \#Layers & \begin{tabular}[c]{@{}c@{}}Hidden \\ (Input)\end{tabular} & Intermediate & \begin{tabular}[c]{@{}c@{}}\#Heads \\ (Output)\end{tabular} \\ \midrule
+%     ViT & 0.2B & 24 & 1024 & 4096 & 16 \\
+
+%     MLP-S & 73M & 2 & 4096 & 14344 & 1024 \\
+
+%     Mistral & 2.8B & 12 & 4096 & 14344 & 32 \\
+
+%     InternViT & 6B & 45 & 4096 & 14344 & 32 \\
+
+%     MLP-L & 149M & 2 & 3200 & 20480 & 4096 \\
+
+%     Yi & 6B & 20 & 4096 & 10240 & 32 \\
+%     \bottomrule
+%     \end{tabular}
+% \label{config:module}
+% \end{center}
+% \end{table}
+
+% \begin{table}[t]
+% \begin{center}
+% \centering
+%     \caption{Configuration of Projectors}
+%     % \vspace{-1mm}
+%     % \setlength{\tabcolsep}{5pt}
+%     \setlength{\arrayrulewidth}{1pt}
+%     \begin{tabular}{cccccc}
+%     \toprule
+%     Projector & \#Param. & \#Layers & \begin{tabular}[c]{@{}c@{}}Input\\ size\end{tabular} & Intermediate & \begin{tabular}[c]{@{}c@{}}Output\\ size\end{tabular} \\
+%     \midrule
+%     MLP-S & 73M & 2 & 4096 & 14344 & 1024 \\
+%     \midrule
+%     MLP-L & 149M & 2 & 3200 & 20480 & 4096 \\
+%     \bottomrule
+%     \end{tabular}
+% \label{config:proj}
+% \end{center}
+% \end{table}
+
+
+% \textbf{Models and datasets.}
+% We evaluate two MLLMs of different scales, with detailed specifications provided in Tables~\ref{config:model}, \ref{config:module} and \ref{config:proj}. 
+% For the vision encoders, we employ ViT\cite{dosovitskiy2020image} and InternViT\cite{chen2024internvl}, both of which are state-of-the-art vision stuctures. 
+% For the language model backbones, we select two representative and widely adopted open-source models: Mistral\cite{jiang2023mistral7b} and Yi\cite{ai2025yiopenfoundationmodels}. 
+
+% We construct MLLM-3B by pairing ViT with Mistral, and MLLM-12B by combining InternViT with Yi. 
+% For pretraining, we utilize the LLaVA Visual Instruct dataset obtained from HuggingFace, which comprises a curated subset of the LAION/CC/SBU dataset with improved concept coverage balance through additional filtering.
+
+\textbf{Models and datasets.}
+% TABLE~\ref{config:model} illustrates the two MLLMs used in our experiments: MLLM-3B and MLLM-12B.
+We constructed two MLLMs by integrating distinct modules for evaluation, referred to as MLLM-3B and MLLM-12B.
+% ~\cite{jiang2023mistral7b}
+% MLLM-3B employs ViT~\cite{dosovitskiy2020image} as its encoder, Mistral as its LLM backbone, and MLP-S as its projector.
+% In comparison, MLLM-12B utilizes InternViT~\cite{chen2024internvl} as the encoder, Yi~\cite{young2024yi} as the LLM backbone, and MLP-L as the projector.
+% Comprehensive configurations of the encoder and LLM backbone modules are presented in Table~\ref{config:module}, while the projector configurations are detailed in Table~\ref{config:proj}. 
+Detailed configurations of all modules are presented in Table~\ref{config:module}.
+To align model memory demands with the clusters, MLLM-3B is trained on Cluster-S, while MLLM-12B is trained on Cluster-L. 
+The training dataset is the LLaVA Visual Instruct dataset.
+% \cite{liu2024improved}, obtained from HuggingFace\cite{liuhaotianllavadata}.
+% It comprises a curated subset of the LAION/CC/SBU dataset, with improved concept coverage achieved through additional filtering.
+
+% ------ old begin ------
+% \textbf{Baselines and metrics.}
+% We evaluate \textit{MMoH} against three state-of-the-art approaches:
+% (1) Megatron\cite{shoeybi2019megatron, narayanan2021efficient} has been adapted for stuctures of MLLMs as a mainstream homogeneous training framework for large models.
+% However, it inherits the language model training paradigm by either attaching non-language modules to the first pipeline stage or assigning them to independent stages.
+% This coarse-grained, module-level partitioning creates significant memory pressure on the first pipeline stage, frequently leading to out-of-memory (OOM) errors and inefficient utilization of GPU resources.
+% (2) Whale\cite{jia2022whale} is an efficient giant model training framework over heterogeneous GPUs.
+% It organizes heterogeneous devices in descending order of memory capacity to optimize resource utilization\cite{kim2023bpipe} and balances the workloads proportional to device computing capacity while respecting memory constraints. 
+% (3) Espresso\cite{zhouespresso} is a novel heterogeneous training framework that introduces a resource-aware stage placement strategy. 
+% It proposes a compute-memory ratio (CMR) metric to characterize device capabilities quantitatively, and organizes heterogeneous GPUs in ascending CMR order to simultaneously optimize both computational throughput and communication efficiency during distributed training.
+% Since \textit{MMoH} preserves model convergence accuracy, our evaluation primarily focuses on training throughput (samples/s). For each experimental setting, we perform 10 warm-up iterations followed by 50 measured training iterations, and report the stable average throughput observed during the measurement phase.
+% ------ old end ------
+
+% ------ yqhao begin ------
+\textbf{Baselines and metrics.}
+We evaluate \textit{MMoH} against three state-of-the-art approaches:
+(1) Megatron~\cite{shoeybi2019megatron} is a mainstream homogeneous training framework that has been adapted to support MLLM structures. 
+% However, it either attaches non-language modules to the first stage or assigns them to dedicated stages.
+% However, its coarse-grained, module-level partitioning creates significant memory pressure on the first pipeline stage, frequently leading to out-of-memory (OOM) errors and inefficient utilization of GPU resources.
+(2) Whale~\cite{jia2022whale} is an efficient training framework designed for large-scale models on heterogeneous GPU clusters.
+It organizes heterogeneous devices in descending order of memory capacity to optimize resource utilization.
+% ~\cite{kim2023bpipe}.
+% Workloads are balanced proportionally to each device’s computational capacity while adhering to memory constraints.
+(3) Espresso\cite{zhouespresso} is a novel heterogeneous training framework that introduces a resource-aware stage placement strategy. It proposes a compute-memory ratio (CMR) metric.
+% to quantitatively characterize the computational and memory capabilities of each device. 
+Based on this metric, GPUs are organized in ascending CMR order to jointly optimize computational throughput and communication efficiency during distributed training.
+Since \textit{MMoH} preserves model accuracy, we focus our evaluation on training throughput (samples/second). For each experiment, we execute 10 warm-up iterations followed by 50 timed training iterations, and report the average throughput achieved during the measured phase.
+% Since \textit{MMoH} maintains model convergence accuracy, our evaluation primarily focuses on training throughput (samples/s). For each experimental setting, we perform 10 warm-up iterations followed by 50 measured training iterations, and report the stable average throughput observed during the measurement phase.
+% ------ yqhao end ------
+
+\subsection{End-to-End Training Performance}
+\label{section:4-b}
+% % We evaluate the training throughput of various model stuctures across two heterogeneous GPU cluster configurations, comparing \textit{MMoH} against the three baseline methods discussed previously. 
+% % \textbf{Can \textit{MMoH} improve training performance against SOTA methods?}
+% We compare the throughput of \textit{MMoH} against three baselines while training MLLM-3B and MLLM-12B under four freezing scenarios as listed in Section \ref{section:2-a}.
+% % 1) \textit{no-freeze}: neither the encoder nor the LLM backbone modules, along with the projector, are frozen;
+% % 2) \textit{freeze-enc}: the encoder module is frozen;
+% % 3) \textit{freeze-llm}: the LLM backbone module is frozen;
+% % 4) \textit{freeze-both}: Both the encoder and LLM backbone module are frozen.
+% % When both the encoder and LLM are frozen, tensor parallelism (TP) and data parallelism (DP) are configured as 1 and 4, respectively. For all other freezing patterns, we use TP = 2 and DP = 2. 
+% The parallel training strategy varies across these scenarios, as frozen training alters the memory requirements of MLLMs significantly.
+% For both two MLLMs, we set the PP size equal to the number of nodes in the heterogeneous cluster, following the Virtual Worker (VW) pattern.
+% % For MLLM-3B, in the \textit{freeze-both} scenario, we set the (TP, DP) size to (1, 4) by default.
+% % For the remaining three scenarios, we set the (TP, DP) size to (2, 2) by default.
+% % For MLLM-12B, we set the PP size to 8. When both the encoder and LLM are frozen, TP and DP are set to 1 and 4, respectively. When no modules are frozen, we use TP = 4 and DP = 1. For the remaining frozen configurations, TP and DP are both set to 2. 
+% % For MLLM-12B, in the \textit{freeze-both} scenario, we set the (TP, DP) size to (1, 4) by default.
+% % In the \textit{no-freeze} scenario, we set the set the (TP, DP) size to (4, 1) by default.
+% % For other two scenarios, we set the (TP, DP) size to (2, 2) by default.
+% During the experiments, we initially set the DP size to 4 and the TP size to 1.
+% If an out-of-memory (OOM) error occurs, we incrementally increase the TP size and decrease DP size. 
+% If the OOM error persists even when TP is set to 4, we consider it an unrecoverable OOM error under the constraint that TP communication must remain within a single node. Fig.~\ref{exp:e2e} illustrates the results of the end-to-end training experiments.
+
+% Fig.~\ref{fig6} demonstrates that \textit{MMoH} consistently achieves substantial performance improvements over all baselines, with significant speedups maintained across different module-freezing scenarios.
+
+% \begin{figure}[t]
+% \centerline{\includegraphics{figs/evaluation1.pdf}}
+% \caption{End-to-end performance comparison between \textit{MMoH} and three baselines. Longer bars indicate better performance. OOM denotes an out-of-memory error.}
+% \label{exp:e2e}
+% \end{figure}
+\begin{figure}[!t]
+\vspace*{2mm}
+    \centering
+
+    \begin{subfigure}[b]{\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/e2e_3B.pdf}
+        \caption{Training MLLM-3B on Cluster-S}
+        \label{fig:throughput-3b}
+    \end{subfigure}
+
+    \vspace{5mm} % 控制上下间距
+
+    \begin{subfigure}[b]{\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figs/e2e_12B.pdf}
+        \caption{Training MLLM-12B on Cluster-L}
+        \label{fig:throughput-12b}
+    \end{subfigure}
+
+    \caption{End-to-end throughput comparison across 4 frozen scenarios for training two different MLLMs on two heterogeneous clusters. Longer bars indicate higher throughput. OOM denotes an out-of-memory error.}
+    \label{fig:throughput-comparison}
+    \vspace*{-5mm}
+\end{figure}
+
+% ------ yqhao begin ------
+% End 2 End Performance
+We compare the training throughput of \textit{MMoH} against three baselines using MLLM-3B and MLLM-12B under four freezing setups: (1) \textit{no-freeze}, (2) \textit{freeze-enc}, (3) \textit{freeze-llm}, and (4) \textit{freeze-both} (details in Section~\ref{section:2-a}). Each scenario changes memory usage and influences parallelization.
+We start with DP=4 and TP=1. If OOM occurs, we increment TP and decrease DP. If OOM persists when TP=4 (the maximum per-node parallelism), the configuration is deemed invalid. Results are shown in Fig.~\ref{fig:throughput-comparison}.
+% We evaluate the training throughput of \textit{MMoH} against three baseline methods using MLLM-3B and MLLM-12B under four freezing scenarios: (1) \textit{no-freeze}, (2) \textit{freeze-enc}, (3) \textit{freeze-llm}, and (4) \textit{freeze-both} (detail description in Section~\ref{section:2-a}).
+% Each scenario alters memory demands and thus affects parallel strategy. 
+% We initially set DP to 4 and TP to 1. If an OOM error occurs, TP is increased while DP is reduced accordingly.
+% If the OOM issue persists when TP reaches 4, which corresponds to the maximum parallelism supported within a single node, the configuration is considered infeasible.
+% Fig.~\ref{fig:throughput-comparison} illustrates the results of the end-to-end training experiments.
+
+% ------ yqhao end ------
+
+
+% ------ old begin ------
+% \textbf{MLLM-3B.}
+% When training MLLM-3B on Cluster A, Megatron consistently yields the lowest throughput across all frozen training scenarios, as it is tailored for homogeneous GPU clusters and neglects the need for load balancing, resulting in poor GPU utilization. 
+% Notably, in our heterogeneous cluster evaluations, Megatron incorporates Whale's GPU topology strategy to minimize potential out-of-memory OOM errors during MLLM training.
+% Whale achieves higher throughput than Megatron by incorporating a load-balancing strategy designed for heterogeneous GPUs.
+% Espresso further improves upon this by considering not only load balancing but also communication overhead, resulting in superior throughput compared to Whale.
+% \textit{MMoH} advances this further by designing GPU topologies aligned to the computation and memory demands of MLLMs to maximize GPUs utialization and by selecting appropriate partitioning granularities for different modules. These strategies work in concert to deliver higher throughput than all baseline methods.
+% To elaborate, under \textit{no-freeze} scenario, \textit{MMoH} exhibits the highest throughput, reaching 7.32 samples/s, surpassing Whale's 6.01 samples per second and Espresso's 6.42 samples/s. 
+% For Megatron, we raise the tensor parallelism (TP) to 4 to facilitate training. However, hindered by the frequent TP communication, Megatron's throughput is limited to 4.41 samples/s, which is only 60\% of \textit{MMoH}'s performance. 
+% When only the encoder is frozen, \textit{MMoH} demonstrates the most significant improvement over Espresso, achieving a throughput that is 1.15$\times$ that of Espresso. When only the LLM backbone is frozen, \textit{MMoH} exhibits the greatest enhancement over Whale, with a throughput that is 1.26$\times$ that of Whale. 
+% Under \textit{freeze-both} scenario, \textit{MMoH} provides a speedup ranging from 1.09-1.72$\times$ compared to the three baselines.
+% ------ old end ------
+
+
+% ------ yqhao begin ------
+\textbf{MLLM-3B.}
+% When training MLLM-3B on Cluster-S, Megatron has the lowest throughput in all frozen training cases.
+% This is mainly because it was designed for homogeneous GPU clusters, so it doesn’t balance the workload well across different GPUs, leading to poor GPU usage.
+% Although Megatron uses Whale’s device topology to avoid out-of-memory (OOM) issues in heterogeneous clusters, it still suffers from workload imbalance.
+% Whale improves performance by adding a load-balancing strategy for different types of GPUs.
+% Espresso goes further by considering both load balancing and communication overhead.
+% MMoH builds on these improvements. It uses a demand-driven device topology that matches the compute and memory needs of MLLMs, and it introduces a hybrid-granularity partitioning method that adjusts to the needs of each module.
+When training MLLM-3B on Cluster-S, Megatron shows the lowest throughput in all frozen scenarios. This is primarily because it was designed for homogeneous clusters and fails to balance workloads effectively across diverse GPUs, resulting in poor utilization. Although Megatron adopts Whale's device topology to prevent OOM errors in heterogeneous settings, it still suffers from significant load imbalance.
+Whale enhances performance by incorporating a load-balancing strategy across GPU types. Espresso further improves upon this by jointly optimizing load balance and communication overhead.
+MMoH builds on these advances with a demand-driven device topology that adapts to the computational and memory requirements of MLLMs, and a hybrid-granularity partitioning method tailored to each module’s characteristics.
+% Building on these advancements, \textit{MMoH} employs a demand-driven device topology tailored to the computational and memory characteristics of MLLMs, and introduces a hybrid-granularity abstraction to adapt partitioning strategies to the specific requirements of each module.
+% These coordinated strategies enable \textit{MMoH} to achieve superior throughput compared to all baselines.
+Under the \textit{no-freeze} scenario, \textit{MMoH} delivers the highest throughput. While raising TP to 4 enables Megatron to train, frequent TP communication severely limits its performance.
+With the encoder frozen, \textit{MMoH} achieves a 1.15$\times$ gain over Espresso; with the LLM backbone frozen, it improves upon Whale by 1.26$\times$.
+In the \textit{freeze-both} setting, \textit{MMoH} maintains an advantage of 1.08$\times$–1.72$\times$ over all baselines.
+
+% ------ yqhao end ------
+
+% \begin{table*}[t]
+% \centering
+% \footnotesize
+% \caption{Model partitioning comparison of two MLLMs across different frozen scenarios. A, B and C denote the NVIDIA RTX 3090, 2080 Ti, 2080 GPUs respectively.}
+% \setlength{\tabcolsep}{3pt} % 控制列间距
+% \renewcommand{\arraystretch}{1.5} % 控制行高
+% \begin{tabular}{l|ll|ll|ll}
+% \hline
+% \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{Frozen} \\ \textbf{Pattern}\end{tabular}} & \multicolumn{2}{c|}{\textbf{Whale(layer-granularity)}} & \multicolumn{2}{c|}{\textbf{Espresso(layer-granularity)}} & \multicolumn{2}{c}{\textbf{\textit{MMoH}(hybrid-granularity)}} \\
+%  & \multicolumn{1}{c}{\textbf{MLLM-3B}} & \multicolumn{1}{c|}{\textbf{MLLM-12B}}
+%  & \multicolumn{1}{c}{\textbf{MLLM-3B}} & \multicolumn{1}{c|}{\textbf{MLLM-12B}}
+%  & \multicolumn{1}{c}{\textbf{MLLM-3B}} & \multicolumn{1}{c}{\textbf{MLLM-12B}} \\
+% \hline
+% \multirow{2}{*}{\textit{no freeze}} 
+%   & [\textit{A},\textit{B},\textit{B},\textit{C}] & [\textit{A},\textit{A},\textit{A},\textit{A},\textit{B},\textit{B},\textit{C},\textit{C}] 
+%   & [\textit{B},\textit{B},\textit{C},\textit{A}] & [\textit{B},\textit{B},\textit{C},\textit{C},\textit{A},\textit{A},\textit{A},\textit{A}] 
+%   & [\textit{B},\textit{A},\textit{B},\textit{C}] & [\textit{B},\textit{B},\textit{C},\textit{C},\textit{A},\textit{A},\textit{A},\textit{A}] \\
+%   & [30,3,3,2] & [15,15,17,9,3,3,3,2] 
+%   & [26,3,2,7] & [7,7,6,6,15,11,8,7] 
+%   & [11,14,6,4] & [7,7,6,6,18,16,13,15] \\
+% \hline
+% \multirow{2}{*}{\textit{freeze-enc.}} 
+%   & [\textit{A},\textit{B},\textit{B},\textit{C}] & [\textit{A},\textit{A},\textit{A},\textit{A},\textit{B},\textit{B}, \textit{C},\textit{C}] 
+%   & [\textit{B},\textit{B},\textit{C},\textit{A}] & [\textit{B},\textit{B},\textit{C},\textit{C},\textit{A},\textit{A},\textit{A},\textit{A}] 
+%   & [\textit{C},\textit{A},\textit{B},\textit{B}] & [\textit{C},\textit{C},\textit{B},\textit{B},\textit{A},\textit{A},\textit{A},\textit{A}] \\
+%   & [31,3,3,1] & [38,11,5,5,2,3,2,1] 
+%   & [28,3,2,5] & [8,8,6,6,22,13,13,12] 
+%   & [12,13,6,4] & [12,11,11,11,11,11,11,10] \\
+% \hline
+% \multirow{2}{*}{\textit{freeze-llm}} 
+%   & [\textit{A},\textit{B},\textit{B},\textit{C}] & [\textit{A},\textit{A},\textit{A},\textit{A},\textit{B},\textit{B}, \textit{C},\textit{C}] 
+%   & [\textit{B},\textit{B},\textit{C},\textit{A}] & [\textit{B},\textit{B},\textit{C},\textit{C},\textit{A},\textit{A}, \textit{A},\textit{A}] 
+%   & [\textit{B},\textit{B},\textit{A},\textit{C}] & [\textit{C},\textit{C},\textit{B},\textit{B},\textit{A},\textit{A},\textit{A},\textit{A}] \\
+%   & [27,4,4,3] & [13,13,13,13,4,4,4,3] 
+%   & [14,14,3,7] & [3,3,3,3,13,13,17,12] 
+%   & [7,8,16,4] & [3,3,5,5,13,14,23,22] \\
+% \hline
+% \multirow{2}{*}{\textit{freeze-both}} 
+%   & [\textit{A},\textit{B},\textit{B},\textit{C}] & [\textit{A},\textit{A},\textit{A},\textit{A},\textit{B},\textit{B}, \textit{C},\textit{C}] 
+%   & [\textit{B},\textit{B},\textit{C},\textit{A}] & [\textit{B},\textit{B},\textit{C},\textit{C},\textit{A},\textit{A}, \textit{A},\textit{A}] 
+%   & [\textit{B},\textit{A},\textit{B},\textit{C}] & [\textit{A},\textit{B},\textit{B},\textit{C},\textit{C},\textit{A},\textit{A},\textit{A}] \\
+%   & [30,3,3,2] & [38,9,5,5,3,3,2,2] 
+%   & [28,2,2,6] & [18,5,4,4,16,7,7,6] 
+%   & [14,14,4,3] & [36,4,5,3,4,14,12,10] \\
+% \hline
+% \end{tabular}
+% \label{tab:partition}
+% \end{table*}
+
+% ------ old begin ------
+% \textbf{MLLM-12B.}
+% We also evaluate a larger MLLM on a more heterogeneous GPU cluster, as shown in TABLE \ref{config:cluster} and TABLE \ref{config:module}. 
+% Under \textit{no-freeze} and \textit{freeze-llm}, Megatron encounters out-of-memory (OOM) errors and fails to train the model due to severe load imbalance resulting from its coarse-grained, module-level partitioning strategy. 
+% Even after increasing the TP size and reducing the DP size, the GPUs assigned to the first pipeline stage are still unable to accommodate the entire encoder, despite having already allocated the highest-memory-capacity GPU to the first stage based on Whale’s strategy.
+% In contrast, Whale alleviates this issue by distributing the large encoder across multiple stages instead of concentrating it in the first stage, thereby avoiding OOM errors and enabling successful training across all frozen scenarios. 
+% Furthermore, Espresso achieves higher throughput than Whale by incorporating more comprehensive considerations.
+% In contrast, \textit{MMoH} consistently achieves the highest throughput compared to all three baselines across all scenarios. Notably, when only the encoder or both the encoder and LLM are frozen, \textit{MMoH} significantly outperforms all three baselines, benefiting from its early-termination scheduler.
+% % 从数据上进行分析
+% Specifically, Espresso and \textit{MMoH} significantly outperform Whale under \textit{no-freeze} scenario.
+% Whale achieves an average throughput of 2.05 samples/s, while Espresso reaches 2.49 samples/s.
+% \textit{MMoH} slightly surpasses Espresso with 2.57 samples/s, achieving a 3.5\% reduction in iteration time compared to Espresso and over 25\% compared to Whale. 
+% When only the LLM backbone is frozen, \textit{MMoH} ranks first with a throughput of 2.97 samples/s, achieving a 7.2\% and 28\% improvement over Whale and Espresso respectively.
+% Under the \textit{freeze-enc.} and \textit{freeze-all} scenarios, \textit{MMoH} achieves 3.87 and 5.22 samples/s in these two settings, respectively, attaining up to 77\%, 28\%, and 19\% higher throughput than Megatron, Whale, and Espresso.
+% ------ old end ------
+
+% ------ yqhao begin ------
+\textbf{MLLM-12B.}
+% We evaluate a larger MLLM on a larger heterogeneous GPU cluster (TABLE~\ref{config:cluster}, TABLE~\ref{config:module}).
+% We evaluate MLLM-12B on Cluster-L. 
+% Under \textit{no-freeze} and \textit{freeze-llm}, Megatron fails to train due to OOM errors.
+% These result from the load imbalance introduced by its coarse-grained partitioning.
+% Increasing TP and reducing DP fails to resolve the issue, as the first-stage devices remain overloaded, even when assigned the highest memory device according to Whale’s strategy.
+% Whale avoids OOM by distributing the encoder across multiple stages rather than concentrating it in the first, thus enabling successful training across all scenarios. 
+% Espresso further improves throughput by jointly addressing load balancing and communication overhead. 
+% \textit{MMoH} consistently achieves the highest throughput across all scenarios, particularly benefiting from its early-termination scheduler when the encoder or both the encoder and LLM are frozen.
+We evaluate MLLM-12B on Cluster-L. Under both the \textit{no-freeze} and \textit{freeze-llm} settings, Megatron fails to train due to OOM errors caused by load imbalance from its coarse-grained partitioning.
+Even after adjusting TP and DP, the first-stage devices remain overloaded—even when assigned the highest-memory devices using Whale’s strategy.
+Whale avoids OOM by distributing the encoder across multiple stages instead of concentrating it in the first, enabling training in all scenarios. Espresso further improves throughput by co-optimizing load balance and communication.
+\textit{MMoH} achieves the highest throughput in all cases, with particularly strong gains when the encoder or both encoder and LLM are frozen, thanks to its early-termination scheduler.
+Under the \textit{no-freeze} scenario, both Espresso and \textit{MMoH} significantly outperform Whale.
+\textit{MMoH} achieves a 1.04$\times$ reduction in iteration time compared to Espresso, and over 1.26$\times$ improvement compared to Whale.
+When the LLM backbone is frozen, \textit{MMoH} achieves a 1.26$\times$ and 1.11$\times$ improvement over Whale and Espresso, respectively.
+Under the \textit{freeze-enc.} and \textit{freeze-both} scenarios, \textit{MMoH} demonstrates up to 1.77$\times$, 1.28$\times$, and 1.19$\times$ higher throughput than Megatron, Whale, and Espresso, respectively.
+
+% ------ yqhao end ------
+
+% ------ old begin ------
+% \subsection{Stage Mapping Analysis}
+% \label{section:4-c}
+% % 分析 topo 和 划分，没想好怎么展示
+% We compare the stage mapping strategies of two MLLMs under three strategies: Whale, Espresso, and \textit{MMoH} as shown in Table~\ref{tab:partition}, excluding Megatron’s naive stage mapping strategy from the comparison.
+% Both Whale and Espresso adopt single transformer-layer granularity for model partitioninging. To support MLLMs, we extend their stage mapping strategies accordingly. 
+% In contrast, \textit{MMoH} employs a hybrid-granularity approach, enabling more flexible and efficient partitioning for MLLMs. 
+% In our evaluations, every three encoder transformer layers are grouped into a single Encoder-Layer Chunk, while each large LLM transformer layer is divided into two separate chunks for MLLM-3B. 
+% Additionally, the input embedding layer and the output layer are decoupled from the first and last LLM transformer layers, respectively, and treated as individual chunks. 
+% For MLLM-12B, each encoder transformer layer is preserved as an individual Encoder-Layer Chunk due to its relatively large size, while the remaining partitioning strategy mirrors that of MLLM-3B. 
+% The projector is treated as an individual Projector Chunk in both two MLLMs. 
+% As a result, MLLM-3B, originally composed of 38 layers, is reorganized into 35 chunks, whereas MLLM-12B, with 67 layers, is reorganized into 88 chunks.
+% This explains why the total number of partitions in our partition list, as shown in TABLE~\ref{tab:partition}, differs from those of Whale and Espresso.
+
+% % 解释表格内容
+% As listed in TABLE~\ref{tab:partition}, Whale tends to assign more model layers to the front stages, as the GPUs allocated to these stages typically possess larger memory capacity and higher computational performance. 
+% The original definition of the compute-memory ratio (CMR) in Espresso is ineffective cause \textit{frozen training} changes the relationship between the computation and gradient synchronization overhead, so we simplify it to the ratio of the computing capability (TFLOPS) and memory capacity (GB) of a GPU to accommodate varying frozen scenarios.
+% By greedy overlapping the communication overhead with computation, it outperforms Whale across all configurations.
+% However, both the two rigid stage mapping strategies fail to align with the varying computational and memory requirements of different MLLM components, ultimately making them less effective than \textit{MMoH}.
+
+% % 分析 MLLM-3B 的部分场景
+% \textit{MMoH} MMoH parallel strategy planner dynamically adapts to different frozen scenarios. 
+% For example, when training MLLM-3B under \textit{no-freeze} setting, \textit{MMoH} adopts a [B, A, B, C] GPU topology, which means we place the 2080 Ti at the first stage, followed by the 3090, another 2080 Ti, and finally the 2080. 
+% However, when the frozen setting shifts to \textit{freeze-enc.}, \textit{demand-driven device topology designer} intelligently adapts to the reduced computational and memory requirements in front layers.
+% Consequently, it replaces 2080 Ti assigned to the first stage with 2080, which has lower computational performance and memory capacity, thereby improving resource utilization.
+% When the pattern changes to \textit{freeze-llm}, the computational and memory demands in the later layers decrease relative to the \textit{no-freeze} setting.
+% \textit{MMoH} responds by placing two 2080 Ti at the front, followed by the 3090 and 2080.
+% Under the \textit{freeze-both} configuration, where both the encoder and LLM backbone are frozen, the computational and memory requirements across all layers are significantly reduced. 
+% In this case, \textit{MMoH} reuses the same topology as in the \textit{no-freeze} scenario, as it remains effective under the overall lighter workload.
+
+% % 分析 MLLM-12B 的部分场景
+% Notably, when training MLLM-12B under the \textit{no-freeze} scenario, our \textit{demand-driven device topology designer} selects the same device topology as Espresso, and the resulting model partitionings are also similar.
+% This outcome is primarily due to the encoder of MLLM-12B imposing lower computational and memory demands compared to the LLM backbone. 
+% As such, \textit{MMoH} assigns the resource-constrained devices to the earlier pipeline stages, aligning hardware capabilities with model requirements.
+% Interestingly, despite relying on a different heuristic, Espresso arrives at a similar configuration under this setting. 
+% A comparable alignment is observed under the \textit{freeze-llm} scenario, where the stage mapping strategies of \textit{MMoH} and Espresso again exhibit strong similarity.
+% Although the LLM is frozen, it still incurs higher computation overhead than other modules.
+% As a result, \textit{MMoH}'s performance gains over Espresso are relatively modest in these cases, showing improvements of only 3.5\% and 6.8\%, respectively. 
+% % However, compared to Whale, \textit{MMoH} demonstrates significantly higher throughput improvements of 25.8\% and 27.9\%. 
+
+% To understand why \textit{MMoH} achieves slightly better performance than Espresso, even when utilizing similar device topologies, we analyze the average computation time over the last 20 iterations to examine the distribution of computation overhead.
+% As shown in Table~\ref{tab:partition}, under the \textit{no-freeze} scenario, Whale tends to assign devices with higher computational capacity to the early pipeline stages. 
+% This approach contrasts with both Espresso and \textit{MMoH}, which prioritize assigning more capable devices to the later stages. 
+% Whale’s strategy results in a mismatch between hardware allocation and the MLLM’s demands, leading to an imbalanced distribution of workload and higher average computation times across all stages, as illustrated in Fig.~\ref{fig:load}.
+% In contrast, Espresso and \textit{MMoH} adopt a device topology that better aligns with the MLLM’s resource requirements, yielding significantly better performance than Whale. 
+% Nevertheless, \textit{MMoH} achieves slightly more balanced computation overhead than Espresso.
+% A comparison of their partitioning strategies reveals that stages 5 to 7 benefit from \textit{MMoH}’s finer-granularity model partitioning, which ultimately contributes to reduced iteration time.
+% Under the \textit{freeze-llm} scenario, W
+% Under \textit{freeze-llm} scenario, Whale’s topology deviates so significantly from the model’s demands that training is only feasible with TP=4.
+% Meanwhile, Espresso and \textit{MMoH} can successfully train with TP=2. 
+% Notably, Espresso places the 2080 Ti GPU first, whereas \textit{MMoH} places the 2080 GPU first. 
+% This subtle difference enables \textit{MMoH} to accommodate four additional encoder layers in the earlier stages, thereby reducing the average burden on the last four stages and achieving a more balanced distribution of computation overhead.
+% ------ old end ------
+
+\begin{table*}[h]
+\centering
+\vspace*{5mm}
+\caption{Model partitioning comparison across different frozen scenarios. A, B, and C denote NVIDIA RTX 3090, 2080 Ti, and 2080 GPUs.}
+% A, B, and C denote NVIDIA RTX 3090, 2080 Ti, and 2080 GPUs, respectively. Speedup is calculated relative to Whale.
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{ccc|cc|cc}
+\hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{Frozen}\\\textbf{Pattern}\end{tabular}} & 
+\multicolumn{2}{c|}{\textbf{Whale (layer-granularity)}} & 
+\multicolumn{2}{c|}{\textbf{Espresso (layer-granularity)}} & 
+\multicolumn{2}{c}{\textbf{\textit{MMoH} (hybrid-granularity)}} \\
+& \textbf{MLLM-3B} & \textbf{MLLM-12B} & \textbf{MLLM-3B} & \textbf{MLLM-12B} & \textbf{MLLM-3B} & \textbf{MLLM-12B} \\
+\hline
+\renewcommand{\arraystretch}{2.4}
+\textit{no freeze} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C}]\\{[30,3,3,2]}\\1.00x} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,A,A,A,B,B,C,C}]\\{[15,15,17,9,3,3,3,2]}\\1.00x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,A}]\\{[26,3,2,7]}\\1.07x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[7,7,6,6,15,11,8,7]}\\ 1.22x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,A,B,C}]\\{[11,14,6,4]}\\ \textbf{1.22x}} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[7,7,6,6,18,16,13,15]}\\ \textbf{1.26x}} \\
+\hline
+\textit{freeze-enc.} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C}]\\{[31,3,3,1]}\\1.00x} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,A,A,A,B,B,C,C}]\\{[38,11,5,5,2,3,2,1]}\\1.00x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,A}]\\{[28,3,2,5]}\\1.05x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[8,8,6,6,22,13,13,12]}\\1.04x} 
+\rule{0pt}{20pt} & \makecell{[\textit{C,A,B,B}]\\{[12,13,6,4]}\\ \textbf{1.20x}} 
+\rule{0pt}{20pt} & \makecell{[\textit{C,C,B,B,A,A,A,A}]\\{[12,11,11,11,11,11,11,10]}\\ \textbf{1.23x}} \\
+\hline
+\textit{freeze-llm} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C}]\\{[27,4,4,3]}\\1.00x} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,A,A,A,B,B,C,C}]\\{[13,13,13,13,4,4,4,3]}\\1.00x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,A}]\\{[14,14,3,7]}\\1.15x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[3,3,3,3,13,13,17,12]}\\1.20x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,A,C}]\\{[7,8,16,4]}\\ \textbf{1.26x}} 
+\rule{0pt}{20pt} & \makecell{[\textit{C,C,B,B,A,A,A,A}]\\{[3,3,5,5,13,14,23,22]}\\ \textbf{1.33x}} \\
+\hline
+\textit{freeze-both} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C}]\\{[30,3,3,2]}\\1.00x} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,A,A,A,B,B,C,C}]\\{[38,9,5,5,3,3,2,2]}\\1.00x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,A}]\\{[28,2,2,6]}\\1.08x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[18,5,4,4,16,7,7,6]}\\1.20x} 
+\rule{0pt}{20pt} & \makecell{[\textit{B,A,B,C}]\\{[14,14,4,3]}\\ \textbf{1.18x}} 
+\rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C,C,A,A,A}]\\{[36,4,5,3,4,14,12,10]}\\ \textbf{1.28x}} \\
+\hline
+\vspace*{-5mm}
+\end{tabular}
+\label{tab:partition}
+\end{table*}
+
+% ------ yqhao begin ------
+% \subsection{Model Partitioning Analysis}\label{section:4-c} % TODO : label
+% Table~\ref{tab:partition} compares the partitioning strategies of Whale, Espresso, and \textit{MMoH} on two MLLMs (excluding Megatron’s naive approach). Whale and Espresso use single-layer granularity adapted for MLLMs, while \textit{MMoH} employs hybrid granularity for improved balance and efficiency.
+% For MLLM-3B, \textit{MMoH} groups all three encoder layers into one chunk, splits each LLM layer into two chunks, and treats the embedding, output, and projector as separate chunks. For the larger MLLM-12B, each encoder layer becomes an individual chunk, while other components are partitioned similarly.
+% Consequently, \textit{MMoH} reorganizes MLLM-3B into 35 chunks and MLLM-12B into 88 chunks, resulting in different total partition counts than Whale and Espresso.
+As shown in Table~\ref{tab:partition}, We compare the model partitioning strategies of Whale, Espresso, and \textit{MMoH} on two MLLMs, excluding Megatron’s naive partitioning strategy.
+Whale and Espresso use single-layer granularity and are extended to support MLLMs. In contrast, \textit{MMoH} adopts a hybrid-granularity approach for more balanced and efficient partitioning.
+For MLLM-3B, all three encoder layers form an encoder-layers chunk, while each LLM layer is split into two chunks. The input embedding, output layer, and projector are each treated as independent chunks. 
+For MLLM-12B, each encoder layer forms a separate chunk due to its size, with other components handled similarly to MLLM-3B.
+As a result, MLLM-3B and MLLM-12B are reorganized into 35 and 88 chunks by \textit{MMoH}, respectively, explaining the differences in total partitions compared to Whale and Espresso.
+
+% \textbf{Limitations of Whale and Espresso.}
+% As demonstrated in TABLE \ref{tab:partition}, Whale assigns more layers to earlier stages, leveraging the higher memory and compute capacity of the corresponding GPUs. 
+% Espresso fails under frozen training due to altered compute–communication dynamics.
+% Although Espresso improves over Whale by overlapping communication and computation, its strategies remain rigid and fail to adapt to the heterogeneous demands of MLLM modules. 
+
+% \textbf{Model partitioning strategies of \textit{MMoH}.}
+% \textit{MMoH} dynamically adjusts its model partitioning to accommodate frozen training scenarios.
+% For instance, when training MLLM-3B under the \textit{no-freeze} setting, it adopts [B, A, B, C] device topology, placing the 2080 Ti, 3090, another 2080 Ti, and 2080 across the stages.
+% Under \textit{freeze-enc.}, where front-end computation decreases, \textit{MMoH} replaces the first-stage 2080 Ti with a lower-resource 2080, improving overall resource efficiency.
+% In the \textit{freeze-llm} scenario, where rear-stage demands drop, it reorders the devices to [B, B, A, C], ensuring alignment with shifting workloads.
+% Under \textit{freeze-both}, where the workload is uniformly lightened, \textit{MMoH} reuses the original topology as it remains efficient.
+% For MLLM-12B under \textit{no-freeze}, \textit{MMoH} adopts the same device topology and similar partitioning as Espresso.
+% This similarity arises because both approaches allocate less powerful GPUs to the initial pipeline stages, as the encoder requires substantially less computation and memory than the LLM backbone.
+% A similar pattern is observed in the \textit{freeze-llm} scenario, where the frozen LLM still incurs higher overhead than other modules.
+% In both cases, although the device topologies are comparable, \textit{MMoH} achieves better performance by more accurately balancing device resources with the different layer-wise demands of MLLM modules, resulting in improvements of 3.5\% and 6.8\% over Espresso.
+
+% 贴一张负载均衡性的图
+\begin{figure}[t]
+    \centerline{\includegraphics{figs/load_balance.pdf}}
+    \caption{The load balance analysis of \textit{MMoH} and two heterogeneous approaches when training MLLM-12B under two frozen settings. The distribution is more concentrated representing the partition result is more balanced. The lower height indicates a shorter iteration time.}
+    \label{fig:load}
+    \vspace{-5mm}
+\end{figure}
+
+\textbf{Model partitioning strategies comparison.}
+To evaluate the impact of model partitioning on runtime, we compare average per-iteration computing times for Whale, Espresso, and \textit{MMoH}.
+As shown in Fig.~\ref{fig:load}, under the \textit{no-freeze} setting, Whale’s allocation of high-performance GPUs to early stages misaligns with peak workloads, causing elevated overhead.
+Espresso and \textit{MMoH} instead assign GPUs with higher memory capacity to later stages, better matching layer demands.
+Moreover, \textit{MMoH} applies finer-grained partitioning in stages 5–7, smoothing workload spikes and reducing iteration time relative to Espresso.
+In the \textit{freeze-llm} scenario, Whale requires TP=4 to avoid OOM, whereas Espresso and \textit{MMoH} succeed with TP=2.
+Espresso places the 2080 Ti in stage 1, but \textit{MMoH} opts for the lower-capacity 2080.
+This subtle adjustment allows \textit{MMoH} to include four additional encoder layers early, balancing load and lowering computation peaks in later pipeline stages.
+% ------ yqhao end ------
+
+% ------ old begin ------
+% \subsection{Ablation Study of Early-Termination Scheduler}
+% \label{section:4-d}
+
+% We evaluate the effectiveness of \textit{early-termination scheduler} on MLLM-12B, as demonstrated in Fig. \ref{fig:early}. Since the performances of Megatron and Whale is substantially lower than those of \textit{MMoH}, we only choose Espresso for detailed comparative analysis.
+% We focus on two frozen scenarios: (1) \textit{freeze-enc.}, and (2) \textit{freeze-both}, as our \textit{early-termination scheduler} is specifically designed for frozen training. In addition to the original Espresso, we include a variant enhanced with our \textit{early-termination scheduler}, denoted as Espresso w/ ET. We also evaluate a version of \textit{MMoH} with \textit{early-termination scheduler} disabled, referred to as \textit{MMoH} w/o ET, to isolate its impact. 
+
+
+% \begin{figure}[t]
+%     \centering
+%     % 左图
+%     \begin{subfigure}[b]{0.22\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{figs/early_termination.pdf}
+%         \caption{End-to-end performance}  % 左图的标题
+%         \label{fig:left}
+%     \end{subfigure}
+%     \hspace{0.01\textwidth}  % 控制两张图之间的间距
+%     % 右图
+%     \begin{subfigure}[b]{0.22\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{figs/ET-time.pdf}
+%         \caption{Comp. overhead analysis}  % 右图的标题
+%         \label{fig:right}
+%     \end{subfigure}
+%     \caption{The effectiveness of Early-Termination Scheduler}
+%     \label{fig:early}
+% \end{figure}
+
+% As demonstrated in Fig. \ref{fig:early}(a), under \textit{freeze-enc.} scenario, Espresso exhibits the lowest throughput among the four candidates, with an average of 3.26 samples/s.
+% \textit{MMoH} w/o ET ranks second, achieving 3.47 samples/s, representing a 1.06$\times$ speed-up over Espresso.
+% To our surprise, Espresso w/ ET achieves 3.63 samples/s, which means 11\% improvement over the original Espresso and a 4.7\% improvement over \textit{MMoH} w/o ET.
+% Our full \textit{MMoH} implementation outperforms all variants, achieving the highest throughput of 3.87 samples/s.
+% Compared to \textit{MMoH} w/o ET, this corresponds to an 11.4\% improvement, and relative to the original Espresso, it achieves a 19.2\% reduction in iteration time.
+% Under \textit{freeze-both} setting, \textit{MMoH} again achieves the best performance, with a throughput of 5.22 samples/s.
+% \textit{MMoH} w/o ET ranks second, with a throughput of 4.82 samples/s which means a 8.3\% slower than the full \textit{MMoH}.
+% Following closely is Espresso w/ ET, which records 4.75 samples/s, trailing \textit{MMoH} w/o ET by 1.5\% and full \textit{MMoH} by 10\%.
+% The original Espresso ranks last, with a thropughput of 4.41 samples/s, lagging behind Espresso w/ ET by 7.8\% and falling 19\% short of \textit{MMoH}.
+
+% We further analyze the distribution of computation overhead during MLLM-12B training under the \textit{freeze-enc.} scenario. 
+% Specifically, we examine the last 20 training iterations, calculating the average forward computation time per iteration for each pipeline stage to evaluate how \textit{MMoH} redistributes computation when the \textit{early-termination scheduler} is active. , As illustrated in Fig.~\ref{fig:early}(b), compared to Espresso, \textit{MMoH} deliberately increases the forward computation overhead on the frozen stages(i.e., the first four stages), whose backward computation are entirely skipped. 
+% This intentional imbalance alleviates the computational burden on the non-frozen stages, enabling the final four stages to execute more efficiently than in Espresso. As a result, \textit{MMoH} achieves a notable reduction in overall iteration time.
+% ------ old end ------
+
+% ------ yqhao begin ------
+\subsection{Ablation Study of Early-termination tcheduler}\label{section:4-d}
+The effectiveness of the proposed \textit{early-termination scheduler} is evaluated on MLLM-12B, with results demonstrated in Fig.~\ref{fig:early}. Due to the substantially lower performance of Megatron and Whale, our comparison is limited to Espresso and \textit{MMoH}. In our evaluation, we focus on two frozen training scenarios: (1) \textit{freeze-enc.} and (2) \textit{freeze-both}, for which the early-termination scheduler is specifically designed.
+To isolate the impact of the scheduler, we evaluated four configurations: (1) the original Espresso; (2) Espresso integrated with the proposed scheduler (Espresso+); (3) \textit{MMoH} without the scheduler (\textit{MMoH-}); and (4) full \textit{MMoH} with the scheduler enabled.
+As shown in Fig.~\ref{fig:early}(a), under \textit{freeze-enc.}, the original Espresso exhibits the lowest throughput. \textit{MMoH}- achieves a 6.4\% speedup over Espresso, while Espresso+ attains an 11.3\% improvement. Full \textit{MMoH} leads with a 19.2\% gain over Espresso and 11.4\% over \textit{MMoH}-.
+Under \textit{freeze-both}, only the original Espresso requires TP=4 while others train with TP=2. Full \textit{MMoH} outperforms \textit{MMoH}- and Espresso+ by 8.3\% and 10.0\%, respectively, and reduces iteration time by 19.0\% relative to Espresso.
+We further analyze computation overhead under the \textit{freeze-enc.} setting. As shown in Fig.~\ref{fig:early}(b), \textit{MMoH} reallocates more computations to the first four frozen stages, whose backward computations are skipped. This redistribution reduces the burden on later pipeline stages, enabling more efficient execution and shortening overall iteration time.
+
+\begin{figure}[t]
+    \vspace*{2mm}
+    \centering
+    % 左图
+    \begin{subfigure}[b]{0.23\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/early_termination.pdf}
+        \caption{End-to-end performance}  % 左图的标题
+        \label{fig:left}
+    \end{subfigure}
+    \hspace{0.01\textwidth}  % 控制两张图之间的间距
+    % 右图
+    \begin{subfigure}[b]{0.21\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figs/ET-time.pdf}
+        \caption{Comp. overhead analysis}  % 右图的标题
+        \label{fig:right}
+    \end{subfigure}
+    \caption{Effectiveness of the early-termination scheduler. We integrate our scheduler into Espresso, denoted as Espresso+, and remove it from \textit{MMoH}, denoted as \textit{MMoH}–.}
+    \label{fig:early}
+    \vspace*{-5mm}
+\end{figure}
+
+% ------ yqhao end ------
+
+
+% \section{Related Works}
+% \textbf{DNN training on heterogeneous clusters.}
+% There are several works to investigate DNN training on heterogeneous clusters.
+% HetPipe groups heterogeneous devices into Virtual Workers (VWs) with similar performance to facilitate efficient training.
+% Merak\cite{10049507} achieves efficient communication for model training with hybrid parallelism.
+% Whale\cite{jia2022whale} introduces a heterogeneity-aware pipeline parallelism framework, balancing computation and memory demands to improve training efficiency.
+% SDPipe\cite{miao2023sdpipe} develops a framework for dynamic heterogeneity where peak GPU FLOPS are dynamically changed during runtime.
+% Metis\cite{um2024metis} automates parallelism plans on heterogeneous devices with nearly brute search.
+% Espresso\cite{zhouespresso} takes both computation and memory capacity into consideration, further reducing the iteration time.
+% Although the aforementioned works account for the varying computation power and memory capacity across heterogeneous devices, they overlook the diverse computational and memory demands across different modules of MLLMs.
+% In constrast, \textit{MMoH} jointly considers both model-side demands and device-side capacities, making it more suitable for efficient MLLM training.
+
+% \textbf{Fine-grained model partitioning.}
+% Many existing works such as HPipe\cite{ma2024hpipe}, takes transformer-layer as the partition granularity while some approaches conduct a finer-grained granularity model partitioning.
+% AutoPipe-H\cite{liu2022autopipe} separates transformer layers into attention and FFN components to improve load balancing on homogeneous GPUs.
+% % AutoPipe-H\cite{liu2022autopipe} and AdaPipe\cite{sun2024adapipe} separates transformer layers into attention and FFN components to improve load balancing on homogeneous GPUs to reduce the bubbles in pipelines.
+% AdaPipe\cite{sun2024adapipe} also splits the transformer layer into attention and FFN components, adopting a computation-unit granularity to orchestrate recomputation to reduce the bubbles in pipelines.
+% However, previous works adopt either a single transformer-layer granularity or a uniformly fine-grained approach, both of which are tailored to traditional language models.
+% \textit{MMoH} introduces hybrid-granularity abstraction to accommodate the hybrid-module architecture of MLLMs, achieving a better trade-off between partitioning complexity and workload balance on heterogeneous clusters.
+
+% \textbf{Pipeline scheduling mechanism.} In addition to the 1F1B, several alternative pipeline scheduling strategies have been proposed. Chimera\cite{li2021chimera} combines bidirectional pipelines to reduce pipeline bubbles.
+% % , albeit at the cost of doubled memory overhead. 
+% Hanayo\cite{liu2023hanayo} introduces a wave-like pipeline parallelism strategy to address the implementation challenges of pipeline training.
+% ZeroBubble\cite{qi2023zero} decouples the backward computation into two parts, further reducing pipeline bubbles.
+% % : one for computing output gradients and another for computing weight gradients.
+% % By orchestrating these two parts alongside the forward computation, ZeroBubble further reduces pipeline bubbles.
+% However, these pipeline scheduling mechanisms overlook the changes introduced by the frozen technique, resulting in unnecessary operations.
+% \textit{MMoH} proposes the early-termination scheduler which are orthogonal with these strategies. Integrating our optimizations with these scheduling mechanisms is part of our future work.
+
+
+\section{Conclusion}
+% Due to limitations in our experimental environment, we are unable to evaluate MMoH on clusters containing a broader variety of heterogeneous devices.
+% In our current setup, the computation performance of devices is strictly proportional to memory capacity.
+% However, devices such as the NVIDIA RTX 3080 and 4070, which feature relatively high computation performance but limited memory capacity, could further enhance MMoH's ability to match device capabilities with the computational and memory demands of MLLMs.
+
+In this paper, we propose \textit{MMoH}, an efficient framework for training multimodal large language models (MLLMs) on heterogeneous GPU clusters.
+It comprises an \textit{MMoH} parallel strategy planner and an early-termination scheduler. The planner takes into account the modular nature of MLLMs, hardware heterogeneity, and the frozen technique to design an optimal parallel strategy. It begins by selecting suitable device topologies based on the resource demands of each module, then applies a hybrid-granularity abstraction to segment the model. Using this segmentation, it partitions the model into pipeline stages and maps them to the appropriate devices. During training, the scheduler further improves efficiency by removing redundant computation and communication made possible by frozen modules. Experiments show that \textit{MMoH} achieves up to 1.77× speedup over existing training approaches.
+
+\section*{Acknowledgment}
+This work is sponsored in part by the National Natural Science Foundation of China under Grant No. 62025208 and 62421002.
+
+% Before you begin to format your paper, first write and save the content as a 
+% separate text file. Complete all content and organizational editing before 
+% formatting. Please note sections \ref{AA}--\ref{SCM} below for more information on 
+% proofreading, spelling and grammar.
+
+% Keep your text and graphic files separate until after the text has been 
+% formatted and styled. Do not number text heads---{\LaTeX} will do that 
+% for you.
+
+% \subsection{Evaluation}\label{AA}
+% Define abbreviations and acronyms the first time they are used in the text, 
+% even after they have been defined in the abstract. Abbreviations such as 
+% IEEE, SI, MKS, CGS, ac, dc, and rms do not have to be defined. Do not use 
+% abbreviations in the title or heads unless they are unavoidable.
+
+% \subsection{Units}
+% \begin{itemize}
+% \item Use either SI (MKS) or CGS as primary units. (SI units are encouraged.) English units may be used as secondary units (in parentheses). An exception would be the use of English units as identifiers in trade, such as ``3.5-inch disk drive''.
+% \item Avoid combining SI and CGS units, such as current in amperes and magnetic field in oersteds. This often leads to confusion because equations do not balance dimensionally. If you must use mixed units, clearly state the units for each quantity that you use in an equation.
+% \item Do not mix complete spellings and abbreviations of units: ``Wb/m\textsuperscript{2}'' or ``webers per square meter'', not ``webers/m\textsuperscript{2}''. Spell out units when they appear in text: ``. . . a few henries'', not ``. . . a few H''.
+% \item Use a zero before decimal points: ``0.25'', not ``.25''. Use ``cm\textsuperscript{3}'', not ``cc''.)
+% \end{itemize}
+
+% \subsection{Equations}
+% Number equations consecutively. To make your 
+% equations more compact, you may use the solidus (~/~), the exp function, or 
+% appropriate exponents. Italicize Roman symbols for quantities and variables, 
+% but not Greek symbols. Use a long dash rather than a hyphen for a minus 
+% sign. Punctuate equations with commas or periods when they are part of a 
+% sentence, as in:
+% \begin{equation}
+% a+b=\gamma\label{eq}
+% \end{equation}
+
+% Be sure that the 
+% symbols in your equation have been defined before or immediately following 
+% the equation. Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation \eqref{eq}'', except at 
+% the beginning of a sentence: ``Equation \eqref{eq} is . . .''
+
+% \subsection{\LaTeX-Specific Advice}
+
+% Please use ``soft'' (e.g., \verb|\eqref{Eq}|) cross references instead
+% of ``hard'' references (e.g., \verb|(1)|). That will make it possible
+% to combine sections, add equations, or change the order of figures or
+% citations without having to go through the file line by line.
+
+% Please don't use the \verb|{eqnarray}| equation environment. Use
+% \verb|{align}| or \verb|{IEEEeqnarray}| instead. The \verb|{eqnarray}|
+% environment leaves unsightly spaces around relation symbols.
+
+% Please note that the \verb|{subequations}| environment in {\LaTeX}
+% will increment the main equation counter even when there are no
+% equation numbers displayed. If you forget that, you might write an
+% article in which the equation numbers skip from (17) to (20), causing
+% the copy editors to wonder if you've discovered a new method of
+% counting.
+
+% {\BibTeX} does not work by magic. It doesn't get the bibliographic
+% data from thin air but from .bib files. If you use {\BibTeX} to produce a
+% bibliography you must send the .bib files. 
+
+% {\LaTeX} can't read your mind. If you assign the same label to a
+% subsubsection and a table, you might find that Table I has been cross
+% referenced as Table IV-B3. 
+
+% {\LaTeX} does not have precognitive abilities. If you put a
+% \verb|\label| command before the command that updates the counter it's
+% supposed to be using, the label will pick up the last counter to be
+% cross referenced instead. In particular, a \verb|\label| command
+% should not go before the caption of a figure or a table.
+
+% Do not use \verb|\nonumber| inside the \verb|{array}| environment. It
+% will not stop equation numbers inside \verb|{array}| (there won't be
+% any anyway) and it might stop a wanted equation number in the
+% surrounding equation.
+
+% \subsection{Some Common Mistakes}\label{SCM}
+% \begin{itemize}
+% \item The word ``data'' is plural, not singular.
+% \item The subscript for the permeability of vacuum $\mu_{0}$, and other common scientific constants, is zero with subscript formatting, not a lowercase letter ``o''.
+% \item In American English, commas, semicolons, periods, question and exclamation marks are located within quotation marks only when a complete thought or name is cited, such as a title or full quotation. When quotation marks are used, instead of a bold or italic typeface, to highlight a word or phrase, punctuation should appear outside of the quotation marks. A parenthetical phrase or statement at the end of a sentence is punctuated outside of the closing parenthesis (like this). (A parenthetical sentence is punctuated within the parentheses.)
+% \item A graph within a graph is an ``inset'', not an ``insert''. The word alternatively is preferred to the word ``alternately'' (unless you really mean something that alternates).
+% \item Do not use the word ``essentially'' to mean ``approximately'' or ``effectively''.
+% \item In your paper title, if the words ``that uses'' can accurately replace the word ``using'', capitalize the ``u''; if not, keep using lower-cased.
+% \item Be aware of the different meanings of the homophones ``affect'' and ``effect'', ``complement'' and ``compliment'', ``discreet'' and ``discrete'', ``principal'' and ``principle''.
+% \item Do not confuse ``imply'' and ``infer''.
+% \item The prefix ``non'' is not a word; it should be joined to the word it modifies, usually without a hyphen.
+% \item There is no period after the ``et'' in the Latin abbreviation ``et al.''.
+% \item The abbreviation ``i.e.'' means ``that is'', and the abbreviation ``e.g.'' means ``for example''.
+% \end{itemize}
+% An excellent style manual for science writers is \cite{b7}.
+
+% \subsection{Authors and Affiliations}
+% \textbf{The class file is designed for, but not limited to, six authors.} A 
+% minimum of one author is required for all conference articles. Author names 
+% should be listed starting from left to right and then moving down to the 
+% next line. This is the author sequence that will be used in future citations 
+% and by indexing services. Names should not be listed in columns nor group by 
+% affiliation. Please keep your affiliations as succinct as possible (for 
+% example, do not differentiate among departments of the same organization).
+
+% \subsection{Identify the Headings}
+% Headings, or heads, are organizational devices that guide the reader through 
+% your paper. There are two types: component heads and text heads.
+
+% Component heads identify the different components of your paper and are not 
+% topically subordinate to each other. Examples include Acknowledgments and 
+% References and, for these, the correct style to use is ``Heading 5''. Use 
+% ``figure caption'' for your Figure captions, and ``table head'' for your 
+% table title. Run-in heads, such as ``Abstract'', will require you to apply a 
+% style (in this case, italic) in addition to the style provided by the drop 
+% down menu to differentiate the head from the text.
+
+% Text heads organize the topics on a relational, hierarchical basis. For 
+% example, the paper title is the primary text head because all subsequent 
+% material relates and elaborates on this one topic. If there are two or more 
+% sub-topics, the next level head (uppercase Roman numerals) should be used 
+% and, conversely, if there are not at least two sub-topics, then no subheads 
+% should be introduced.
+
+% \subsection{Figures and Tables}
+% \paragraph{Positioning Figures and Tables} Place figures and tables at the top and 
+% bottom of columns. Avoid placing them in the middle of columns. Large 
+% figures and tables may span across both columns. Figure captions should be 
+% below the figures; table heads should appear above the tables. Insert 
+% figures and tables after they are cited in the text. Use the abbreviation 
+% ``Fig.~\ref{fig}'', even at the beginning of a sentence.
+
+% \begin{table}[htbp]
+% \caption{Table Type Styles}
+% \begin{center}
+% \begin{tabular}{|c|c|c|c|}
+% \hline
+% \textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
+% \cline{2-4} 
+% \textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
+% \hline
+% copy& More table copy$^{\mathrm{a}}$& &  \\
+% \hline
+% \multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
+% \end{tabular}
+% \label{tab1}
+% \end{center}
+% \end{table}
+
+% \begin{figure}[htbp]
+% \centerline{\includegraphics{fig1.png}}
+% \caption{Example of a figure caption.}
+% \label{fig}
+% \end{figure}
+
+% Figure Labels: Use 8 point Times New Roman for Figure labels. Use words 
+% rather than symbols or abbreviations when writing Figure axis labels to 
+% avoid confusing the reader. As an example, write the quantity 
+% ``Magnetization'', or ``Magnetization, M'', not just ``M''. If including 
+% units in the label, present them within parentheses. Do not label axes only 
+% with units. In the example, write ``Magnetization (A/m)'' or ``Magnetization 
+% \{A[m(1)]\}'', not just ``A/m''. Do not label axes with a ratio of 
+% quantities and units. For example, write ``Temperature (K)'', not 
+% ``Temperature/K''.
+
+% \section*{References}
+
+% Please number citations consecutively within brackets \cite{b1}. The 
+% sentence punctuation follows the bracket \cite{b2}. Refer simply to the reference 
+% number, as in \cite{b3}---do not use ``Ref. \cite{b3}'' or ``reference \cite{b3}'' except at 
+% the beginning of a sentence: ``Reference \cite{b3} was the first $\ldots$''
+
+% Number footnotes separately in superscripts. Place the actual footnote at 
+% the bottom of the column in which it was cited. Do not put footnotes in the 
+% abstract or reference list. Use letters for table footnotes.
+
+% Unless there are six authors or more give all authors' names; do not use 
+% ``et al.''. Papers that have not been published, even if they have been 
+% submitted for publication, should be cited as ``unpublished'' \cite{b4}. Papers 
+% that have been accepted for publication should be cited as ``in press'' \cite{b5}. 
+% Capitalize only the first word in a paper title, except for proper nouns and 
+% element symbols.
+
+% For papers published in translation journals, please give the English 
+% citation first, followed by the original foreign-language citation \cite{b6}.
+
+% \begin{thebibliography}{00}
+\small
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,reference}
+% \bibitem{b1} Brown, T., Mann, B., Ryder, N., Subbiah, M., Kaplan, J. D., Dhariwal, P., ... Amodei, D. (2020). Language models are few-shot learners. Advances in neural information processing systems, 33, 1877-1901.
+
+% \end{thebibliography}
+% \vspace{12pt}
+% \color{red}
+% IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
+
+\end{document}
+
+
+\begin{figure*}[htbp]
+    \centering
+    % 主图a包含的b和c子图
+    \subfloat[b\label{fig:b}]{
+        % 子图b内部嵌套的b1和b2
+        \begin{minipage}[t]{0.45\textwidth}
+            \centering
+            \subfloat[b1\label{fig:b1}]{
+                \includegraphics[width=0.2\linewidth]{fig1.png}
+            }
+            \subfloat[b2\label{fig:b2}]{
+                \includegraphics[width=0.2\linewidth]{fig1.png}
+            }
+        \end{minipage}
+    }
+    \hfill
+    \subfloat[c\label{fig:c}]{
+        \begin{minipage}[t]{0.2\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{fig1.png}
+        \end{minipage}
+    }
+    \caption{a}
+    \label{fig:a}
+\end{figure*}

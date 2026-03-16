@@ -1,21 +1,13 @@
 \begin{cabstract}
-国防科技大学是一所直属中央军委的综合性大学。1984年,学校经国务院、中央军委和教育部批准首批成立研究生院，%
-肩负着为全军培养高级科学和工程技术人才与指挥人才，培训高级领导干部，从事先进武器装备和国防关键技术研究的重要任务。%
-国防科技大学是全国重点大学，也是全国首批进入国家“211工程” 建设并获中央专项经费支持的全国重点院校之一。%
-学校前身是1953年创建于哈尔滨的中国人民解放军军事工程学院，简称“哈军工”。
+多模态大语言模型（MLLM）融合视觉、语言等模态的感知与生成能力，是当前人工智能研究的重要方向，其训练依赖分布式与并行计算。实际部署中的 GPU 集群往往由多代、多型号设备混合组成，存在显存、算力与通信的异构；而 MLLM 在结构上由编码器、投影层与 LLM 骨干等异构模块组成，训练时又广泛采用分阶段冻结策略，导致各阶段计算与显存需求差异显著。现有并行策略（如 Megatron-LM、ZeRO）多假设同构集群与单一模型形态，在异构环境下易产生负载不均衡、资源利用率低及冻结场景下的冗余计算与通信等问题。
+
+本文从流水线划分与调度、显存优化两个层面开展研究。在划分与调度方面，提出 MMoH 框架：通过需求驱动的设备拓扑识别、复合粒度模型抽象与冻结感知的整数规划划分，在给定异构集群与 MLLM 配置下自动生成与当前训练阶段相匹配的流水线并行策略；通过提前终止调度器在连续冻结阶段省略不必要的反向计算与阶段间通信，在保持收敛性的前提下提升吞吐。在显存优化方面，针对现有框架（如 Megatron-LM）中激活重计算采用全局统一配置、在异构集群上难以同时兼顾显存安全与计算效率的问题，提出 HR-MMoH 的异构激活重计算方法：系统梳理 Megatron 的重计算粒度与子模块配置参数，在 MMoH 划分基础上为各流水线阶段根据其显存上限与算力独立配置重计算粒度与子模块集合，显存紧张阶段采用更激进的检查点以降低 OOM 风险，显存充裕阶段采用较保守的配置以减少多余重算，并通过基于剖析的配置策略与 MMoH 形成“划分—调度—显存优化”的联合优化。在两种异构集群与两种规模 MLLM（3B、12B）上的实验表明，MMoH 在多种冻结场景下相对 Megatron-LM、Whale、Espresso 均可取得最高吞吐，最高可达约 1.77 倍加速，提前终止调度器可带来约 8\%--19\% 的额外增益；HR-MMoH 的按阶段差异化配置思路通过剖析实验得到验证，可为显存受限场景下的训练提供补充手段。本文为异构 GPU 集群上 MLLM 的高效并行训练提供了可参考的技术路径。
 \end{cabstract}
-\ckeywords{国防科技大学; 211; 哈军工}
+\ckeywords{多模态大语言模型；异构 GPU 集群；流水线并行；激活重计算；MMoH}
 
 \begin{eabstract}
-National University of Defense Technology is a comprehensive national key university based in Changsha, %
-Hunan Province, China. It is under the dual supervision of the Ministry of National Defense %
-and the Ministry of Education, designated for Project 211 and Project 985, %
-the two national plans for facilitating the development of Chinese higher education. %
+Multimodal large language models (MLLMs) integrate vision, language, and other modalities for perception and generation, and have become a major focus of artificial intelligence research; their training relies on distributed and parallel computing. In practice, GPU clusters are often composed of mixed generations and models of devices, exhibiting heterogeneity in memory, compute, and communication. Meanwhile, MLLMs are architecturally composed of heterogeneous modules such as encoders, projectors, and LLM backbones, and training commonly adopts stage-wise freezing, leading to significant differences in compute and memory demand across pipeline stages. Existing parallel strategies (e.g., Megatron-LM, ZeRO) mostly assume homogeneous clusters and uniform model structure, which in heterogeneous settings can cause load imbalance, low resource utilization, and redundant computation and communication under freezing.
 
-NUDT was originally founded in 1953 as the Military Academy of Engineering in Harbin of Heilongjiang Province. %
-In 1970 the Academy of Engineering moved southwards to Changsha and was renamed Changsha Institute of Technology.%
- The Institute changed its name to National University of Defense Technology in 1978.
-
+This thesis addresses the problem from two aspects: pipeline partitioning and scheduling, and memory optimization. For partitioning and scheduling, we propose the MMoH framework: it uses demand-driven device topology identification, multi-granularity model abstraction, and freeze-aware integer-programming-based partitioning to automatically generate pipeline-parallel strategies that match the current training stage for a given heterogeneous cluster and MLLM configuration; an early-termination scheduler omits unnecessary backward computation and inter-stage communication at consecutive frozen stages, improving throughput while preserving convergence. For memory optimization, we address the fact that existing frameworks (e.g., Megatron-LM) use a single global activation recomputation configuration, which is ill-suited to heterogeneous clusters where memory-tight stages may still hit OOM while memory-rich stages incur unnecessary recomputation. We propose HR-MMoH with heterogeneous-aware gradient checkpointing: we systematically summarize Megatron's recomputation granularity and submodule parameters, then assign each pipeline stage an independent recomputation configuration (granularity and submodule set) according to its memory headroom and compute, so that memory-tight stages use more aggressive checkpointing to reduce OOM risk and memory-rich stages use conservative settings to avoid redundant recomputation; a profiling-based configuration strategy is used and integrated with MMoH to form a joint ``partitioning--scheduling--memory optimization'' pipeline. Experiments on two heterogeneous clusters and two MLLM scales (3B and 12B parameters) show that MMoH achieves the highest throughput under various freezing scenarios compared with Megatron-LM, Whale, and Espresso, with speedups of up to about 1.77$\times$, and the early-termination scheduler brings an additional 8\%--19\% gain; the per-stage heterogeneous checkpoint configuration in HR-MMoH is validated via profiling and provides a complementary means for memory-constrained training. This work provides a practical technical path for efficient parallel training of MLLMs on heterogeneous GPU clusters.
 \end{eabstract}
-\ekeywords{NUDT; MND; ME}
-
+\ekeywords{Multimodal large language model; Heterogeneous GPU cluster; Pipeline parallelism; Gradient checkpointing; MMoH}

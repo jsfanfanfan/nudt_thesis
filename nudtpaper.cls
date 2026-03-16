@@ -582,12 +582,11 @@
     {\@zhdate \par}%
   }
   \vspace{1mm}
-  \cleardoublepage%
-  \newpage
+  \clearpage
   \thispagestyle{empty}%
 
   \begin{center}\leavevmode
-  \vfill\bfseries 
+  \vfill\bfseries
   {\bf \erhao[1.25] \@entitle \par   \vfill\vfill\vfill\vfill\vfill}
   {\bf \sanhao[1.25] %调整与word一致
   \begin{tabular}{rl}

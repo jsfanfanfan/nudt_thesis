@@ -37,11 +37,13 @@
 \documentclass[master,ttf,twoside]{nudtpaper}
 \usepackage{mynudt}
 \usepackage{multirow,array,makecell}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,calc}
 
-\classification{TP391}
+\classification{TP302}
 \serialno{23023014}
 \confidentiality{公开}
-\UDC{681}
+\UDC{004.8}
 \title{面向异构 GPU 集群的多模态大语言模型\\并行训练策略研究}
 \displaytitle{面向异构 GPU 集群的多模态大语言模型并行训练策略研究}
 \author{范锦山}
@@ -59,6 +61,7 @@
 \papertype{工学}
 \enpapertype{Engineering}
 % 加入makenomenclature命令可用nomencl制作符号列表。
+\AtBeginDocument{\makeatletter\let\origcleardoublepage\cleardoublepage\makeatother}
 
 \begin{document}
 	\graphicspath{{figures/}}
@@ -74,29 +77,25 @@
 \listoffigures
 
 \midmatter
+\makeatletter
+\@openrightfalse
+\makeatother
 \input{data/abstract}
 \input{data/denotation}
 
+% 目录/摘要/符号说明之间不插空白页；正文起恢复“新章从奇数页起”，章节之间插空白页
+\makeatletter
+\def\cleardoublepage{\clearpage}
+\makeatother
+
 %书写正文，可以根据需要增添章节; 正文还包括致谢，参考文献与成果
 \mainmatter
-\renewcommand\UrlFont{\timesnr}
 \makeatletter
-\newcounter{blankpages}
-\def\cleardoublepage{%
-	\clearpage
-	\if@twoside
-	\ifodd\c@page
-	\else
-	\hbox{}\newpage\stepcounter{blankpages}%
-	\thispagestyle{empty}%
-	\if@twocolumn\hbox{}\newpage\fi
-	\fi
-	\fi
-}
-\newcommand{\@romannoblank}[1]{%
-	\@roman{\numexpr#1-\value{blankpages}\relax}%
-}
+\global\let\cleardoublepage\origcleardoublepage
+\@openrighttrue
+\setcounter{page}{1}
 \makeatother
+\renewcommand\UrlFont{\timesnr}
 
 \input{data/chap01}
 \input{data/chap02}

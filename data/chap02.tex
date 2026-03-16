@@ -1,234 +1,439 @@
 \chapter{相关工作}
 
-本章从多模态大语言模型、并行与分布式训练基础、异构 GPU 集群并行训练策略以及
-梯度检查点优化等方面对国内外相关研究进行综述。
-如今，基于 Transformer 的大语言模型在包括自然语言处理\cite{brown2020gpt3,openai2023}、
-图像识别\cite{vit2020}、多模态\cite{clip2021}、图学习与推荐系统等众多前沿领域和
-下游任务上大放异彩。
-然而，随着模型参数的增加和数据规模的扩大，模型结构越来越复杂、
-模型参数量越来越大、训练数据越来越多，
-导致单个设备已经无法完成模型和数据的存储，
-多模态大语言模型的训练越来越有难度。
-为了解决上述问题，目前学界已经提出并应用了多种并行策略来实现和优化大模型的训练。
-然而，目前传统的并行策略往往忽略了并行训练平台的异构性，
-由于服务器集群中常常存在多种型号的 GPU 和网络连接，
-导致集群中存在着存储异构、算力异构和网络异构。
-在这样的复杂集群环境下，
-传统的并行策略会因为缺乏对异构环境的感知和适应而导致性能表现急剧下滑。
-因此，下文将主要从现有大模型的并行训练策略出发，
-对并行训练的研究现状进行详细论述，并讨论各个并行策略在异构环境下的优缺点。
+本章从多模态大语言模型架构与训练、并行与分布式训练基础、异构 GPU 集群并行训练策略以及
+重计算优化等方面对国内外相关研究进行综述。
+本章内容旨在论证如下观点：模型的模块化设计与分阶段训练深刻改变了其计算图与显存分布；
+尽管混合并行与重计算等显存优化技术已被广泛应用，但在面临集群硬件异构性与 MLLMs 独有的模块异构时，
+现有同构导向的策略仍暴露出明显的局限。
+
+基于 Transformer 的大语言模型在自然语言处理\cite{brown2020gpt3,openai2023}、
+图像识别\cite{vit2020,scaling_vit}、多模态理解与生成\cite{clip2021,blip2}等众多领域取得了显著进展；
+多模态大语言模型（MLLMs）在此基础上融合视觉、语言与生成模块，成为当前研究的热点之一。
+性能提升与规模扩展紧密绑定：扩展定律（Scaling Law）\cite{kaplan2020scaling}表明模型性能随参数规模与数据规模提升而持续改善，
+工业界与学术界因此不断推动模型参数量与训练数据量的增长，
+单设备在显存与算力上已无法容纳完整模型与训练流程\cite{galvatron2022}，
+并行与分布式训练成为训练大模型与 MLLMs 的必由之路。
+目前，以数据并行、张量并行、流水线并行及零冗余优化器（ZeRO）等为代表的并行策略
+已被广泛应用于千亿级参数模型的训练\cite{megatron2021,zero2020,zero2021}，
+但上述框架在设计时多假设\emph{同构} GPU 集群与统一的设备拓扑，
+对实际环境中普遍存在的设备与网络异构考虑不足。
+
+由于硬件迭代与采购周期等因素，实际部署的计算集群往往混用多代、多型号的 GPU，
+导致显存容量、算力与互联带宽呈现高度异构性\cite{whale,hetpipe2020}。
+在此类异构环境下，若直接套用基于同构假设设计的并行策略，极易造成负载失衡与通信拥塞，
+不仅拉低了整体训练效率，也制约了可用资源的规模扩展；
+而 MLLMs 内部各模块（Encoder、LLM、Projector、Generator）在结构与参数量上的悬殊差异，及其分阶段冻结的训练设定，
+进一步加剧了系统级优化的难度。
+
+因此，本章首先介绍 MLLMs 的架构组成、训练数据特点与多阶段训练范式；
+随后梳理数据并行、张量并行、流水线并行等并行策略及 ZeRO 系列优化等分布式训练基础；
+进而探讨现有异构 GPU 集群并行训练方法的研究进展及其适用边界；
+最后评述重计算等显存换计算技术的当前状态。
+通过上述梳理，揭示现有工作在应对异构 MLLMs 训练时的不足，从而为后文 MMoH 与 HR-MMoH 的提出奠定基础。
+
+需要说明的是，并行与分布式训练领域文献浩繁，本章重点聚焦与本文工作直接相关的几个切入点：
+多模态大语言模型的组件差异与其特有的多阶段训练范式，共同决定了其动态且高度不均衡的计算资源需求；
+数据并行、张量并行、流水线并行及 ZeRO 构成了解决大规模训练的基石；
+面对实际生产中普遍存在的集群异构性，如何通过智能化的负载均衡与任务调度来突破单点瓶颈，逐渐成为学术界与工业界关注的焦点；
+同时，以重计算为代表的显存优化技术在异构场景下具备与其他调度策略深度融合的潜力。
+上述各维度的探讨，旨在为后续章节提出的优化算法提供理论与实践层面的依据。
 
 \section{多模态大语言模型}
 
-\subsection{多模态大语言模型架构}
+\subsection{多模态大语言模型的异构架构}
 
-多模态大语言模型（MLLMs）通常由 Modality Encoder、Input Projector、LLM Backbone、
-Output Projector 等模块组成。
-Modality Encoder 负责将不同模态的输入数据（如图像、视频、音频）编码为模型可理解的表示，
-常采用预训练的视觉模型如 CLIP\cite{clip2021}、ViT\cite{vit2020} 等。
-LLM Backbone 是模型的核心，通常为参数量巨大的 Transformer 基座模型（如 GPT 系列%
-\cite{brown2020gpt3,gpt2}、LLaMA\cite{llama3}、T5\cite{t5} 等），
-占据整个模型约 80\%--90\% 的参数量。
-Modality Generator 一般为 Diffusion 类生成模型（如 Stable Diffusion\cite{stable_diffusion}），
-根据 LLM 的输出生成图像、视频等其它模态数据。
-前后两个 Projector 用于将不同模态映射到共享语义空间，
-可能是 Linear 层、Transformer 层或 Q-Former\cite{blip2} 等结构。
-Blip-2\cite{blip2} 率先提出冻结预训练 Encoder 与 LLM、仅训练轻量 Projector 的范式，
-后续 NextGPT\cite{nextgpt}、DreamLLM\cite{dreamllm} 等工作均沿用并发展了此类架构。
-多模态大语言模型的这种模块异构性使得不同层在算力、显存和通信上的需求差异很大，
-在异构 GPU 集群上部署时面临独特的挑战。
+多模态大语言模型（MLLMs）将视觉、语言与（可选）生成能力统一到以大规模语言模型为核心的异构架构中，
+其典型组成如图\ref{fig:mllm_components}所示，主要包括以下几类模块。
+
+Modality Encoder 负责将图像、视频、音频等非文本输入编码为高维特征表示，
+以便与语言模型的词嵌入空间对接。实践中多采用在大规模图文或视频等多模态数据上预训练好的视觉模型作为编码器：
+CLIP\cite{clip2021} 通过对比学习实现开放词汇的视觉表征，被 LLaVA\cite{llava2023}、MiniGPT-4\cite{minigpt4} 等广泛采用；
+ViT\cite{vit2020} 及规模化变体\cite{scaling_vit} 则将图像切分为 patch 后经 Transformer 编码，
+在 Flamingo\cite{flamingo2022}、InternVL\cite{internvl2024} 等工作中用作视觉 backbone。
+InternVL\cite{internvl2024} 将视觉基础模型规模扩展至 60 亿参数，并在多图、长文本与文档理解上取得领先；
+Qwen-VL\cite{qwenvl2023} 支持百万像素级高分辨率与多轮对话，在 DocVQA、ChartQA 等基准上表现突出。
+编码器输出通常为序列形式的特征，再经后续模块映射到 LLM 空间；从而完成视觉等其它模态数据与语言模型的对齐的第一步\cite{vision_language_pretrain_survey2024}。
+
+Input Projector 将编码器输出的多模态特征映射到与 LLMs 词嵌入维度与语义空间对齐的表示，
+使 LLMs 能够将视觉等信息与文本统一处理。常见实现包括线性层、轻量 Transformer 层等，
+以及 BLIP-2\cite{blip2} 提出的 Q-Former（通过可学习的 query 从编码器特征中抽取与任务相关的表示）；
+InstructBLIP\cite{instructblip2023} 在此基础上引入指令感知的 Q-Former，根据用户指令从图像中抽取与任务更相关的特征，
+在 ScienceQA 等零样本任务上显著优于 BLIP-2。该模块参数量远小于 LLM，常与编码器一起在预训练或对齐阶段更新。
+
+\emph{LLM Backbone} 即大规模语言模型主体，承担主要的语言理解与生成计算，
+参数量通常占整个 MLLM 的 80\%--90\%\cite{blip2,llava2023}。
+基座模型多选用已在海量文本上预训练好的 Transformer 模型，如 GPT 系列\cite{brown2020gpt3,gpt2}、
+LLaMA\cite{llama3}、T5\cite{t5} 等；在资源受限或强调高效微调时，常对 LLMs 进行冻结或仅微调部分层。
+
+\emph{Output Projector} 与 \emph{Modality Generator} 用于多模态生成任务（如图生图、文生图、文生视频、文生音频等）：
+前者将 LLMs 的输出映射到生成器可接受的表示空间，后者根据该表示生成图像、视频或音频。
+生成器多采用扩散模型，如 Stable Diffusion\cite{stable_diffusion} 中基于 U-Net\cite{unet} 的潜在扩散结构；
+Next-GPT\cite{nextgpt}、DreamLLM\cite{dreamllm} 等工作在此基础上实现了任意模态到任意模态的生成与转换。
+
+BLIP-2\cite{blip2} 率先系统性地采用 “冻结 Encoder + 冻结 LLM + 仅训练轻量 Projector” 的范式，
+在显著降低训练成本的同时达到与全参数微调可比的效果，后续多数 MLLMs 均沿用或发展此类设计。
+这种\emph{模块异构}（编码器、投影层、LLM、生成器在结构、参数量与计算特性上差异显著）
+与分阶段冻结策略，使得在异构 GPU 集群上为各模块分配合适的算力与显存、并设计均衡的并行与调度策略变得尤为困难。
+
+从实现角度看，编码器多为卷积或 ViT 类结构，单层计算与显存占用与 Transformer 解码层不同；
+投影层参数量小、计算密集度高，在流水线中若与 LLMs 层混合划分，易造成流水级间负载不均；
+LLMs 主体层数多、激活体积大，常需配合激活检查点与张量并行以控制单卡显存。
+生成器（若存在）多为 U-Net 或扩散结构，其前向与反向计算模式与语言模型差异较大。
+因此，在设计面向 MLLMs 的并行与调度方案时，需要针对各子模块的特性分别建模计算、显存与通信，
+并考虑不同训练阶段下冻结比例变化带来的动态负载差异，而不能简单套用单一 Transformer 的划分假设；
+这也为本文第三、四章中针对各模块与冻结状态的细粒度划分与调度提供了直接动机。
 
 \subsection{多模态大语言模型训练数据}
 
-为获得满意的性能，大语言模型与多模态大语言模型通常依赖大规模数据训练。
-例如图像数据集 JFT-3B 包含约 30 亿张图片，
-Common Crawl 网页数据包含数千亿 tokens，
-Open Image\cite{open_images} 需约 18TB 存储，
-YouTube-8M\cite{youtube8m} 等视频数据集甚至需要 PB 级存储。
-在单个硬件加速器上既无法存储完整模型参数，也无法容纳如此大规模的训练数据，
-因此并行训练（数据并行、模型并行及其组合）成为必然选择。
-数据规模与模型规模的持续增长，
-也使得对并行策略的通信效率、存储划分和异构适应性提出了更高要求。
+扩展定律（Scaling Law）\cite{kaplan2020scaling,chinchilla2022} 表明，模型性能随训练数据规模与模型参数规模的提升而持续改善；
+Chinchilla\cite{chinchilla2022} 进一步指出，在计算最优意义下，模型参数量与训练 token 数应近似同比例扩展，
+后续工作\cite{beyond_chinchilla2024} 从推理成本角度拓展了最优数据—模型比例。
+由此可推知，在给定算力预算下，若要逼近 Pareto 前沿的性能，就必须同时扩大数据规模与模型规模；
+因此工业界与学术界在预训练与微调阶段均倾向于使用尽可能大的数据与模型。
+大语言模型通常在海量文本语料（如 Common Crawl、The Pile\cite{pile2020}、书籍与代码）上预训练，规模可达数万亿 token。
+多模态大语言模型在此基础上还需大规模图文对、视频—文本对等多模态数据，
+用于模态对齐、指令微调与多模态生成等阶段；
+由于上述各阶段均依赖大规模监督或多模态配对数据，数据量与存储需求在文本预训练的基础上进一步放大。
+多模态理解与推理的评估常采用 MMMU\cite{mmmu_benchmark2024} 等跨学科基准\cite{mllm_datacentric2024}，
+其题目与数据形态的多样性也反过来推动训练数据在模态与任务类型上的扩展。
 
-\subsection{多模态大语言模型训练目标}
+表\ref{tab:mllm_data_scale}列举了若干代表性数据集的规模与用途。
+图像方面，Open Images\cite{open_images} 包含约 900 万张图像及框注，存储需求约 18TB；
+JFT、LAION 等内部或开放图文对数据集规模可达数亿至数十亿样本，用于视觉—语言预训练。
+视频方面，YouTube-8M\cite{youtube8m} 等基准包含数百万视频与标签，用于视频理解与生成的数据集
+往往需要 PB 级存储与高吞吐的数据管线。
+文本方面，Common Crawl、The Pile 等为 LLM 预训练提供数万亿 token 的语料。
+综合上述规模可知，单机显存既难以容纳完整模型与优化器状态，单机存储与 I/O 带宽也难以在训练周期内高效供给全量数据；
+在这一\emph{双重约束}下，\emph{并行训练}（数据并行、模型并行及其组合）成为必然选择。
+与此同时，数据规模与模型规模的持续增长，对并行策略的 I/O 效率、通信拓扑与异构集群下的数据供给能力提出了更高要求\cite{galvatron2022}。
 
-多模态大语言模型的训练通常分为多个阶段，如模态对齐、指令微调等，
-不同阶段会冻结不同模块（如冻结 LLM 仅训练 Projector，
-或冻结 Encoder 与 LLM 仅训练部分层）。
-冻结会显著改变各模块的反向计算量与显存占用（如优化器状态仅需为未冻结参数维护），
-并影响流水线中各 stage 的负载均衡。
-在异构 GPU 集群下，这种因阶段和冻结策略带来的“模型异构”与设备异构叠加，
-进一步增加了并行策略设计与自动调优的难度。
+\begin{table}[htbp]
+  \centering
+  \caption{多模态大语言模型训练中常用的部分数据集规模示意}
+  \label{tab:mllm_data_scale}
+  \begin{tabular}{lccp{5.5cm}}
+    \toprule
+    类型     & 规模量级        & 存储量级 & 典型用途 \\
+    \midrule
+    图像文本对     & 数百万--数十亿  & TB--PB   & 图文预训练、对齐（如 Open Images\cite{open_images}） \\
+    视频     & 数百万--数亿    & 百 TB--PB & 视频理解、生成（如 YouTube-8M\cite{youtube8m}） \\
+    文本/语料 & 数百亿--数万亿 token & PB 级   & LLM 预训练、指令数据 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{多模态大语言模型训练过程}
+
+多模态大语言模型的训练通常采用多阶段、分模块的策略，
+在不同阶段设定不同的训练目标与可训练参数集合，以兼顾效果与成本\cite{blip2,llava2023}。
+各阶段的先后顺序遵循从粗粒度对齐到细粒度能力塑造的递进关系：
+典型阶段包括（1）\emph{模态对齐}（或预训练），在大规模图文对或视频—文本对上
+训练 Input Projector（及可选的部分 Encoder/LLM），使视觉等特征与 LLM 语义空间对齐；
+（2）\emph{指令微调}（Instruction Tuning），在高质量指令—回答数据上微调，
+以提升遵循指令与对话能力，此时常冻结 Encoder、仅微调 Projector 与 LLM 部分层；
+（3）\emph{多模态生成微调}（若需文生图等），在生成数据上训练 Output Projector 与 Modality Generator，
+LLM 可冻结或低秩微调。
+各阶段对“谁冻结、谁更新”的设定不同，因而在\emph{同一模型}上，
+不同阶段对应不同的有效计算图与显存、算力需求分布；
+换言之，模块异构在时间维度上表现为阶段依赖的、动态变化的负载形态。
+实践中，各阶段采用的典型超参与数据规模因模型与任务而异：LLaVA\cite{llava2023} 在约 60 万图文对上做视觉—语言对齐与指令微调；
+InstructBLIP\cite{instructblip2023} 在 13 个指令化数据集上微调；Qwen-VL\cite{qwenvl2023}、LLaVA-NeXT\cite{llava_next2024} 等则进一步扩大指令数据与上下文长度；
+闭源多模态模型如 Gemini\cite{gemini2023}、PaLM\cite{palm2022} 系列则在更大规模数据与算力下完成预训练与对齐，其具体数据配比与阶段划分多未完全公开。
+
+冻结会显著改变各模块的反向计算量与显存占用。
+其原因是：冻结参数不参与梯度计算与更新，因而无需为其保存梯度或中间激活用于反向；
+优化器状态（如 Adam 的动量与方差）仅需为可训练参数维护，
+故冻结比例越高，单步显存与计算量通常越低，但可调表达能力也越受限\cite{blip2}。
+在流水线并行或层级划分下，若某流水级被冻结，其对应设备上的反向计算远少于未冻结阶段，
+容易造成流水级间负载不均与流水线气泡。
+在异构 GPU 集群下，设备间本就存在显存、算力与带宽差异；
+训练阶段与冻结策略带来的\emph{动态模型异构}（即同一模型在不同阶段呈现不同的有效计算与显存分布）与设备异构叠加，
+使得静态的、一次性确定的划分与调度难以在各阶段均接近最优，进一步增加了并行策略设计调优的难度。
+因此，一种能够随训练阶段与冻结状态自适应调整划分与调度的方案具有明确价值，也是本文 MMoH 设计的目标之一。
+
+图\ref{fig:mllm_training_stages}概括了上述多阶段训练中常见的模块冻结与更新关系，
+便于理解不同阶段对算力与显存的需求差异。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.9\linewidth]{mllm_training_stages.pdf}
+  \caption{MLLM 多阶段训练中典型模块冻结与更新关系示意}
+  \label{fig:mllm_training_stages}
+\end{figure}
 
 \section{并行与分布式训练基础}
 
-\subsection{常见并行策略}
+\subsection{数据并行与模型并行}
 
-数据并行（Data Parallelism）被广泛用于处理数据规模过大的情况，
-其核心思想是通过将训练数据在所有计算设备上划分，
-而每个计算设备都持有一份完整的模型参数\cite{parameter_server,horovod,pytorch_ddp}。
-如图\ref{fig:data_parallel}所示，在训练过程的每次迭代中，
-每个设备可以独立地使用本地模型参数和批次数据计算对应批次的梯度；
-然后，所有设备在下一次迭代之前进行通信操作，
-将各自计算得到的梯度数据进行同步，
-从而保证模型参数的一致性和结果的正确性。
-数据并行训练因其隐式性和直观性而成为并行训练最早提出的策略，
-也是实际应用中最常见的方式。
-PyTorch 框架中提供了 DistributedDataParallel\cite{pytorch_ddp} 工具用于数据并行训练。
-Horovod\cite{horovod} 将数据并行策略适配到了多个框架中。
-Parallax\cite{parallax} 则根据模型的特点灵活地使用参数服务器（Parameter Server）或
-All-Reduce 通信原语进行数据同步，优化了数据并行中的通信开销。
-然而，数据并行存在着明显限制：每个 GPU 都保存模型权重的完整副本，
-因此不能直接用于训练具有大量参数的模型，限制了模型规模的扩展；
-同时，数据并行也将模型训练的工作限制在了单个计算设备内，
-无法通过设备并行的方式加速训练过程。
+\paragraph{数据并行（DP）。}
+数据并行将训练数据在各计算设备间划分，每个设备持有一份完整模型副本，
+本地前向传播与反向传播后通过梯度 All-Reduce 等通信同步参数\cite{parameter_server,horovod,pytorch_ddp}。
+如图\ref{fig:data_parallel}所示，各设备独立计算所分配 mini-batch 的梯度，
+再在迭代末聚合梯度并更新一致参数。DP 实现简单、扩展性好，
+是 PyTorch DDP\cite{pytorch_ddp}、Horovod\cite{horovod} 等框架的默认方式；
+PyTorch 的 FSDP\cite{fsdp2022} 在数据并行基础上对参数、梯度与优化器状态进行分片，与 ZeRO-3 思路相近，
+可在单卡显存受限时支撑千亿级稠密模型训练；Parallax\cite{parallax} 针对稀疏与异构场景对参数服务器与 All-Reduce 做了灵活选择。
+其局限在于单卡需容纳完整模型与优化器状态（DP）或需额外通信聚合分片（FSDP），
+无法单独支撑超大参数规模，常与张量/流水线并行或 ZeRO 组合使用。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.75\linewidth]{fig03_data_parallel}
-  \caption{数据并行}
+  \includegraphics[width=0.55\linewidth]{fig03_data_parallel.pdf}
+  \caption{数据并行示意}
   \label{fig:data_parallel}
 \end{figure}
 
-模型并行（Model Parallelism）是实现大模型训练的有效途径，
-包括张量并行（Tensor Parallelism）\cite{megatron2020} 和
-流水线并行（Pipeline Parallelism）\cite{gpipe}。
-张量并行的核心思想是将模型在层内进行划分，
-每个计算设备分别持有模型一部分的层内张量，它们组合在一起是一份完整的张量，
-从而将模型的参数和计算任务分别绑定到不同的相互连接的设备上。
-如图\ref{fig:tensor_parallel}所示，在训练过程的每次迭代中，
-每个计算设备只负责模型一部分参数的计算，
-然后通过中间激活值和梯度值的通信，使模型可以进行下一层的计算。
-Megatron-LM\cite{megatron2020} 提出了针对 Transformer 模型张量并行的训练方法，
-对每两个连续层的权重首先按行（输入维度）划分，再按列（输出维度）划分，
-消除了同步第一层中间输出的需要，但随后仍然需要大量的跨设备通信。
-GShard\cite{gshard} 提出了在计算图层面进行张量并行优化的思路。
-然而，目前的张量并行方式受限于 GPU 服务器集群中的带宽情况，尤其是跨节点带宽，
-其并行规模无法进行大规模扩展，往往需要结合其他并行方式一起加速。
+\paragraph{张量并行（TP）与序列并行（SP）。}
+张量并行在\emph{层内}划分权重与计算，使多设备协同完成单层的前向与反向，
+组合后等价于完整层\cite{megatron2020,megatron2021}。
+如图\ref{fig:tensor_parallel}所示，每设备仅持有部分参数与激活，
+层间通过 All-Gather/Reduce-Scatter 等通信传递激活与梯度。
+Megatron-LM\cite{megatron2020} 针对 Transformer 提出按行/列交替划分 FFN 与注意力权重，
+在减少同步次数的同时控制通信量；GShard\cite{gshard} 在 MoE 中结合张量并行与专家划分。
+TP 通信密集且对带宽敏感，实践中多限于单节点或高带宽拓扑内，并与流水线、数据并行组合\cite{megatron2021}。
+序列并行（SP）针对长序列场景，将输入沿\emph{序列维}划分到多卡，每卡仅处理一段子序列，
+通过通信在注意力等层交换信息以保持语义一致\cite{megatron2023,ulysses2023}。
+DeepSpeed-Ulysses\cite{ulysses2023} 将序列均匀分片，在注意力处采用两阶段 All-to-All 重分布，
+使通信量随序列长度与设备数成比例缩放，支持百万级 token 训练；
+Megatron 中的实现常与张量并行共用进程组，与 TP、PP、DP 组合构成多维混合并行\cite{megatron2023}。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.75\linewidth]{fig04_tensor_parallel}
-  \caption{张量并行}
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig04_tensor_parallel_left}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{fig04_tensor_parallel_right}
+  \end{minipage}
+  \caption{张量并行示意}
   \label{fig:tensor_parallel}
 \end{figure}
 
-流水线并行的核心思想是将模型在层间进行划分，
-每个计算设备分别持有整个模型的若干层，称为一个 stage；
-这些 stage 组合起来是一份完整的模型。
-如果直接将不同设备上的 stage 串行地进行训练，
-则会导致每个 stage 训练过程中只有一个设备在进行计算，设备利用率极低。
-如图\ref{fig:pipeline_parallel}所示，流水线并行针对训练数据进一步划分为多个
-micro-batch，依次输入到模型中进行计算。
-尽管各级流水线在不同的 micro-batch 之间存在数据依赖，
-然而 batch 之间数据是相互独立的，
-从而每个 micro-batch 可以依次进行模型训练，实现流水线的训练过程，
-大大减少计算设备的空闲时间。
-GPipe\cite{gpipe} 提出了使用 micro-batch 的流水线并行方式，
-通过设计多级流水减少了 Bubble 的空闲。
-PipeDream\cite{pipedream2019} 提出了 1F1B（1 次前向 1 次反向），
-通过异步调度的方式进一步减少了 Bubble 的空闲。
-TeraPipe\cite{terapipe} 则在自回归模型的单个训练 sequence 中使用 token 级流水线并行，
-实现了更细粒度的流水线并行。
-数据并行、张量并行和流水线并行策略相互正交，可以一起用于并行训练。
-由于流水线并行的通信量一般较小，且跨节点通信明显慢于节点内通信，
-因此张量并行往往仅限于节点内训练，而流水线并行则用于跨节点训练，
-以更好地利用硬件带宽\cite{megatron2020}。
+\paragraph{流水线并行（PP）。}
+流水线并行在\emph{层间}划分模型，每设备持有若干连续层构成一个流水级，如图\ref{fig:pipeline_parallel}所示。
+GPipe 使用多个 micro-batch 依次流过各流水级以重叠计算、降低空闲（bubble）\cite{gpipe}。
+PipeDream\cite{pipedream2019} 提出 1F1B（1 Forward 1 Backward）等异步调度进一步压缩空闲；
+TeraPipe\cite{terapipe,terapipe_icml2022} 在序列内做 token 级流水线，实现更细粒度的层间并行。
+Chimera\cite{chimera_pp2023} 采用双向流水线减少气泡；
+Hanayo\cite{hanayo_pp} 等波式调度进一步优化多流水级下的计算重叠。
+近年来，\textbf{ZeroBubble}\cite{zerobubble2024} 在同步语义下将反向拆分为“对输入的梯度”与“对参数的梯度”两阶段，
+结合 1F1B1W 等调度与参数更新重叠，实现了近似零 bubble，在相同显存下相较 1F1B 提升吞吐约 23\%--31\%；
+\textbf{DualPipe}\cite{dualpipe2025} 采用双向 micro-batch 流动与前后向重叠，在 DeepSeek 等超大规模训练中用于降低 bubble 与通信压力。
+PP 通信量相对较小，适合跨节点扩展，常与节点内 TP、全局 DP 组合\cite{megatron2020}。
+上述并行方式降低了单机负载与通信压力，但单机显存仍可能成为瓶颈；
+下文介绍的零冗余优化器（ZeRO）系列正是针对显存分片与优化器状态而提出，与 DP/TP/PP 组合后构成当前大模型训练的主流栈。
+长序列场景下，Ring Attention\cite{ring_attention2024} 等通过块状 Transformer 与环形通信在有限显存内支持近无限上下文，与 PP、SP 形成互补。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\linewidth]{fig05_pipeline_parallel}
-  \caption{流水线并行}
+  \includegraphics[width=\linewidth]{fig05_pipeline_parallel.pdf}
+  \caption{流水线并行示意}
   \label{fig:pipeline_parallel}
 \end{figure}
 
-\subsection{多维混合并行}
-
-ZeRO\cite{zero2020} 是微软 DeepSpeed 团队提出的零冗余优化器技术，
-针对大规模深度神经网络中数据并行训练进行高效优化。
-如图\ref{fig:zero}所示，在模型训练中，
-各部分的存储占用从高到低依次为优化器状态、梯度和参数。
-ZeRO 通过将以上三部分分别划分到每个计算设备中，
-进而减少存储开销和提高 GPU 利用率来扩展大语言模型的训练。
-在训练过程中，ZeRO 通过前向和反向的多次通信同步数据，保证训练结果的一致性。
-目前，学界已经提出了一些针对 ZeRO 的通信方面的改进工作。
-MiCS\cite{mics2022} 是在云服务环境下针对 ZeRO 的通信数据量进行减少和优化；
-ZeRO++\cite{zeroplusplus} 基于量化技术减少 ZeRO 的通信数据量；
-AMSP\cite{amsp} 则将 ZeRO 的划分方式扩展到一个统一划分空间，
-寻找通信开销最小的策略，进一步扩展了大模型训练的规模。
+\paragraph{上下文并行（CP）与专家并行（EP）。}
+上下文并行（CP）在如今模型输入越来越长的场景下得到了广泛应用：单卡显存难以容纳全长序列的激活时，
+将输入沿序列维划分到多卡，在注意力等层通过通信交换信息以保持语义一致，
+与张量并行共用进程组的序列并行（Sequence Parallelism）不同，上下文并行把模型输入在序列维度做切分，
+不同的序列块使用不同的 GPU 进行计算，称为 Context Parallelism（CP）\cite{megatron2023}。
+CP 在 8K+ token 场景下显存收益显著，但会引入额外通信与拓扑约束，需与 Flash Attention、激活检查点等配合使用。
+专家并行（EP）针对混合专家模型（MoE）：不同 token 由不同子网络（专家）处理，
+EP 将\emph{完整专家}分布到不同设备，每设备仅持有部分专家权重，
+前向时根据路由将激活发送至对应专家所在设备，再汇总结果\cite{gshard}。
+与张量并行（每设备持所有专家的部分权重）不同，EP 下每设备只存部分专家的全量权重，
+通信模式为 All-to-All 的 token 重分布，适合专家数多、单专家规模适中的 MoE。
+GShard\cite{gshard} 将 MoE 与张量并行结合并做自动分片；DeepSeek-MoE\cite{deepseek_moe2024} 等在有限资源下通过 MoE 扩展语言模型规模；
+DualPipe\cite{dualpipe2025} 等也在流水线中结合专家并行以支撑超大规模 MoE 训练。
+EP 的主要挑战是专家负载不均与路由带来的通信开销，需高带宽互联与负载均衡设计。
+图\ref{fig:expert_parallel}展示了专家并行中的典型路由过程：门控网络先为 token 选择 Top-$k$ 专家，
+再通过 All-to-All 将 token 分发到对应 GPU 上的专家执行计算，最后汇聚结果返回主干网络。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\linewidth]{fig06_zero}
-  \caption{零冗余优化器 ZeRO}
+  \includegraphics[width=0.78\linewidth]{fig06_expert_parallel}
+  \caption{专家并行（EP）中门控路由与专家分布示意}
+  \label{fig:expert_parallel}
+\end{figure}
+
+\subsection{零冗余优化器（ZeRO）}
+
+ZeRO\cite{zero2020,zero2021} 在数据并行基础上，将优化器状态、梯度与参数分片存于各卡，
+前向与反向时按需聚合，在保持 DP 通信量的前提下显著降低单卡显存，使千亿级训练可行。
+如图\ref{fig:zero}所示，ZeRO 三阶段分别分片优化器状态、梯度与参数；
+ZeRO-Infinity\cite{zero2021} 进一步将部分状态卸载至 CPU/NVMe 以突破 GPU 显存墙。
+ZeRO++\cite{zeroplusplus} 通过量化与通信重算减少跨节点通信量；MiCS\cite{mics2022}、AMSP\cite{amsp} 等在云环境与统一划分空间上做了扩展。
+ZeRO-3 与张量并行、流水线并行的组合在工程上存在约束（如 DeepSpeed 与 Megatron 的 3D 并行通常采用 ZeRO-1/2 与 TP+PP），
+需根据框架与集群拓扑谨慎配置\cite{zero3_tp_pp,tensor_parallelism_survey}，
+在实际部署中需在显存节省、通信开销与实现复杂度之间权衡。
+在注意力与激活显存方面，Flash Attention\cite{flash_attention_2022} 通过分块计算与 IO 感知将注意力显存从序列长度平方降为线性，
+FlashAttention-3\cite{flashattention3_2024} 在 H100 上进一步通过异步计算与低精度达到更高利用率。
+ZeRO 与 TP、PP、SP 等组合构成当前大模型与 MLLM 训练的主流基础设施。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{fig07_zero.png}
+  \caption{零冗余优化器 ZeRO 示意}
   \label{fig:zero}
 \end{figure}
 
 \section{异构 GPU 集群并行训练策略}
 
-在存储方面，由于不同 GPU 之间的存储不一致，
-传统的并行策略会导致存储负载不均衡，
-大存储的设备会出现存储利用不充分的问题，影响了模型训练的扩展性。
-在算力方面，由于不同 GPU 之间的算力不一致，
-传统并行策略会导致“木桶效应”，不仅使得计算资源利用率下降，
-还导致整体训练速度的降低。
-在网络方面，由于集群中存在的不对称的多级网络连接，
-使得不同设备之间的通信开销相去甚远，
-低带宽网络对应的通信将成为训练的性能瓶颈。
-因此，面向异构 GPU 集群的并行训练策略成为近年来的研究热点。
+实际部署中，高校、企业与云平台往往无法配备全同构的 GPU 集群：
+设备多代共存（如 A100 与 V100、H100 混用）、显存容量从数十 GB 到 80\,GB 不等、
+算力与互联带宽差异显著。
+在此类\emph{异构}环境下，直接套用面向同构集群设计的并行训练框架，通常会引发三个层面的系统性问题。
+\emph{存储异构}方面，传统策略多假设各卡显存一致，按均匀方式划分模型与激活，
+导致大显存设备利用率不足而小显存设备易发生 OOM，制约扩展性。
+\emph{算力异构}方面，同步式并行要求各设备步调一致，最慢设备成为瓶颈，
+产生“木桶效应”，整体算力利用率与训练吞吐下降。
+\emph{网络异构}方面，集群常存在多级互联（节点内 NVLink、节点间 InfiniBand 或以太），
+不同链路带宽与延迟差异大，跨节点通信易成为瓶颈。
+针对异构 GPU 集群并行训练的方法逐步成为近年来的研究热点，
+下文将梳理代表性工作及其应用局限。
+这些工作从不同角度缓解了异构带来的负载不均与 OOM 风险，但多数仍以通用 LLMs 或粗粒度划分为前提，
+对 MLLMs 的模块异构与分阶段冻结的适配仍显不足。
 
-HetPipe\cite{hetpipe2020} 结合了流水线并行（PMP）和数据并行（DP），
-多个 GPU 被分组为虚拟工作节点（VW），以流水线方式处理小批量数据，
-然后这些虚拟工作节点再通过数据并行提高训练的可扩展性和性能。
-但是 HetPipe 没有考虑虚拟工作节点内部的异构设备排列方式，
-对于通信开销和显存开销的考虑过于直观，而且完全没有考虑模型异构，
-在如今的多模态大语言模型训练时不适用。
+HetPipe\cite{hetpipe2020} 较早将流水线并行与数据并行结合以利用异构集群。
+其将多个 GPU 组织为虚拟工作节点（VW），在 VW 内采用流水线模型并行（PMP）处理小批量，
+在 VW 间采用数据并行提升可扩展性。
+通过将“弱”设备与“强”设备搭配成 VW，在一定程度上缓解了单机算力不足的问题。
+然而，HetPipe 未显式建模 VW 内部的异构设备排列与通信拓扑，
+对通信与显存开销的估计较为直观，且未考虑\emph{模型异构}（如 MLLM 中 Encoder、Projector、LLM 模块结构各异、冻结策略不同），
+在当今多模态大语言模型与分阶段训练场景下适用性有限。
 
-Whale\cite{whale} 是阿里巴巴团队提出的一种面向异构存储的 GPU 集群的并行训练优化方法。
-由于实际 GPU 集群中存在的存储异构和算力异构问题，
-Whale 提出了一种基于硬件感知的负载均衡算法，
-通过按比例分配的方式为每个设备分配不同大小的批次数据和模型部分，
-实现了数据并行与张量并行的负载均衡。
-然而，Whale 没有考虑集群中普遍存在的网络异构性，
-对于存储异构和算力异构的优化方法过于直观和简单，
-并且是在子图的粗粒度下进行的划分和编译，也没有考虑 ZeRO 的并行方法，
-因此仍然需要进一步的优化。
+Whale\cite{whale} 针对显存与算力异构，提出基于硬件感知的负载均衡方法。
+通过刻画各 GPU 的存储与算力差异，Whale 按比例为各设备分配不同大小的批次与模型分片，
+在数据并行与张量并行下实现计算与显存负载的均衡。
+其思路对“大卡多算、小卡少算”的配置有参考价值。
+但 Whale 未考虑\emph{网络异构}，且存储/算力均衡策略相对直观，
+划分与编译粒度停留在子图级别，未与 ZeRO 等显存优化结合，
+在超大规模与多维度异构并存时仍有优化空间。
 
-AMP\cite{amp2022} 是卡耐基梅隆大学团队提出的一种针对异构环境下大模型的
-并行训练优化方法。
-AMP 同时考虑了模型异构和设备异构，
-针对模型中不同层的结构不同的情况进行了抽象和建模，
-而针对集群中不同 GPU 存储异构和网络异构进行了近似计算。
-在此基础上，AMP 基于 3D 并行方法（DP+TP+PP），
-设计了一个详细的开销模型（Cost Model）以评估异构模型在异构环境下的计算和通信开销，
-并通过动态规划算法确定最优的并行策略。
-尽管 AMP 在传统的 3D 并行策略的基础上提升了异构环境下的性能表现，
-但是 AMP 的并行维度是基于全局的粗粒度划分，开销模型的准确性不足，
-并且没有考虑显存开销，
-在实际的应用中会大概率发生内存不足（Out of Memory）的问题，
-故而仍然具有很大的改进空间。
+AMP\cite{amp2022} 在异构环境下为大模型自动寻找并行策略。
+AMP 同时考虑\emph{模型异构}（不同层结构、参数量与计算量）与\emph{设备异构}（GPU 显存、算力、网络），
+对层间差异进行抽象与建模，对集群内存储与网络异构进行近似量化，
+在此基础上基于 3D 并行（DP+TP+PP）设计开销模型（Cost Model），
+并用动态规划求解近似最优的并行配置。
+实验表明其在异构场景下相较基线有明显提升。
+不足在于：划分粒度为全局粗粒度，开销模型对通信与显存估计的准确性有限，
+且未显式约束显存上界，实际部署中易出现 OOM，仍需与显存预算和重计算等联合考虑。
 
-而与 ZeRO 相关的工作中，不论是 ZeRO、MiCS 还是 ZeRO++ 和 AMSP，
-在面向大语言模型并行训练的异构性环境下，均存在着潜在的问题和提升的空间。
-ZeRO 中存在着庞大的通信开销；
-MiCS 中存在着对模型规模的限制，并且对于异构的网络连接中的高带宽连接利用率低；
-ZeRO++ 的量化方法引入了潜在的信息损失和模型性能的下降，存在通用性问题；
-AMSP 针对通信的优化思路同样局限于减少跨节点的通信量，
-无法充分适应和利用异构集群中存在的不同存储、算力和网络带宽。
+近年来，面向大模型在云上与异构集群中训练的资源调度与配置规划工作受到关注。
+\textbf{Espresso}\cite{espresso2025} 是一种面向成本效益的异构 GPU 资源供给与阶段放置框架，
+面向大规模模型训练场景。
+Espresso 集成四大模块：\emph{Profiler} 分析不同层在异构 GPU 上的迭代时间与显存占用；
+\emph{GPU Allocator} 负责异构 GPU 的分配；\emph{Stage Placer} 确定流水线等并行策略下的阶段放置；
+\emph{Performance Estimator} 预测给定配置下的训练性能。
+用户可指定模型、数据集、训练轮数与 SLO（服务等级目标），
+由系统自动给出资源分配与 stage 放置方案，从而在异构环境中兼顾成本与效率。
+Espresso 为异构集群上的大模型训练提供了从分析到配置的一体化思路，
+其与 ZeRO、流水线气泡优化及 MLLM 模块异构的结合仍可进一步探索。
 
-\section{梯度检查点优化}
+\textbf{HetHub}\cite{hethub2024} 面向多厂商异构 GPU 集群（如 华为昇腾、AMD 与 NVIDIA 的计算卡混合），
+引入分布式统一通信器、性能预测器与自动并行规划，在 768 张异构卡（128 张 AMD + 640 张 A 系列）上
+训练 Llama-140B 达到理论性能上界的 97.49\%，验证了异构集群训练大模型的可行性。
+\textbf{HexiScale}\cite{hexiscale2024} 将数据、流水线与张量并行的非对称划分形式化为约束优化问题，
+采用层次图划分算法为异构 GPU 分配计算，在 7B--30B LLM 上取得与同构系统相当的 MFU（平均差距约 3.5\%），
+为“按设备能力非对称划分”提供了系统化方法。
 
-在大规模模型与长序列训练中，为节省显存，
-常采用梯度检查点（Gradient Checkpointing）技术，
-即不保存所有层的中间激活，仅在部分层保存，
-反向传播时对未保存的层进行重新前向计算以得到梯度。
-全部重计算策略不保存任何中间激活，仅在需要时按需重算，
-显存占用最低但计算量增加明显。
-选择重计算策略则选择部分层作为检查点保存激活，在显存与计算之间取得折中。
-细粒度重计算进一步在算子或更小粒度上决定保存与重算，
-可结合模型结构和异构设备的显存与算力进行更精细的优化。
-在异构 GPU 集群上，不同设备显存与算力差异大，
-将梯度检查点与流水线划分、stage 分配结合，
-可避免显存溢出并提高整体吞吐，是本文后续优化方向之一。
-Colossal-Auto\cite{colossal_auto} 等工作对自动并行与激活检查点进行了统一自动化，
-为面向异构环境的联合优化提供了参考。
+\textbf{Zorse}\cite{zorse2025} 则直接针对异构 GPU 集群上的 LLM 训练效率优化。
+其指出，在异构集群上高效训练需要：（1）将流水线并行与数据并行以通信与显存高效的方式结合；
+（2）支持更灵活的配置，包括将 GPU 灵活划分为\emph{非对称}的流水线阶段、在同一数据并行组内容纳异构 GPU。
+Zorse 实现了上述能力的统一，并配备自动规划器，根据工作负载自动生成训练配置。
+实验表明在异构场景下相较现有系统有显著提升。
+Zorse 与 Espresso 等工作的出现，反映了社区对异构环境下大模型训练系统化方法的需求，
+二者在 MLLMs 多模块、分阶段冻结训练等场景下的适配问题仍亟待解决。
+
+此外，与 ZeRO 系列相关的工作在异构场景下也存在局限。
+ZeRO\cite{zero2020,zero2021} 的梯度/参数 All-Gather 等通信在跨节点异构网络中易成为瓶颈；
+MiCS\cite{mics2022} 对模型规模与异构网络下的高带宽链路利用仍有不足；
+ZeRO++\cite{zeroplusplus} 的量化与通信重算在带来收益的同时可能引入精度与通用性代价；
+AMSP\cite{amsp} 等侧重跨节点通信削减，对集群内存储、算力与带宽的细粒度异构利用仍有限。
+综合来看，现有异构并行与 ZeRO 类方法多针对通用 LLM 或同构假设下的扩展，
+对\emph{多模态大语言模型的模块异构、分阶段冻结}与\emph{显存—算力—通信}三重异构的联合优化仍不足，
+为本文面向异构集群的 MLLMs 高效训练与调度研究留下了空间。
+
+从系统实现角度，将上述思路落地还需解决若干工程问题：异构设备上的性能预测与开销建模、
+与 Megatron/DeepSpeed 等现有框架的集成方式、以及多阶段训练下划分与调度策略的自动或半自动生成。
+Frenzy\cite{frenzy_memory2024} 等面向内存感知的 serverless 调度在异构环境下可辅助资源与阶段放置；
+部分工作\cite{espresso2025,zorse2025} 已开始提供从分析到配置的一体化工具，
+但在 MLLM 的模块级划分、冻结感知调度与重计算的联合优化方面仍缺少系统化方案，
+这也是本文 MMoH 与 HR-MMoH 设计所要弥补的不足。
+
+\section{重计算显存优化技术}
+
+大规模模型与长序列训练中，前向传播产生的中间激活（activation）需在反向传播时用于梯度计算，
+若全部保存则显存占用随层数与序列长度线性甚至平方增长，成为训练瓶颈。
+\emph{重计算}（Recomputation，又称激活检查点(Activation Checkpointing)）通过“以计算换显存”的思想，即
+前向传播时仅保存部分激活或仅保存检查点处的输入，反向时对未保存的区域重新执行前向传播以得到所需激活值，如图\ref{fig:recomputation}所示，
+从而在显存与计算之间进行权衡，是缓解显存压力的常用手段\cite{chen2016checkpoint}。
+根据检查点放置的粒度和策略，可大致分为全部重计算、选择重计算与细粒度重计算三类；
+以下分别简述其思路与适用场景。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{fig08_recomputation.pdf}
+  \caption{重计算（激活检查点）示意：以计算换显存，按粒度可分为全层、选择性子模块与细粒度重算}
+  \label{fig:recomputation}
+\end{figure}
+
+\paragraph{全部重计算。}
+全部重计算（full recomputation）策略在前向阶段不保存任何中间激活，
+仅在若干“检查点”层保存该层的输入（或仅保存网络输入），
+反向传播需要某段中间激活时，从最近的检查点重新执行前向至该位置再计算梯度。
+极端情况下仅保存网络输入，则显存占用可降至与深度无关的常数级别，但反向传播需对整网做一次完整前向重算，计算开销约增加前向传播的一倍。
+Chen 等\cite{chen2016checkpoint} 针对链式计算图证明了在仅增加一次额外前向的前提下，通过动态规划可求得检查点的最优放置，使显存从 $O(n)$ 降为 $O(\sqrt{n})$（$n$ 为层数），
+并在千层残差网络等实验中实现了显存的大幅下降（如 48\,GB $\to$ 7\,GB）与约 30\% 的训练时间增加。
+全部重计算实现简单、显存收益最大，适合显存极度紧张、算力相对充裕的场景，但计算冗余较高。
+
+\paragraph{选择重计算。}
+选择重计算（selective recomputation）不是对整个 Transformer 层统一做 checkpoint，
+而是只对\emph{显存占用大但重算代价相对较低}的部分子模块执行重算，未选部分仍正常保存激活。
+Korthikanti 等\cite{korthikanti2023activation} 在大规模 Transformer 中提出的 selective activation recomputation 即属于此类：
+其核心思想是优先重算注意力中的 $QK^\top$、softmax、dropout 以及与 $V$ 的乘法等中间激活，
+因为这些张量随序列长度和注意力头数增长较快，但额外 FLOPs 开销相对有限。
+相较整层重计算，该策略的显存收益略小，但能显著降低重算开销；论文报告其总时间开销约为 7\%，明显低于整层重算的 39\%\cite{korthikanti2023activation}。
+在工程实现上，Megatron-LM 与 NeMo 将其落地为 \texttt{selective} 粒度，默认仅重算 \texttt{core\_attn}，
+也可扩展到 \texttt{mlp}、\texttt{moe}、\texttt{layernorm} 等指定子模块\cite{selective_checkpoint_megatron,nemo_activation_recomp}。
+
+\paragraph{细粒度重计算。}
+细粒度重计算（fine-grained recomputation）在\emph{算子}或更小粒度上决定哪些激活保存、哪些重算，
+从而更精细地利用不同算子的计算—显存特性。
+与上一段“选择重计算”主要回答“\emph{哪些模块}需要重算”不同，细粒度重计算更关注“\emph{如何在模块内部}重算”。
+例如，Transformer 中可不把整个注意力或 MLP 作为单一单位处理，而是进一步细化到 LayerNorm、dropout、MoE 激活函数、
+或某些投影输出等中间张量：前向时仅保留最少输入或元数据，反向时再局部恢复需要的结果。
+Megatron-LM/NeMo 中的 output-discarding checkpoint 就体现了这种思路：它并非简单地把整段前向再执行一遍，
+而是在前向后主动丢弃部分输出张量的存储，在反向阶段借助 hook 触发局部重算，从而进一步压缩激活占用\cite{selective_checkpoint_megatron,nemo_activation_recomp}。
+这类方法比“按层”或“按子模块”的重计算更贴近实现细节，能够利用不同算子的显存占用、通信需求与 FLOPs 差异做更细致的权衡。
+Lynx\cite{lynx2024} 进一步将激活重算与通信重叠调度，在 1.3B--23B GPT 模型上相较现有方法取得最高约 1.37$\times$ 的加速，
+表明细粒度重算若与通信、并行调度协同设计，还可以同时改善显存效率与训练吞吐。
+细粒度策略可结合模型结构（如 MLLMs 中 Encoder、Projector、LLM 各模块的算子组成）与异构设备的显存、算力差异，
+在不同设备或不同 stage 上采用不同的检查点粒度，是面向异构集群与 MLLM 的潜在优化方向。
+
+在 Megatron-LM 与 NeMo 等框架中，重计算被实现为可配置的多级粒度。
+\emph{全部重计算}（full）以整个 Transformer 层为粒度：检查点保存每层输入，反向时重算整层前向，显存下降显著但单层计算约增加 30\%。
+框架进一步提供两种全层模式：\emph{block} 模式通过参数指定每个流水线 stage 内参与重计算的层数，可仅对部分层做检查点以在显存与计算间折中；
+\emph{uniform} 模式以连续多层的“块”为重计算单位，块内仅存块首输入，适用于层数很多或层间激活相对较小的模型，可节省激活显存但会增加重算缓冲。
+\emph{选择性重计算}（selective）则仅在\emph{子模块}级别重算：例如仅对自注意力块做检查点与重算（保存注意力块输入，重算 softmax、dropout、QKV 等中间激活），而 MLP 等不重算。
+自注意力激活随序列长度平方增长、占显存大头，但其重算成本相对线性投影层较低，因此选择性重算能以较小计算代价获得较高显存收益；
+用户还可指定 \texttt{core\_attn}、\texttt{mlp}、\texttt{moe} 等模块是否参与重算。
+在使用 Flash Attention 时，框架通常强制对注意力做选择性重算以配合其显存布局。
+上述多级粒度（全层 block/uniform、子模块 selective）为实际训练中按显存预算与算力调节检查点策略提供了细粒度控制，与 Korthikanti 等\cite{korthikanti2023activation} 的序列并行与选择性激活重算相结合，已广泛应用于大规模 Transformer 与 LLM 训练。
+然而，现有检查点策略多面向\emph{同构}设备设计：重计算层数、块大小、参与重算的子模块等均需用户或策略脚本\emph{手动指定}，且通常假设各设备显存与算力一致，无法根据异构集群中不同设备的显存余量与算力差异自动调节（例如在显存紧张设备上加大重算比例、在算力瓶颈设备上减少重算）。
+
+将重计算与流水线并行、stage 划分及异构分配结合，可进一步缓解显存瓶颈并提升整体吞吐：
+例如在流水线各 stage 内独立设置检查点策略，或在显存紧张的设备上采用更激进的重计算、在算力紧张处适当多存以减少重算，
+但上述调节目前仍依赖人工或离线调参。
+Megatron-LM、NeMo 等支持按层或子模块（如 \texttt{core\_attn}、\texttt{mlp}）配置选择性重算\cite{selective_checkpoint_megatron,nemo_activation_recomp}；
+Colossal-Auto\cite{colossal_auto,stage_wise_checkpoint2023} 等将自动并行策略搜索与激活检查点统一自动化，为大规模模型与异构环境下的联合优化提供了参考；
+在异构 GPU 集群上，针对 MLLM 的模块异构与分阶段冻结，设计能\emph{自动适应}设备异构的细粒度检查点策略仍是开放问题，也是本文后续工作方向之一。
+
+\section{本章小结}
+
+本章从多模态大语言模型、并行与分布式训练基础、异构 GPU 集群并行训练策略以及重计算优化四个方面对相关工作进行了综述。
+大模型训练系统的综述\cite{llm_systems_survey2024,distributed_dl_survey2022} 也从不同角度归纳了并行、显存与异构优化的发展脉络。
+首先介绍了 MLLM 的典型架构（编码器、投影层、LLM 骨干及可选生成器）、训练数据规模与训练目标，以及模块异构与分阶段冻结带来的计算—显存需求差异。随后综述了数据并行、张量并行、流水线并行、序列并行与专家并行等多维混合并行方式，以及 ZeRO 系列显存分片优化，指出其在同构假设下的广泛应用与在异构、模块异构场景下的局限。接着讨论了异构 GPU 集群上显存、算力与通信的异构性，以及 Whale、HetPipe、Espresso、Cephalo 等异构感知并行与调度工作的思路与不足，并指出 MLLM 的混合模块结构与冻结策略进一步增加了高效划分与调度的难度。最后介绍了重计算的基本原理与全层、选择重计算及细粒度重计算等实现方式，以及 Megatron-LM 等框架中的多级粒度配置，并指出现有检查点策略多面向同构设备、难以根据异构集群与 MLLM 各阶段需求自动调节。
+综合来看，MLLM 的模块异构与分阶段冻结、以及异构集群的显存—算力—通信差异，共同构成了现有同构导向并行与统一检查点策略难以直接应对的挑战。
+上述分析为本文第三章的 MMoH 框架（需求驱动拓扑、复合粒度划分、冻结感知划分与提前终止调度）与第四章的 HR-MMoH 异构重计算提供了问题背景与动机。
