@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.16)  16 MAR 2026 23:12
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.16)  20 MAR 2026 17:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1374,10 +1374,7 @@ LaTeX Font Warning: Font shape `TU/SimSun(1)/b/n' undefined
 
 ] [6
 
-] (./thesis.lof
-Underfull \vbox (badness 2343) has occurred while \output is active []
-
- [7
+] (./thesis.lof [7
 
 ])
 \tf@lof=\write8
@@ -1511,8 +1508,8 @@ Underfull \vbox (badness 3323) has occurred while \output is active []
  [19]
 File: figures/fig06_expert_parallel.pdf Graphic file (type pdf)
 <use figures/fig06_expert_parallel.pdf>
-File: figures/fig07_zero.png Graphic file (type bmp)
-<figures/fig07_zero.png>
+File: figures/fig07_zero.pdf Graphic file (type pdf)
+<use figures/fig07_zero.pdf>
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1597,6 +1594,9 @@ File: figures/MMoH-figs/early_termination.pdf Graphic file (type pdf)
 <use figures/MMoH-figs/early_termination.pdf>
 File: figures/MMoH-figs/ET-time.pdf Graphic file (type pdf)
 <use figures/MMoH-figs/ET-time.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [46]) (./data/chap04.tex [47] [48
 
 ]
@@ -1640,14 +1640,20 @@ Overfull \hbox (7.9344pt too wide) in paragraph at lines 61--61
 []|\TU/CourierNew(0)/m/n/10.53937 recompute_modules| 
  []
 
+
+Overfull \hbox (4.46805pt too wide) in paragraph at lines 66--70
+|\TU/SimSun(1)/m/n/12.045 “块”|  的 输 入，|  反 向 时 重 新 执 行 该 段 前 向 再 反 传。|  在 \TU/TimesNewRoman(0)/m/n/12.045 full \TU/SimSun(1)/m/n/12.045 粒 度 下，| \TU/CourierNew(0)/m/n/12.045 recompute_method
+ []
+
 [50]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [51] [52]
-Overfull \hbox (1.28691pt too wide) in paragraph at lines 150--150
+ [51]
+Overfull \hbox (1.28691pt too wide) in paragraph at lines 148--148
 []|$\OML/cmm/m/it/10.95 N[]$| 
  []
 
+[52]
 File: figures/recomputation_attention.pdf Graphic file (type pdf)
 <use figures/recomputation_attention.pdf>
 
@@ -1657,55 +1663,57 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 File: figures/recomputation_mlp.pdf Graphic file (type pdf)
 <use figures/recomputation_mlp.pdf>
  [54]
-Underfull \hbox (badness 10000) in paragraph at lines 229--229
+Underfull \hbox (badness 10000) in paragraph at lines 242--242
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--231
+Underfull \hbox (badness 10000) in paragraph at lines 244--244
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--231
+Underfull \hbox (badness 10000) in paragraph at lines 244--244
 \TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--233
+Underfull \hbox (badness 10000) in paragraph at lines 246--246
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--233
+Underfull \hbox (badness 10000) in paragraph at lines 246--246
 \TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--233
+Underfull \hbox (badness 10000) in paragraph at lines 246--246
 \TU/CourierNew(0)/m/n/10.53937 mlp\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [55]
-Underfull \vbox (badness 1194) has occurred while \output is active []
+ [55] [56]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [56] [57]) (./data/chap05.tex [58] [59
+ [57]) (./data/chap05.tex [58] [59] [60
+
+] [61
 
 
 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [60] [61]) (./data/ack.tex [62]) [63
+ [62] [63]) (./data/ack.tex [64]) [65
 
-] [64
+] [66
 
 ] (./thesis.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [65
+ [67
 
 
 ]
@@ -1716,13 +1724,13 @@ Underfull \hbox (badness 3884) in paragraph at lines 102--106
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [66]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [67]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
  [68]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [69]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [70]
 Underfull \hbox (badness 10000) in paragraph at lines 347--351
 []\TU/TimesNewRoman(0)/m/n/12.045 NVIDIA Corporation. NVIDIA Blackwell Architecture and GPU
  []
@@ -1735,10 +1743,10 @@ Underfull \hbox (badness 1742) in paragraph at lines 359--363
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [69]
+ [71]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [70]
+ [72]
 
 Package fontspec Info: 
 (fontspec)             Script 'CJK' not explicitly supported within font
@@ -1783,7 +1791,7 @@ Underfull \hbox (badness 2951) in paragraph at lines 506--511
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [71]
+ [73]
 Underfull \hbox (badness 2401) in paragraph at lines 660--664
 []\TU/TimesNewRoman(0)/m/n/12.045 NVIDIA. Megatron-LM: Activation Recomputation [J]. NVIDIA Deep
  []
@@ -1791,16 +1799,16 @@ Underfull \hbox (badness 2401) in paragraph at lines 660--664
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [72]
+ [74]
 Underfull \hbox (badness 1043) in paragraph at lines 672--676
 []\TU/TimesNewRoman(0)/m/n/12.045 Li Z, Lin Z, Wang C, et al. Lynx: Efficient Memory Management for
  []
 
-) (./data/resume.tex [73] [74
+) (./data/resume.tex [75] [76
 
-]) (./data/reviewinfo.tex [75
+]) (./data/reviewinfo.tex [77
 
-] [76
+] [78
 
 ]
 Overfull \hbox (5.0051pt too wide) in paragraph at lines 5--20
@@ -1812,15 +1820,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 28--30
 
  []
 
-) [77
+) [79
 
-] [78
+] [80
 
 ] (./data/appendix01.tex)
 \tf@thm=\write9
 \openout9 = `thesis.thm'.
 
- [79
+ [81
 
 
 
@@ -1837,19 +1845,16 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: B9D029BC7FC5A892126B0EA2312C1340;8084.
+(rerunfilecheck)             Checksum: 19B53BC706A8F5213250FA16316CC611;8100.
  ) 
 Here is how much of TeX's memory you used:
- 36745 strings out of 468168
- 788406 string characters out of 5436524
- 1233872 words of memory out of 5000000
- 64702 multiletter control sequences out of 15000+600000
- 659877 words of font info for 241 fonts, out of 8000000 for 9000
+ 36774 strings out of 468168
+ 790227 string characters out of 5436524
+ 1236943 words of memory out of 5000000
+ 64729 multiletter control sequences out of 15000+600000
+ 659893 words of font info for 243 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 125i,17n,121p,2307b,1005s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 125i,19n,121p,2307b,1005s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (95 pages).
+Output written on thesis.pdf (97 pages).

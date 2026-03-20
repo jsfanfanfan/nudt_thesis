@@ -281,14 +281,14 @@
 \citation{chen2016checkpoint}
 \citation{chen2016checkpoint}
 \@writefile{toc}{\contentsline {section}{\numberline {2.4}重计算显存优化技术}{23}{section.2.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算（激活检查点）示意}}{23}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:recomputation}{{2.7}{23}{重计算（激活检查点）示意}{figure.caption.23}{}}
+\@writefile{toc}{\contentsline {paragraph}{全部重计算。}{23}{paragraph*.24}\protected@file@percent }
 \citation{korthikanti2023activation}
 \citation{korthikanti2023activation}
 \citation{selective_checkpoint_megatron,nemo_activation_recomp}
 \citation{selective_checkpoint_megatron,nemo_activation_recomp}
 \citation{lynx2024}
-\@writefile{toc}{\contentsline {paragraph}{全部重计算。}{24}{paragraph*.24}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算（激活检查点）示意}}{24}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:recomputation}{{2.7}{24}{重计算（激活检查点）示意}{figure.caption.23}{}}
 \@writefile{toc}{\contentsline {paragraph}{选择重计算。}{24}{paragraph*.25}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{细粒度重计算。}{24}{paragraph*.26}\protected@file@percent }
 \citation{korthikanti2023activation}
@@ -365,16 +365,18 @@
 \newlabel{fig:chap3_e2e}{{3.8}{44}{四种冻结场景下 MMoH 与基线在两种异构集群上的训练吞吐对比。柱越长表示吞吐越高，OOM 表示显存溢出。}{figure.caption.50}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}实验分析}{45}{subsection.3.4.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{划分策略对比。}{45}{paragraph*.53}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{负载均衡。}{45}{paragraph*.54}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。}}{45}{figure.caption.55}\protected@file@percent }
-\newlabel{fig:chap3_load}{{3.9}{45}{MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。}{figure.caption.55}{}}
-\@writefile{toc}{\contentsline {paragraph}{提前终止调度器消融。}{45}{paragraph*.56}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces 不同冻结场景下的模型划分对比。A、B、C 分别表示 NVIDIA RTX 3090、2080 Ti 与 2080 GPU。}}{45}{table.caption.54}\protected@file@percent }
+\newlabel{tab:chap3_partition}{{3.3}{45}{不同冻结场景下的模型划分对比。A、B、C 分别表示 NVIDIA RTX 3090、2080 Ti 与 2080 GPU。}{table.caption.54}{}}
+\@writefile{toc}{\contentsline {paragraph}{负载均衡。}{45}{paragraph*.55}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{提前终止调度器消融。}{45}{paragraph*.57}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。}}{46}{figure.caption.56}\protected@file@percent }
+\newlabel{fig:chap3_load}{{3.9}{46}{MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。}{figure.caption.56}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。}}{46}{figure.caption.58}\protected@file@percent }
+\newlabel{fig:chap3_early}{{3.10}{46}{提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。}{figure.caption.58}{}}
 \citation{zerobubble2024}
 \citation{dualpipe2025}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。}}{46}{figure.caption.57}\protected@file@percent }
-\newlabel{fig:chap3_early}{{3.10}{46}{提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。}{figure.caption.57}{}}
-\@writefile{toc}{\contentsline {paragraph}{局限与扩展。}{46}{paragraph*.58}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}本章小结}{46}{section.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{局限与扩展。}{47}{paragraph*.59}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}本章小结}{47}{section.3.5}\protected@file@percent }
 \citation{chen2016checkpoint}
 \@writefile{toc}{\contentsline {chapter}{\numberline {4}HR-MMoH: 多模态大语言模型在异构 GPU 集群上的重计算策略}{49}{chapter.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}引言}{49}{section.4.1}\protected@file@percent }
@@ -382,46 +384,47 @@
 \citation{megatron2020,megatron2021,megatron2023}
 \@writefile{toc}{\contentsline {section}{\numberline {4.2}异构重计算}{50}{section.4.2}\protected@file@percent }
 \newlabel{sec:HR-MMoH-method}{{4.2}{50}{异构重计算}{section.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}现有的重计算策略与分析}{50}{subsection.4.2.1}\protected@file@percent }
-\newlabel{sec:megatron-recompute}{{4.2.1}{50}{现有的重计算策略与分析}{subsection.4.2.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Megatron-LM 重计算相关配置参数}}{51}{table.caption.60}\protected@file@percent }
-\newlabel{tab:chap4-megatron-params}{{4.1}{51}{Megatron-LM 重计算相关配置参数}{table.caption.60}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Megatron selective 粒度下可配置的子模块}}{52}{table.caption.61}\protected@file@percent }
-\newlabel{tab:chap4-megatron-modules}{{4.2}{52}{Megatron selective 粒度下可配置的子模块}{table.caption.61}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}异构重计算策略设计}{52}{subsection.4.2.2}\protected@file@percent }
-\newlabel{sec:HR-MMoH-design}{{4.2.2}{52}{异构重计算策略设计}{subsection.4.2.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{重计算技术的定量分析。}{52}{paragraph*.62}\protected@file@percent }
-\citation{korthikanti2023activation}
-\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces 4.2.2 节主要符号说明}}{53}{table.caption.63}\protected@file@percent }
-\newlabel{tab:chap4-symbols}{{4.3}{53}{4.2.2 节主要符号说明}{table.caption.63}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces 注意力子层中间激活示意}}{54}{figure.caption.64}\protected@file@percent }
-\newlabel{fig:chap4-recomp-attn}{{4.1}{54}{注意力子层中间激活示意}{figure.caption.64}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces MLP 子层中间激活示意}}{54}{figure.caption.65}\protected@file@percent }
-\newlabel{fig:chap4-recomp-mlp}{{4.2}{54}{MLP 子层中间激活示意}{figure.caption.65}{}}
-\@writefile{toc}{\contentsline {paragraph}{输入与约束。}{55}{paragraph*.67}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces 单层 Transformer 中间激活量}}{56}{table.caption.66}\protected@file@percent }
-\newlabel{tab:chap4-activation}{{4.4}{56}{单层 Transformer 中间激活量}{table.caption.66}{}}
-\@writefile{toc}{\contentsline {paragraph}{配置策略。}{56}{paragraph*.68}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{与 MMoH 的协同。}{56}{paragraph*.69}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}现有的重计算策略与定量分析}{50}{subsection.4.2.1}\protected@file@percent }
+\newlabel{sec:megatron-recompute}{{4.2.1}{50}{现有的重计算策略与定量分析}{subsection.4.2.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Megatron-LM 重计算相关配置参数}}{51}{table.caption.61}\protected@file@percent }
+\newlabel{tab:chap4-megatron-params}{{4.1}{51}{Megatron-LM 重计算相关配置参数}{table.caption.61}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Megatron selective 粒度下可配置的子模块}}{52}{table.caption.62}\protected@file@percent }
+\newlabel{tab:chap4-megatron-modules}{{4.2}{52}{Megatron selective 粒度下可配置的子模块}{table.caption.62}{}}
+\@writefile{toc}{\contentsline {paragraph}{重计算技术的定量分析。}{52}{paragraph*.63}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{注意力子层}{52}{paragraph*.65}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces 4.2.2 节主要符号说明}}{53}{table.caption.64}\protected@file@percent }
+\newlabel{tab:chap4-symbols}{{4.3}{53}{4.2.2 节主要符号说明}{table.caption.64}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces 注意力子层中间激活示意}}{53}{figure.caption.66}\protected@file@percent }
+\newlabel{fig:chap4-recomp-attn}{{4.1}{53}{注意力子层中间激活示意}{figure.caption.66}{}}
+\@writefile{toc}{\contentsline {paragraph}{MLP 子层}{54}{paragraph*.67}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces MLP 子层中间激活示意}}{54}{figure.caption.68}\protected@file@percent }
+\newlabel{fig:chap4-recomp-mlp}{{4.2}{54}{MLP 子层中间激活示意}{figure.caption.68}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces 单层 Transformer 中间激活量}}{55}{table.caption.69}\protected@file@percent }
+\newlabel{tab:chap4-activation}{{4.4}{55}{单层 Transformer 中间激活量}{table.caption.69}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}异构重计算策略设计}{56}{subsection.4.2.2}\protected@file@percent }
+\newlabel{sec:HR-MMoH-design}{{4.2.2}{56}{异构重计算策略设计}{subsection.4.2.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{输入与约束。}{56}{paragraph*.70}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{问题求解。}{56}{paragraph*.71}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{与 MMoH 的协同。}{57}{paragraph*.72}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.3}实验验证}{57}{section.4.3}\protected@file@percent }
 \newlabel{sec:HR-MMoH-exp}{{4.3}{57}{实验验证}{section.4.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}实验设置}{57}{subsection.4.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{平台与配置思路验证。}{57}{paragraph*.70}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{对比与指标。}{57}{paragraph*.71}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}实验结果}{57}{subsection.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{平台与配置思路验证。}{57}{paragraph*.73}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{对比与指标。}{57}{paragraph*.74}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}实验结果}{58}{subsection.4.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}实验分析}{58}{subsection.4.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{显存—算力权衡。}{58}{paragraph*.72}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{与 MMoH 划分的配合。}{58}{paragraph*.73}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{显存—算力权衡。}{58}{paragraph*.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{与 MMoH 划分的配合。}{58}{paragraph*.76}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.4}本章小结}{58}{section.4.4}\protected@file@percent }
 \newlabel{sec:HR-MMoH-summary}{{4.4}{58}{本章小结}{section.4.4}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}总结与展望}{59}{chapter.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}全文工作总结}{59}{section.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}主要创新点}{59}{subsection.5.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}研究的局限性}{60}{subsection.5.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}未来工作展望}{60}{section.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}理论深化}{61}{subsection.5.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}应用拓展}{61}{subsection.5.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{致谢}{63}{chapter*.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}总结与展望}{61}{chapter.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}全文工作总结}{61}{section.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}主要创新点}{61}{subsection.5.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}研究的局限性}{62}{subsection.5.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}未来工作展望}{62}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}理论深化}{63}{subsection.5.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}应用拓展}{63}{subsection.5.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{致谢}{65}{chapter*.78}\protected@file@percent }
 \bibstyle{bstutf8}
 \bibdata{ref/refs}
 \bibcite{galvatron2022}{{1}{}{{}}{{}}}
@@ -438,7 +441,7 @@
 \bibcite{blip2}{{12}{}{{}}{{}}}
 \bibcite{llava2023}{{13}{}{{}}{{}}}
 \bibcite{flamingo2022}{{14}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{参考文献}{65}{section*.76}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{参考文献}{67}{section*.79}\protected@file@percent }
 \bibcite{instructblip2023}{{15}{}{{}}{{}}}
 \bibcite{llava15_2023}{{16}{}{{}}{{}}}
 \bibcite{qwenvl2023}{{17}{}{{}}{{}}}
@@ -540,11 +543,11 @@
 \bibcite{llm_systems_survey2024}{{113}{}{{}}{{}}}
 \bibcite{distributed_dl_survey2022}{{114}{}{{}}{{}}}
 \bibcite{load_balance_heterogeneous}{{115}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{作者在学期间取得的学术成果}{75}{chapter*.78}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{公开评阅信息}{77}{chapter*.79}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{作者在学期间取得的学术成果}{77}{chapter*.81}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{公开评阅信息}{79}{chapter*.82}\protected@file@percent }
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
 \@writefile{toc}{\ttl@change@i {\@ne }{chapter}{0pt}{\vspace {0.25\baselineskip } \heiti \xiaosi [1.25]}{附录\,\thecontentslabel \quad }{}{\hspace {.5em}\titlerule *{.}\contentspage }\relax }
 \@writefile{toc}{\ttl@change@v {chapter}{}{}{}\relax }
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}模板提供的希腊字母命令列表}{79}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}模板提供的希腊字母命令列表}{81}{appendix.A}\protected@file@percent }
 \ttl@finishall
-\gdef \@abspage@last{95}
+\gdef \@abspage@last{97}

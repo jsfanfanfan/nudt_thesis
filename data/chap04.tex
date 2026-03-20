@@ -35,7 +35,7 @@
 \section{异构重计算}
 \label{sec:HR-MMoH-method}
 
-\subsection{现有的重计算策略与分析}
+\subsection{现有的重计算策略与定量分析}
 \label{sec:megatron-recompute}
 
 作为当前大模型分布式训练的主流框架，NVIDIA 推出的 Megatron-LM\cite{megatron2020,megatron2021,megatron2023} 大模型并行训练框架集中定义了与重计算相关的配置，
@@ -63,23 +63,27 @@ full 时须同时指定 \texttt{recompute\_method} 与 \texttt{recompute\_num\_l
 	\end{tabular}
 \end{table}
 
-在重计算粒度与层级划分方面，\textbf{整层重计算（full）}：以 Transformer 层为单位做检查点；前向只保存每个“块”的输入，反向时重新执行该段前向再反传。\texttt{TransformerBlock.forward()} 在 \texttt{recompute\_granularity == 'full'} 且处于训练模式时调用 \texttt{\_checkpointed\_forward()}，底层使用 \texttt{tensor\_parallel.checkpoint} 或 FP8/FP4 下的 \texttt{te\_checkpoint}。
-
-在 full 粒度下，\texttt{recompute\_method} 与 \texttt{recompute\_num\_layers} 共同决定“哪些层”被包在一个 checkpoint 中：
+\textbf{整层重计算（full）}：以 Transformer 层为统一粒度做检查点；前向只保存每个“块”的输入，反向时重新执行该段前向再反传。
+在 full 粒度下，\texttt{recompute\_method} 与 \texttt{recompute\_num\_layers} 共同决定流水级上多少个模型层只需要保存一个中间激活值。
+\texttt{recompute\_method} 具体可以取一下以下两种值：
 \begin{itemize}
-	\item \textbf{uniform}（均匀分块）：将当前流水级内的所有层均匀分成多个 chunk，每个 chunk 包含 \texttt{recompute\_num\_layers} 层；每个 chunk 的输入被 checkpoint，chunk 内前向一次执行，反向时整块先重计算再反传。
+	\item \textbf{uniform}（均匀分块）：将当前流水级内的所有层均匀分成多个 chunk，每个 chunk 包含 \texttt{recompute\_num\_layers} 层；
+  每个 chunk 的输入被 checkpoint，chunk 内前向一次执行，反向时整个 chunk 先重计算再反传。
   chunk 数少则显存更省，但单次重算层数较多。
-	\item \textbf{block}（仅前 N 层）：在当前流水级内，只对前 \texttt{recompute\_num\_layers} 层逐层做 checkpoint；后续层不做 checkpoint，正常存激活。在显存允许时可减少重计算量，更充分利用显存。
+	\item \textbf{block}（仅前 N 层）：在当前流水级内，只对前 \texttt{recompute\_num\_layers} 层逐层做重计算；后续层不需要做重计算，正常存储中间激活。
+  在显存允许时可减少重计算量，更充分利用显存。
 \end{itemize}
 
-\textbf{选择性重计算（selective）}：在每一层内仅对 \texttt{recompute\_modules} 中列出的子模块做重计算，其余部分正常存激活。
-此时 \texttt{recompute\_method} 与 \texttt{recompute\_num\_layers} 均须为 \texttt{None}，且 selective 始终作用于\emph{所有层}。
-各子模块在各自的 \texttt{forward} 中根据配置项\texttt{recompute\_modules} 决定舍弃哪些子模块的中间激活值，在反向传播时哪些模块的激活值需要重新计算。
+\textbf{选择重计算（selective）}：在每一层内仅对 \texttt{recompute\_modules} 中列出的子模块做重计算，其余部分正常存激活。
+此时 \texttt{recompute\_method} 与 \texttt{recompute\_num\_layers} 均须为设置为 \texttt{None}，且 selective 始终作用于所有流水级上的所有模型层。
+模型每个子模块在各自的前向传播中根据用户指定的配置项\texttt{recompute\_modules} 决定舍弃哪些子模块的中间激活值，在反向传播时哪些模块的激活值需要重新计算。
 
 选择性子模块方面，\texttt{recompute\_modules} 指定在 selective 粒度下要对哪些子模块做重计算。
-不同子模块采用的 checkpoint 机制不同：\emph{标准 checkpoint} 保存输入、反向时重新前向再反传；
-\emph{Output-discarding checkpoint} 在前向完成后丢弃该子模块输出的显存，在反向时通过梯度 hook 再算一遍并写回，可进一步省显存。
-表~\ref{tab:chap4-megatron-modules} 列出常用选项、含义及 checkpoint 类型。
+不同子模块采用的重计算机制不同：标准 checkpoint 保存输入、反向时重新前向再反传；
+Output-discarding checkpoint 在前向完成后丢弃该子模块输出的显存，在反向时通过梯度钩子函数再算一遍并写回，可进一步节省显存。
+若未指定 \texttt{recompute\_modules}，则默认为 \texttt{["core\_attn"]}。
+稠密模型下常用的“最省显存”组合为 \texttt{[core\_attn, mlp, layernorm]}。
+表~\ref{tab:chap4-megatron-modules} 列出目前训练框架使用选择重计算时支持的常用选项、含义及 checkpoint 类型。
 
 \begin{table}[htbp]
 	\centering
@@ -102,26 +106,20 @@ full 时须同时指定 \texttt{recompute\_method} 与 \texttt{recompute\_num\_l
 	\renewcommand{\arraystretch}{1.0}
 \end{table}
 
-若未指定 \texttt{recompute\_modules}，则默认为 \texttt{["core\_attn"]}。稠密模型下常用的“最省显存”组合为 \texttt{[core\_attn, mlp, layernorm]}。部分子模块有前置条件：例如 \texttt{moe\_act} 需与 \texttt{moe\_grouped\_gemm} 同时开启，\texttt{mla\_up\_proj} 仅在启用 \texttt{multi\_latent\_attention} 时有效；CPU offloading 与任意重计算互斥。
 
-上述策略在实现上对\emph{同一训练任务内的所有流水级、所有设备}采用统一的 \texttt{recompute\_granularity}、\texttt{recompute\_method}、\texttt{recompute\_num\_layers} 与 \texttt{recompute\_modules}，即面向同构集群的“全局一致”策略。
-在异构集群上，显存紧张流水级若与显存充裕流水级使用相同配置，易出现前者仍 OOM 或后者重算过多的问题，
-而且目前的重计算技术给所有流水级增加了计算负载，这使得异构 GPU 集群中性能较差的 GPU 进一步成为计算瓶颈
+上述策略在实现上对同一训练任务内的所有流水级、所有 GPU 计算设备采用统一的重计算粒度、重计算方法、重计算层数以及重计算模块，即面向同构集群时使用了的“全局一致”的重计算策略。
+但是在异构集群上，显存紧张流水级若与显存充裕流水级使用相同的重计算配置，易出现前者仍 OOM 或后者重计算过多的问题，
+而且目前的重计算技术给所有流水级增加了同样大小的计算负载，这使得异构 GPU 集群中性能较差的 GPU 进一步成为计算瓶颈，
 为下文针对各流水级/设备做差异化配置的异构重计算提供了动机。
 
-\subsection{异构重计算策略设计}
-\label{sec:HR-MMoH-design}
-
-在 MMoH 已完成的流水线划分与设备映射基础上，HR-MMoH 的异构重计算核心思想是：\emph{为每个流水级（或每台设备）根据其显存上限以及算力，独立配置重计算粒度与子模块集合}，
-使显存压力大的流水级采用更激进的检查点以降低 OOM 风险，显存压力小的流水级采用较保守的配置以减少不必要的重计算开销，从而在满足显存约束的前提下最小化迭代时间并最大化 GPU 利用率。
-
 \paragraph{重计算技术的定量分析。}
-为定量比较不同重计算策略对显存占用的影响，本段在给定输入形状与数值格式下，对\emph{单层} Transformer 前向传播中需为反向传播保留的中间激活总量进行详细推导。
-假设层输入张量形状为 $[B, S, H]$，其中 $B$ 为 batch size、$S$ 为序列长度、$H$ 为隐藏维度；
-中间激活使用训练常用的 \texttt{bf16} 格式，每元素占 2 字节。采用常见的 Pre-LayerNorm 的 decoder-only 单层结构：
-层输入 $\mathbf{x}$ 经 LayerNorm 后进入注意力子层，
-残差连接后再经 LayerNorm 进入 MLP 子层（线性 $\to$ GELU $\to$ 线性 + Dropout），再次残差连接得到层输出。
-记注意力头数为 $A$，MLP 层的中间维度设置为常用的设置，即 hidden size 的 4 倍，记为 $4H$
+为定量比较不同重计算策略对显存占用的影响，本文在给定输入形状与数值格式下，
+对单个 Transformer 层在前向传播中需为反向传播保留的中间激活所需要的显存占用量进行详细推导。
+假设层输入张量 X 形状为 $[B, S, H]$，其中 $B$ 为 batch size、$S$ 为输入序列长度、$H$ 为隐藏维度；
+中间激活使用训练常用的 BF16 格式，每元素占 2 个字节。Transformer 层采用常见的 Pre-LayerNorm 的 decoder-only 单层结构：
+层输入 X 经 LayerNorm 后进入注意力子层，
+残差连接后再经 LayerNorm 进入 MLP 子层（线性层 $\to$ GELU激活层 $\to$ 线性层 + Dropout 层），再次残差连接得到层输出。
+记注意力头数为 $A$，MLP 层的中间维度设置为常用的设置，即隐藏维度的 4 倍，记为 $4H$。
 
 为避免后续公式中大小写符号混用带来的歧义，表~\ref{tab:chap4-symbols} 汇总本小节使用的主要记号。
 
@@ -139,12 +137,12 @@ full 时须同时指定 \texttt{recompute\_method} 与 \texttt{recompute\_num\_l
     $S$ & 输入序列长度 \\
     $H$ & 模型隐藏维度 \\
     $A$ & 注意力头数。 \\
-    $\mathbf{x}$ & 输入张量，形状为 $[B,S,H]$。 \\
+    X & 输入张量，形状为 $[B,S,H]$。 \\
     $\mathbf{h}_1$ & 注意力子层与残差连接后的中间张量，形状为 $[B,S,H]$。 \\
-    $4H$ & 主流模型使用的 MLP 中间维度。 \\
-    $N_{\mathrm{None}}$ & 不采用重计算时，单层 Transformer 需保留的中间激活总量。 \\
     $N_{\mathrm{attn}}$ & 单个注意力子层为反向传播保留的中间激活总量。 \\
     $N_{\mathrm{mlp}}$ & 单个 MLP 子层为反向传播保留的中间激活总量。 \\
+    $N_{\mathrm{ln}}$ & 单个 LayerNorm 子层为反向传播保留的中间激活总量。 \\
+    $N_{\mathrm{None}}$ & 不采用重计算时，单层 Transformer 需保留的中间激活总量。 \\
     $N_{\mathrm{selective}}^{\mathrm{core\_attn}}$ & 仅对 \texttt{core\_attn} 使用 selective 重计算时，单层需保留的中间激活总量。 \\
     $N_{\mathrm{selective}}^{\mathrm{core\_attn+mlp}}$ & 对 \texttt{core\_attn} 与 \texttt{mlp} 使用 selective 重计算时，单层需保留的中间激活总量。 \\
     $N_{\mathrm{selective}}^{\mathrm{core\_attn+mlp+ln}}$ & 对 \texttt{core\_attn}、\texttt{mlp} 与 \texttt{layernorm} 使用 selective 重计算时，单层需保留的中间激活总量。 \\
@@ -155,11 +153,17 @@ full 时须同时指定 \texttt{recompute\_method} 与 \texttt{recompute\_num\_l
 \end{table}
 
 \textbf{（1）不重计算（\texttt{None}）。} 仅计反向传播所需中间激活， 使用训练时常用的 BF16 格式，所以每个激活参数大小为 2 字节。
-\emph{注意力子层}：线性投影输入 $2 B S H$、注意力 dropout mask $B S H$、Q/K/V 共享输入 $2 B S H$、$QK^{\top}$ 所需的 Q 与 K 共 $4 B S H$、softmax 输出 $2 B A S^2$、softmax dropout mask $B A S^2$、对 V 的注意力中 dropout 输出与 V 共 $2 B A S^2 + 2 B S H$，合计
+
+\paragraph{注意力子层}：
+Q/K/V 共享输入为 $2 B S H$，计算得到的 Q/K/V 大小均为 $2 B S H$，共计 $6 B S H$，
+计算 $QK^{T}$ 后进行 softmax 的中间结果为 $2B A S^2$，Dropout 的 mask 为 $B A S^2$，
+Dropout 的输出为 $2 B A S^2$，最后与 V 相乘的中间结果为 $2 B A S$，
+最后的 Dropout 的 mask 矩阵为 $B S H$，
+合计
 \begin{equation}
   N_{\mathrm{attn}} = 11 B S H + 5 B A S^2.
 \end{equation}
-其中 $5 B A S^2$ 来自 $QK^{\top}$、softmax 及 dropout、attention-over-V 等，随序列长度平方增长。
+其中 $5 B A S^2$ 来自 $QK^{\top}$、softmax 及 dropout等，随序列长度平方增长，成为长序列输入时中间激活的主要来源。
 图~\ref{fig:chap4-recomp-attn} 详细分析了注意力子层在 \texttt{None} 情形下需保存的中间激活及其大小。
 
 \begin{figure}[htbp]
@@ -169,7 +173,9 @@ full 时须同时指定 \texttt{recompute\_method} 与 \texttt{recompute\_num\_l
   \label{fig:chap4-recomp-attn}
 \end{figure}
 
-\emph{MLP 子层}（中间维度 $4H$）：两个线性层各自保存输入（$2 B S H$ 与 $4H$ 维张量 $4 B S H$）、GELU 需保存其输入、dropout 需保存 mask，合计\cite{korthikanti2023activation}
+\paragraph{MLP 子层}：
+中间维度 $4H$，第一个线性层的输入为 $2 B S H$，需要保存的输出为 $8 B S H $，经过中间激活后第二个线性层的输入为 $8 B S H$，
+最后的 Dropout 层的 mask 矩阵为 $B S H$，合计
 \begin{equation}
   N_{\mathrm{mlp}} = 19 B S H.
 \end{equation}
@@ -182,19 +188,25 @@ full 时须同时指定 \texttt{recompute\_method} 与 \texttt{recompute\_num\_l
   \label{fig:chap4-recomp-mlp}
 \end{figure}
 
-\emph{两个 LayerNorm}（注意力前、MLP 前）各保存输入 $2 B S H$，共 $4 B S H$。于是，不采用重计算时单层需保存的中间激活总量为
+\emph{两个 LayerNorm}（注意力前、MLP 前）各保存输入 $2 B S H$，合计
 \begin{equation}
-  N_{\mathrm{None}} = N_{\mathrm{attn}} + N_{\mathrm{mlp}} + 4 B S H = 34 B S H + 5 B A S^2.
+  N_{\mathrm{ln}} = 4 B S H.
 \end{equation}
-其中 $5 B A S^2$ 项随序列长度平方增长，是长序列场景下激活显存的主要来源。
 
-\textbf{（2）选择性重计算（\texttt{selective}）。} 仅对指定子模块做重计算：前向只保存该子模块的\emph{输入}，反向传播时在子模块内部重新前向传播再反传，其它未开启重计算的子模块仍按 \texttt{None} 情形完整保存中间激活。
-以仅对 \texttt{core\_attn} 开启 selective 为例，注意力子层在 \texttt{None} 情形下需要 $N_{\mathrm{attn}} = 11 B S H + 5 B A S^2$ 个激活元素；
-对 \texttt{core\_attn} 做 selective 后，注意力\emph{内部}的中间激活（$QK^{\top}$、softmax 及其 dropout mask 矩阵、attention-over-$V$ 等）都不再常驻，
+于是，不采用重计算时单层需保存的中间激活总量为
+\begin{equation}
+  N_{\mathrm{None}} = N_{\mathrm{attn}} + N_{\mathrm{mlp}} + N_{\mathrm{ln}} = 34 B S H + 5 B A S^2.
+\end{equation}
+其中 $5 B A S^2$ 项随序列长度平方增长，可能成为长序列场景下中间激活显存的主要来源。
+
+\textbf{（2）选择重计算（\texttt{selective}）。} 仅对指定子模块做重计算：前向只保存该子模块的\emph{输入}，反向传播时在子模块内部重新前向传播再反传，
+其它未开启重计算的子模块仍按 \texttt{None} 情形完整保存中间激活。
+以仅对 \texttt{core\_attn} 开启选择重计算为例，注意力子层在 \texttt{None} 情形下需要 $N_{\mathrm{attn}} = 11 B S H + 5 B A S^2$ 大小的显存空间来存储中间激活值；
+对 \texttt{core\_attn} 做选择重计算之后，Attention 块内部的中间激活（$QK^{\top}$、softmax 及其 dropout mask 矩阵等）都不再常驻显存，
 只保留该子模块的输入张量（层输入和 LN 输出）以便在反向传播重新计算注意力块本身；
-MLP 子层与两个 LayerNorm 的激活仍按照 $N_{\mathrm{mlp}}$ 与 $4 B S H$ 的代价保存，因此整层的线性部分从 $34 B S H + 5 B A S^2$ 约减少为 $23 B S H$。
+MLP 子层与两个 LayerNorm 的激活仍按照 $N_{\mathrm{mlp}}$ 与 $N_{\mathrm{ln}}$ 的代价保存，因此整层的线性部分从 $34 B S H + 5 B A S^2$ 约减少为 $23 B S H$。
 
-若在此基础上进一步对 \texttt{mlp} 开启 selective，则 MLP 内部的 $19 B S H$ 激活也改为在反向时重算，其常驻部分被压缩为 “MLP 输入边界” ，此时需要保存的中间激活总量进一步降低为 $6 B S H$。
+若在此基础上进一步对 \texttt{mlp} 开启选择重计算，则 MLP 内部的 $19 B S H$ 激活也改为在反向传播时重算，只需要让输入的张量常驻显存，此时需要保存的中间激活总量进一步降低为 $6 B S H$。
 再将 \texttt{layernorm} 纳入 \texttt{recompute\_modules} 时，其输出在前向结束后同样可以丢弃，仅保留必要的输入，需要保存的中间激活总量进一步降低为 $4 B S H$。
 为便于与 \texttt{None} 情形直观对比，本文用
 \begin{align}
@@ -203,15 +215,16 @@ MLP 子层与两个 LayerNorm 的激活仍按照 $N_{\mathrm{mlp}}$ 与 $4 B S H
   N_{\mathrm{selective}}^{\mathrm{core\_attn+mlp+ln}} &= 4 B S H.
 \end{align}
 来表示选择不同重计算模块下需要存储的中间激活占据的显存总量。
-与 \texttt{None} 相比，选择重计算策略去掉了注意力主体与 MLP 主体中的大部分常驻中间激活，仅保留子模块边界的输入张量，显存由 $O(B S H + B A S^2)$ 降为 $O(B S H)$。
+与 \texttt{None} 相比，选择重计算策略去掉了注意力主体与 MLP 主体中的大部分常驻中间激活，仅保留子模块边界的输入张量，显存开销的孔家复杂度由 $O(B S H + B A S^2)$ 降为 $O(B S H)$。
 
-\textbf{（3）整层重计算（\texttt{full}）。} 以整层为检查点单元：前向只保存层输入 $\mathbf{x}$，反向时整层重新前向再反传。故
+\textbf{（3）整层重计算（\texttt{full}）。} 以整层为重计算单元：前向只保存层输入 X，反向时整层重新前向传播再反向传播计算梯度。
+故
 \begin{equation}
   N_{\mathrm{full}} =2 B S H.
 \end{equation}
-显存占用最小，但反向时需重算整层前向，计算开销最大。
+这种情况下的显存占用最小，但反向时需重算整层前向，计算开销最大。
 
-表~\ref{tab:chap4-activation} 汇总了不采用重计算、选择性重计算与整层重计算时单层需保存的中间激活总量。
+表~\ref{tab:chap4-activation} 汇总了不采用重计算、选择重计算与整层重计算时单层需保存的中间激活总量。
 
 \begin{table}[htbp]
   \centering
@@ -230,7 +243,7 @@ MLP 子层与两个 LayerNorm 的激活仍按照 $N_{\mathrm{mlp}}$ 与 $4 B S H
     \hdashline
     \texttt{selective} [\texttt{core\_attn}, \texttt{mlp}] & $6 B S H$ & 注意力与 MLP 内部重算，仅边界与 LN 常驻 \\
     \hdashline
-    \texttt{selective} [\texttt{core\_attn}, \texttt{mlp}, \texttt{layernorm}] & $4 B S H$ & 三者均重算，仅子模块边界输入常驻 \\
+    \texttt{selective} [\texttt{core\_attn}, \texttt{mlp}, \texttt{layernorm}] & $4 B S H$ & 三者均重算，仅两个子模块边界的输入常驻 \\
     \hdashline
     \texttt{full} & $2 B S H$ & 仅保存层输入，反向时整层重算 \\
     \bottomrule
@@ -239,10 +252,24 @@ MLP 子层与两个 LayerNorm 的激活仍按照 $N_{\mathrm{mlp}}$ 与 $4 B S H
   \vspace{2pt}
 \end{table}
 
-\paragraph{输入与约束。}
-在 MMoH 规划器已完成模型划分与设备映射的前提下，记流水线并行度为 $S$，流水级索引为 $s \in \{1,\ldots,S\}$，流水级 $s$ 映射至设备 $d_s$。记设备 $d_s$ 的显存容量上界为 $M_s$，相对计算能力系数为 $C_s$（可由该设备 FLOPs 或实测单流水级迭代时间经归一化得到）。流水级 $s$ 由若干模型块构成；其在前向与反向传播阶段的激活显存峰值及重计算开销由该流水级所采用的检查点配置 $\theta_s$ 唯一确定。配置 $\theta_s$ 的取值为：\texttt{recompute\_granularity} $\in \{\texttt{None}, \texttt{full}, \texttt{selective}\}$；当为 \texttt{full} 时还需指定 \texttt{recompute\_method} 与 \texttt{recompute\_num\_layers}，当为 \texttt{selective} 时则指定 \texttt{recompute\_modules} 子模块列表。形式化地，约束条件为：$\forall s$，在配置 $\theta_s$ 下流水级 $s$ 的激活显存峰值不超过 $M_s$（可保留安全余量）；优化目标为最小化单次训练迭代时间，即 $\min \max_s T_s$，其中 $T_s$ 表示流水级 $s$ 在配置 $\theta_s$ 下前向、重计算与反向阶段耗时之和（含流水级间通信）。
+\subsection{异构重计算策略设计}
+\label{sec:HR-MMoH-design}
 
-\paragraph{配置策略。}
+在 MMoH 已完成的流水线划分与设备映射基础上，HR-MMoH 的异构重计算核心思想是：\emph{为每个流水级（或每台计算设备）根据其显存上限以及算力，独立配置重计算粒度与子模块集合}，
+使显存压力大的流水级采用更激进的检查点以降低 OOM风险，显存压力小的流水级采用较保守的配置以减少不必要的重计算开销，从而在满足显存约束的前提下最小化迭代时间并最大化 GPU 利用率。
+
+
+\paragraph{输入与约束。}
+在 MMoH 规划器已完成模型划分与设备映射的前提下，记流水线并行度为 $S$，流水级索引为 $s \in \{1,\ldots,S\}$，
+流水级 $s$ 映射至设备 $d_s$。记设备 $d_s$ 的显存容量上界为 $M_s$，相对计算能力系数为 $C_s$（可由该设备 FLOPs 或实测单流水级迭代时间经归一化得到）。
+流水级 $s$ 由若干模型块构成；其在前向与反向传播阶段的激活显存峰值及重计算开销由该流水级所采用的检查点配置 $\theta_s$ 唯一确定。
+配置 $\theta_s$ 的取值为：\texttt{recompute\_granularity} $\in \{\texttt{None}, \texttt{full}, \texttt{selective}\}$；
+当为 \texttt{full} 时还需指定 \texttt{recompute\_method} 与 \texttt{recompute\_num\_layers}，
+当为 \texttt{selective} 时则指定 \texttt{recompute\_modules} 子模块列表。形式化地，约束条件为：$\forall s$，
+在配置 $\theta_s$ 下流水级 $s$ 的激活显存峰值不超过 $M_s$（可保留安全余量）；优化目标为最小化单次训练迭代时间，
+即 $\min \max_s T_s$，其中 $T_s$ 表示流水级 $s$ 在配置 $\theta_s$ 下前向、重计算与反向阶段耗时之和（含流水级间通信）。
+
+\paragraph{问题求解。}
 本文采用基于剖析（profiling）的配置生成策略。对每一流水级 $s$，在与其对应的代表设备上预先测量不同 $\theta_s$ 下的激活显存占用与单流水级执行时间 $T_s$；在满足显存约束的可行配置集中，为流水级 $s$ 选取使 $T_s$ 较小且与相邻流水级时间较为均衡的配置，以降低瓶颈流水级对整体迭代时间的主导程度。策略可归纳为两类情形：（1）\emph{显存紧张}的流水级：优先采用 \texttt{full} + \texttt{uniform} 并取较小的 \texttt{recompute\_num\_layers}，或 \texttt{selective} 并采用较完整的 \texttt{recompute\_modules}（如 \texttt{[core\_attn, mlp, layernorm]}），以降低激活显存峰值、避免 OOM；（2）\emph{显存充裕而算力或通信紧张}的流水级：采用 \texttt{None}，或 \texttt{selective} 且仅 \texttt{[core\_attn]}，或 \texttt{full} + \texttt{block} 且较小的 \texttt{recompute\_num\_layers}，以减少不必要的重计算与同步开销。实现上，在 MMoH 规划器输出流水级划分与设备映射之后，由 HR-MMoH 配置模块为各流水级生成对应的 \texttt{TransformerConfig} 参数（或等价的环境变量/配置文件），各训练进程（rank）在初始化时加载其所属流水级的配置，从而在保持 Megatron 单卡前向/反向语义不变的前提下，实现按流水级异构的重计算。
 
 \paragraph{与 MMoH 的协同。}

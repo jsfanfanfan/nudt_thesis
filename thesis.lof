@@ -7,7 +7,7 @@
 \contentsline {figure}{\numberline {2.4}{\ignorespaces 流水线并行示意}}{19}{figure.caption.19}%
 \contentsline {figure}{\numberline {2.5}{\ignorespaces 专家并行（EP）中门控路由与专家分布示意}}{20}{figure.caption.21}%
 \contentsline {figure}{\numberline {2.6}{\ignorespaces 零冗余优化器 ZeRO 示意}}{21}{figure.caption.22}%
-\contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算（激活检查点）示意}}{23}{figure.caption.23}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算（激活检查点）示意}}{24}{figure.caption.23}%
 \contentsline {figure}{\numberline {3.1}{\ignorespaces 主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。}}{28}{figure.caption.28}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。}}{29}{figure.caption.29}%
 \contentsline {figure}{\numberline {3.3}{\ignorespaces 不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间，MMoH1/MMoH2 为 MMoH 规划器针对各场景得到的策略。}}{30}{figure.caption.30}%
@@ -16,8 +16,8 @@
 \contentsline {figure}{\numberline {3.6}{\ignorespaces 提前终止调度器效果示意。4 流水级流水线、4 个 micro-batch，前两流水级为冻结流水级。（a）标准 1F1B；（b）考虑冻结后反向时间变化；（c）提前终止调度器：跳过前两流水级对输入的梯度计算及相应 P2P 通信与张量存储。}}{40}{figure.caption.43}%
 \contentsline {figure}{\numberline {3.7}{\ignorespaces 提前终止在其它流水线调度机制上的适用性。左：Chimera；右：Hanayo。前向时间假设各流水级一致，反向时间差异来自冻结流水级；提前终止可同样应用于连续冻结前缀。}}{41}{figure.caption.44}%
 \contentsline {figure}{\numberline {3.8}{\ignorespaces 四种冻结场景下 MMoH 与基线在两种异构集群上的训练吞吐对比。柱越长表示吞吐越高，OOM 表示显存溢出。}}{44}{figure.caption.50}%
-\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。}}{45}{figure.caption.55}%
-\contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。}}{46}{figure.caption.57}%
-\contentsline {figure}{\numberline {4.1}{\ignorespaces 注意力子层中间激活示意}}{54}{figure.caption.64}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces MLP 子层中间激活示意}}{54}{figure.caption.65}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。}}{46}{figure.caption.56}%
+\contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。}}{46}{figure.caption.58}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces 注意力子层中间激活示意}}{53}{figure.caption.66}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces MLP 子层中间激活示意}}{54}{figure.caption.68}%
 \contentsfinish 

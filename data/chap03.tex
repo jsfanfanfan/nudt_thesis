@@ -555,9 +555,62 @@ Whale 与 Espresso 通过异构感知的拓扑与划分避免了 OOM，但 MMoH 
 
 \paragraph{划分策略对比。}
 Whale 与 Espresso 采用单一“层”粒度划分并扩展到 MLLMs；MMoH 采用复合粒度（编码器合并为块、LLM 拆分为注意力/FFN 块）。
+表~\ref{tab:chap3_partition} 对比了 Whale、Espresso 与 MMoH 在 MLLM-3B、MLLM-12B 及四种冻结场景下的设备拓扑、各流水级块数及相对 Whale 的加速比。
 在相同冻结场景下，MMoH 得到的设备拓扑与各流水级块数分布随冻结状态变化：例如 freeze-encoder 时前段计算需求下降，
 MMoH 会将较弱 GPU 置于首流水级；freeze-LLM 时后段需求下降，设备顺序相应调整，与需求—供给匹配度一致。
 该动态调整能力是现有方法所不具备的，也是 MMoH 在多种场景下均能取得较优性能的重要原因。
+
+\begin{table}[htbp]
+  \centering
+  \caption{不同冻结场景下的模型划分对比。A、B、C 分别表示 NVIDIA RTX 3090、2080 Ti 与 2080 GPU。}
+  \label{tab:chap3_partition}
+  \resizebox{\linewidth}{!}{%
+  \setlength{\tabcolsep}{3pt}%
+  \renewcommand{\arraystretch}{1.0}%
+  \footnotesize
+  \begin{tabular}{ccccccc}
+    \hline
+    \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{冻结}\\\textbf{模式}\end{tabular}} &
+    \multicolumn{2}{c}{\textbf{Whale（层粒度）}} &
+    \multicolumn{2}{c}{\textbf{Espresso（层粒度）}} &
+    \multicolumn{2}{c}{\textbf{MMoH（复合粒度）}} \\
+    & \textbf{MLLM-3B} & \textbf{MLLM-12B} & \textbf{MLLM-3B} & \textbf{MLLM-12B} & \textbf{MLLM-3B} & \textbf{MLLM-12B} \\
+    \hline
+    \renewcommand{\arraystretch}{2.4}
+    no-freeze
+    \rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C}]\\{[30,3,3,2]}\\1.00$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{A,A,A,A,B,B,C,C}]\\{[15,15,17,9,3,3,3,2]}\\1.00$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,A}]\\{[26,3,2,7]}\\1.07$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[7,7,6,6,15,11,8,7]}\\1.22$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,A,B,C}]\\{[11,14,6,4]}\\ \textbf{1.22$\times$}}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[7,7,6,6,18,16,13,15]}\\ \textbf{1.26$\times$}} \\
+    \hline
+    freeze-enc.
+    \rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C}]\\{[31,3,3,1]}\\1.00$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{A,A,A,A,B,B,C,C}]\\{[38,11,5,5,2,3,2,1]}\\1.00$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,A}]\\{[28,3,2,5]}\\1.05$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[8,8,6,6,22,13,13,12]}\\1.04$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{C,A,B,B}]\\{[12,13,6,4]}\\ \textbf{1.20$\times$}}
+    \rule{0pt}{20pt} & \makecell{[\textit{C,C,B,B,A,A,A,A}]\\{[12,11,11,11,11,11,11,10]}\\ \textbf{1.23$\times$}} \\
+    \hline
+    freeze-llm
+    \rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C}]\\{[27,4,4,3]}\\1.00$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{A,A,A,A,B,B,C,C}]\\{[13,13,13,13,4,4,4,3]}\\1.00$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,A}]\\{[14,14,3,7]}\\1.15$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[3,3,3,3,13,13,17,12]}\\1.20$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,A,C}]\\{[7,8,16,4]}\\ \textbf{1.26$\times$}}
+    \rule{0pt}{20pt} & \makecell{[\textit{C,C,B,B,A,A,A,A}]\\{[3,3,5,5,13,14,23,22]}\\ \textbf{1.33$\times$}} \\
+    \hline
+    freeze-both
+    \rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C}]\\{[30,3,3,2]}\\1.00$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{A,A,A,A,B,B,C,C}]\\{[38,9,5,5,3,3,2,2]}\\1.00$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,A}]\\{[28,2,2,6]}\\1.08$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,B,C,C,A,A,A,A}]\\{[18,5,4,4,16,7,7,6]}\\1.20$\times$}
+    \rule{0pt}{20pt} & \makecell{[\textit{B,A,B,C}]\\{[14,14,4,3]}\\ \textbf{1.18$\times$}}
+    \rule{0pt}{20pt} & \makecell{[\textit{A,B,B,C,C,A,A,A}]\\{[36,4,5,3,4,14,12,10]}\\ \textbf{1.28$\times$}} \\
+    \hline
+  \end{tabular}}%
+\end{table}
 
 \paragraph{负载均衡。}
 在 MLLM-12B 上对比各流水级前向计算时间分布可知，MMoH 的划分使各流水级计算时间分布更集中、峰值更低，

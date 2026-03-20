@@ -1,0 +1,92 @@
+\relax 
+\citation{brown2020language,devlin2019bert}
+\citation{li2022blip,liu2024improved,wu2024next}
+\citation{antol2015vqa}
+\citation{sulubacak2020multimodal}
+\citation{team2023gemini}
+\citation{huang2019gpipeefficienttraininggiant,narayanan2019pipedream}
+\citation{epoch2022trendsingpupriceperformance,jeon2019analysis}
+\citation{weng2022mlaas}
+\citation{song2024powerinfer}
+\citation{park2020hetpipe,jia2022whale,zhouespresso}
+\citation{vaswani2017attention}
+\citation{jia2022whale,zhouespresso}
+\citation{tsimpoukelli2021multimodal}
+\citation{benoit2008mapping}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
+\citation{li2023blip,liu2024improved,wu2024next,dong2023dreamllm}
+\citation{tsimpoukelli2021multimodal}
+\citation{huang2019gpipeefficienttraininggiant,narayanan2019pipedream}
+\citation{Lai2023,yun2025jabas,zhouespresso}
+\citation{shoeybi2019megatron}
+\citation{jia2022whale}
+\citation{zhouespresso}
+\newlabel{fig:mllm}{{1a}{2}{}{subfigure.1.1}{}}
+\newlabel{sub@fig:mllm}{{a}{2}{}{subfigure.1.1}{}}
+\newlabel{fig:layer}{{1b}{2}{}{subfigure.1.2}{}}
+\newlabel{sub@fig:layer}{{b}{2}{}{subfigure.1.2}{}}
+\newlabel{fig:gap}{{1c}{2}{}{subfigure.1.3}{}}
+\newlabel{sub@fig:gap}{{c}{2}{}{subfigure.1.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Background and motivation. (a) shows he structure of popular MLLMs. MLLMs use encoders to extract features, project them into text space via a projector, and feed them into the LLM backbone to generate responses. The encoder and the LLM can be frozen to utilize off-the-shelf checkpoints. (b) compares the varying tendency of computational overhead and memory consumption across model layers between LLMs and the evaluated MLLM-3B. NF and FB denote the no-freeze and freeze-both, respectively. (c) shows the iteration time for training MLLM-3B using different parallel strategy planners under two frozen scenarios. MMoH1 and MMoH2 represent the parallel strategies for the respective frozen scenarios identified by the MMoH parallel strategy planner.}}{2}{}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:moti}{{1}{2}{}{figure.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Background and Motivation}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Multimodal Large Language Models}{2}{}\protected@file@percent }
+\newlabel{section:2-a}{{\mbox  {II-A}}{2}{}{subsection.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Distributed Training on Heterogeneous Clusters}{2}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The overview of \textit  {MMoH}. \textit  {MMoH} comprises two key components: \textit  {MMoH parallel strategy planner} and \textit  {early-termination scheduler}. The MMoH planner takes the MLLM configuration and heterogeneous cluster specifications as input and determines the optimal parallel strategy. The scheduler leverages the characteristics of the frozen technique to further improve performance by reducing unnecessary computation and communication overhead.}}{3}{}\protected@file@percent }
+\newlabel{fig2}{{2}{3}{}{figure.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}MMoH Design}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Overview}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}MMoH parallel strategy planner}{3}{}\protected@file@percent }
+\newlabel{section:3-b}{{\mbox  {III-B}}{3}{}{subsection.3.2}{}}
+\citation{liu2022autopipe}
+\citation{um2024metis}
+\citation{liu2022autopipe}
+\citation{cplex2009v12}
+\newlabel{fig:left}{{3a}{4}{}{subfigure.3.1}{}}
+\newlabel{sub@fig:left}{{a}{4}{}{subfigure.3.1}{}}
+\newlabel{fig:right}{{3b}{4}{}{subfigure.3.2}{}}
+\newlabel{sub@fig:right}{{b}{4}{}{subfigure.3.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces The illustration of hybrid-granularity abstraction. For the encoder, two encoder transformer layers are merged into an encoder-layers chunk. For the LLM, a single transformer layer is split into an attention chunk and an FFN chunk without introducing any influence on the communication volume.}}{4}{}\protected@file@percent }
+\newlabel{fig:hybrid}{{3}{4}{}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces The effectiveness of early-termination scheduler. We demonstrate a 4-stage pipeline with 4 micro-batches labeled $0\sim 3$, and the first two pipeline stages are frozen pipeline stages. Variations in forward and backward execution times result from the distribution of computational overhead and the heterogeneous computational performance.}}{4}{}\protected@file@percent }
+\newlabel{fig4}{{4}{4}{}{figure.4}{}}
+\newlabel{cons:chunk}{{7}{4}{}{equation.7}{}}
+\newlabel{cons:k}{{8}{4}{}{equation.8}{}}
+\newlabel{cons:mem}{{9}{4}{}{equation.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Early-termination scheduler}{4}{}\protected@file@percent }
+\newlabel{section:3-c}{{\mbox  {III-C}}{4}{}{subsection.3.3}{}}
+\citation{shoeybi2019megatron}
+\citation{jia2022whale}
+\citation{zhouespresso}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Evaluation}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Experimental setups}{5}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Configuration of heterogeneous clusters}}{5}{}\protected@file@percent }
+\newlabel{config:cluster}{{I}{5}{}{table.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Configuration of Modules}}{5}{}\protected@file@percent }
+\newlabel{config:module}{{II}{5}{}{table.2}{}}
+\newlabel{fig:throughput-3b}{{5a}{5}{}{subfigure.5.1}{}}
+\newlabel{sub@fig:throughput-3b}{{a}{5}{}{subfigure.5.1}{}}
+\newlabel{fig:throughput-12b}{{5b}{5}{}{subfigure.5.2}{}}
+\newlabel{sub@fig:throughput-12b}{{b}{5}{}{subfigure.5.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces End-to-end throughput comparison across 4 frozen scenarios for training two different MLLMs on two heterogeneous clusters. Longer bars indicate higher throughput. OOM denotes an out-of-memory error.}}{5}{}\protected@file@percent }
+\newlabel{fig:throughput-comparison}{{5}{5}{}{figure.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}End-to-End Training Performance}{5}{}\protected@file@percent }
+\newlabel{section:4-b}{{\mbox  {IV-B}}{5}{}{subsection.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces The load balance analysis of \textit  {MMoH} and two heterogeneous approaches when training MLLM-12B under two frozen settings. The distribution is more concentrated representing the partition result is more balanced. The lower height indicates a shorter iteration time.}}{6}{}\protected@file@percent }
+\newlabel{fig:load}{{6}{6}{}{figure.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Ablation Study of Early-termination tcheduler}{6}{}\protected@file@percent }
+\newlabel{section:4-d}{{\mbox  {IV-C}}{6}{}{subsection.4.3}{}}
+\bibstyle{IEEEtran}
+\bibdata{IEEEabrv,reference}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Model partitioning comparison across different frozen scenarios. A, B, and C denote NVIDIA RTX 3090, 2080 Ti, and 2080 GPUs.}}{7}{}\protected@file@percent }
+\newlabel{tab:partition}{{III}{7}{}{table.3}{}}
+\newlabel{fig:left}{{7a}{7}{}{subfigure.7.1}{}}
+\newlabel{sub@fig:left}{{a}{7}{}{subfigure.7.1}{}}
+\newlabel{fig:right}{{7b}{7}{}{subfigure.7.2}{}}
+\newlabel{sub@fig:right}{{b}{7}{}{subfigure.7.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Effectiveness of the early-termination scheduler. We integrate our scheduler into Espresso, denoted as Espresso+, and remove it from \textit  {MMoH}, denoted as \textit  {MMoH}–.}}{7}{}\protected@file@percent }
+\newlabel{fig:early}{{7}{7}{}{figure.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Conclusion}{7}{}\protected@file@percent }
+\gdef \@abspage@last{7}
