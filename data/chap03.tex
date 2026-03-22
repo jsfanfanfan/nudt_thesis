@@ -431,8 +431,8 @@ $\mathrm{COMM}$ 仍取各流水级不可重叠的梯度同步开销的最大值�
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.95\linewidth]{chimera-hanayo.png}
-  \caption{提前终止在其它流水线调度机制上的适用性。左：Chimera；右：Hanayo。前向时间假设各流水级一致，反向时间差异来自冻结流水级；提前终止可同样应用于连续冻结前缀。}
+    \includegraphics[width=0.95\linewidth]{chimera-hanayo.png}
+    \caption{提前终止在其它流水线调度机制上的适用性。左：Chimera；右：Hanayo。前向时间假设各流水级一致，反向时间差异来自冻结流水级；提前终止可同样应用于连续冻结前缀。}
   \label{fig:chap3_chimera_hanayo}
 \end{figure}
 
@@ -527,12 +527,12 @@ MLLM-12B 的 global batch size 为 32、micro-batch size 为 1、最大序列长
   \centering
   \begin{minipage}[b]{\linewidth}
     \centering
-    \includegraphics[width=0.85\linewidth]{MMoH-figs/e2e_3B}
+    \includegraphics[width=0.68\linewidth]{MMoH-figs/e2e_3B}
     \caption*{(a) MLLM-3B 在 Cluster-S 上}
   \end{minipage}\\[0.5em]
   \begin{minipage}[b]{\linewidth}
     \centering
-    \includegraphics[width=0.85\linewidth]{MMoH-figs/e2e_12B}
+    \includegraphics[width=0.68\linewidth]{MMoH-figs/e2e_12B}
     \caption*{(b) MLLM-12B 在 Cluster-L 上}
   \end{minipage}
   \caption{四种冻结场景下 MMoH 与基线在两种异构集群上的训练吞吐对比。柱越长表示吞吐越高，OOM 表示显存溢出。}
@@ -620,7 +620,7 @@ MMoH 会将较弱 GPU 置于首流水级；freeze-LLM 时后段需求下降，�
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{MMoH-figs/load_balance}
+  \includegraphics[width=0.85\linewidth]{MMoH-figs/load_balance}
   \caption{MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。}
   \label{fig:chap3_load}
 \end{figure}

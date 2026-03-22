@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  13 MAR 2026 11:55
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  22 MAR 2026 16:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -735,16 +735,16 @@ Package fontspec Info: Font family 'CourierNew(0)' created for font 'Courier
 
 Package fontspec Info: Font family 'SimSun(0)' created for font 'SimSun' with
 (fontspec)             options
-(fontspec)             [Mapping=tex-text,Script={CJK},Path={C:/Users/fanji/Desktop/nudt_thesis/ttf/},BoldFont={SimHei}].
+(fontspec)             [Mapping=tex-text,Script={CJK},Path={},BoldFont={SimHei}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"[C:/Users/fanji/Desktop/nudt_thesis/ttf/SimSun]/OT:script=hani;language=dflt;mapping=tex-text;"
+(fontspec)             <->"[SimSun]/OT:script=hani;language=dflt;mapping=tex-text;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 (fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->"[C:/Users/fanji/Desktop/nudt_thesis/ttf/SimHei]/OT:script=hani;language=dflt;mapping=tex-text;"
+(fontspec)             <->"[SimHei]/OT:script=hani;language=dflt;mapping=tex-text;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 \thu@linespace=\skip94
@@ -878,8 +878,7 @@ Package tocbasic Info: babel extension for `nls' omitted
 \nomitemsep=\skip101
 )
 Package hyperref Info: Option `colorlinks' set `false' on input line 120.
-)
-No file thesis_blind.aux.
+) (./thesis_blind.aux)
 \openout1 = `thesis_blind.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
@@ -892,7 +891,7 @@ LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 73.
 LaTeX Font Info:    ... okay on input line 73.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 73.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 73.
-(d:/texlive/2022/texmf-dist/tex/latex/base/ts1cmr.fd
+ (d:/texlive/2022/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 73.
@@ -964,14 +963,11 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 73.
 LaTeX Info: Redefining \pageref on input line 73.
 LaTeX Info: Redefining \nameref on input line 73.
+ (./thesis_blind.out) (./thesis_blind.out)
 \@outlinefile=\write4
 \openout4 = `thesis_blind.out'.
 
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
-
-(d:/texlive/2022/texmf-dist/tex/latex/fmtcount/fc-english.def
+ (d:/texlive/2022/texmf-dist/tex/latex/fmtcount/fc-english.def
 Invalid UTF-8 byte or sequence at line 10 replaced by U+FFFD.
 Invalid UTF-8 byte or sequence at line 22 replaced by U+FFFD.
 File: fc-english.def 2016/01/12
@@ -980,13 +976,13 @@ File: fc-english.def 2016/01/12
 
 Package fontspec Info: Font family '仿宋_GB2312(0)' created for font '仿宋_GB2312'
 (fontspec)             with options
-(fontspec)             [Mapping=tex-text,Script={CJK},Path={C:/Users/fanji/Desktop/nudt_thesis/ttf/},Extension={.ttf}].
+(fontspec)             [Mapping=tex-text,Script={CJK},Path={},Extension={.ttf}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"[C:/Users/fanji/Desktop/nudt_thesis/ttf/仿宋_GB2312.ttf]/OT:script=hani;language=dflt;mapping=tex-text;"
+(fontspec)             <->"[仿宋_GB2312.ttf]/OT:script=hani;language=dflt;mapping=tex-text;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Calculating math sizes for size <10.53937> on input line 80.
@@ -1042,14 +1038,13 @@ Overfull \hbox (7.10143pt too wide) in paragraph at lines 80--80
 
 
 Package fontspec Info: Font family 'SimHei(0)' created for font 'SimHei' with
-(fontspec)             options
-(fontspec)             [Mapping=tex-text,Script={CJK},Path={C:/Users/fanji/Desktop/nudt_thesis/ttf/}].
+(fontspec)             options [Mapping=tex-text,Script={CJK},Path={}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"[C:/Users/fanji/Desktop/nudt_thesis/ttf/SimHei]/OT:script=hani;language=dflt;mapping=tex-text;"
+(fontspec)             <->"[SimHei]/OT:script=hani;language=dflt;mapping=tex-text;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Calculating math sizes for size <14.05249> on input line 80.
@@ -1096,33 +1091,38 @@ LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <16.06> not available
 
 [2
 
-]
-\tf@toc=\write5
-\openout5 = `thesis_blind.toc'.
-
+] (./thesis_blind.toc
 
 Package fontspec Info: Font family 'SimSun(1)' created for font 'SimSun' with
-(fontspec)             options
-(fontspec)             [Mapping=tex-text,Script={CJK},Path={C:/Users/fanji/Desktop/nudt_thesis/ttf/}].
+(fontspec)             options [Mapping=tex-text,Script={CJK},Path={}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"[C:/Users/fanji/Desktop/nudt_thesis/ttf/SimSun]/OT:script=hani;language=dflt;mapping=tex-text;"
+(fontspec)             <->"[SimSun]/OT:script=hani;language=dflt;mapping=tex-text;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
+
+
+
+LaTeX Font Warning: Font shape `TU/SimSun(1)/b/n' undefined
+(Font)              using `TU/SimSun(1)/m/n' instead on input line 4.
+
+)
+\tf@toc=\write5
+\openout5 = `thesis_blind.toc'.
 
  [1
 
 
 
-]
+] (./thesis_blind.lot)
 \tf@lot=\write6
 \openout6 = `thesis_blind.lot'.
 
  [2
 
-]
+] (./thesis_blind.lof)
 \tf@lof=\write7
 \openout7 = `thesis_blind.lof'.
 
@@ -1187,55 +1187,70 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 \c@blankpages=\count431
  (./data/chap01.tex
 
-Package natbib Warning: Citation `galvatron2022' on page 1 undefined on input line 10.
+Package natbib Warning: Citation `galvatron2022' on page 1 undefined on input line 8.
 
 
-Package natbib Warning: Citation `vaswani2017' on page 1 undefined on input line 12.
+Package natbib Warning: Citation `vaswani2017' on page 1 undefined on input line 10.
 
 
-Package natbib Warning: Citation `bert' on page 1 undefined on input line 18.
+Package natbib Warning: Citation `bert' on page 1 undefined on input line 16.
 
 
-Package natbib Warning: Citation `gpt2' on page 1 undefined on input line 19.
+Package natbib Warning: Citation `gpt2' on page 1 undefined on input line 17.
 
 
-Package natbib Warning: Citation `t5' on page 1 undefined on input line 19.
+Package natbib Warning: Citation `t5' on page 1 undefined on input line 17.
 
 
-Package natbib Warning: Citation `brown2020gpt3' on page 1 undefined on input line 20.
+Package natbib Warning: Citation `brown2020gpt3' on page 1 undefined on input line 18.
 
 
-Package natbib Warning: Citation `openai2023' on page 1 undefined on input line 20.
+Package natbib Warning: Citation `openai2023' on page 1 undefined on input line 18.
 
 
-Package natbib Warning: Citation `vit2020' on page 1 undefined on input line 23.
+Package natbib Warning: Citation `vit2020' on page 1 undefined on input line 21.
 
 
-Package natbib Warning: Citation `scaling_vit' on page 1 undefined on input line 23.
+Package natbib Warning: Citation `scaling_vit' on page 1 undefined on input line 21.
 
 
-Package natbib Warning: Citation `clip2021' on page 1 undefined on input line 25.
+Package natbib Warning: Citation `clip2021' on page 1 undefined on input line 23.
 
 
-Package natbib Warning: Citation `dalle2021' on page 1 undefined on input line 26.
+Package natbib Warning: Citation `dalle2021' on page 1 undefined on input line 24.
 
 
-Package natbib Warning: Citation `blip2' on page 1 undefined on input line 35.
+Package natbib Warning: Citation `blip2' on page 1 undefined on input line 33.
 
 
-Package natbib Warning: Citation `llava2023' on page 1 undefined on input line 35.
+Package natbib Warning: Citation `llava2023' on page 1 undefined on input line 33.
 
 
-Package natbib Warning: Citation `flamingo2022' on page 1 undefined on input line 35.
+Package natbib Warning: Citation `flamingo2022' on page 1 undefined on input line 33.
 
 
-Package natbib Warning: Citation `minigpt4' on page 1 undefined on input line 39.
+Package natbib Warning: Citation `blip2' on page 1 undefined on input line 34.
 
 
-LaTeX Warning: Reference `fig:mllm_components' on page 1 undefined on input line 44.
+Package natbib Warning: Citation `instructblip2023' on page 1 undefined on input line 35.
 
 
-Package natbib Warning: Citation `blip2' on page 1 undefined on input line 48.
+Package natbib Warning: Citation `llava2023' on page 1 undefined on input line 36.
+
+
+Package natbib Warning: Citation `llava15_2023' on page 1 undefined on input line 36.
+
+
+Package natbib Warning: Citation `qwenvl2023' on page 1 undefined on input line 37.
+
+
+Package natbib Warning: Citation `internvl2024' on page 1 undefined on input line 37.
+
+
+Package natbib Warning: Citation `minigpt4' on page 1 undefined on input line 40.
+
+
+Package natbib Warning: Citation `mllm_survey_acl2024' on page 1 undefined on input line 40.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1245,690 +1260,937 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
+
+Package natbib Warning: Citation `embodied_mllm2024' on page 2 undefined on input line 46.
+
+
+Package natbib Warning: Citation `medical_vlm2024' on page 2 undefined on input line 46.
+
+
+Package natbib Warning: Citation `science_doc_mllm2024' on page 2 undefined on input line 47.
+
+
+Package natbib Warning: Citation `vqav2' on page 2 undefined on input line 47.
+
+
+Package natbib Warning: Citation `gqa2019' on page 2 undefined on input line 47.
+
+
+Package natbib Warning: Citation `mmmu_benchmark2024' on page 2 undefined on input line 48.
+
+
+Package natbib Warning: Citation `blip2' on page 2 undefined on input line 53.
+
 File: figures//fig01_mllm_components.png Graphic file (type bmp)
 <figures//fig01_mllm_components.png>
 
-
-Package natbib Warning: Citation `kaplan2020scaling' on page 2 undefined on input line 66.
-
-
-Package natbib Warning: Citation `deepseek2024' on page 2 undefined on input line 68.
+Package natbib Warning: Citation `kaplan2020scaling' on page 2 undefined on input line 72.
 
 
-Package natbib Warning: Citation `qwen2024' on page 2 undefined on input line 68.
+Package natbib Warning: Citation `kaplan2020scaling' on page 2 undefined on input line 73.
 
 
-Package natbib Warning: Citation `megatron2021' on page 2 undefined on input line 70.
+Package natbib Warning: Citation `chinchilla2022' on page 2 undefined on input line 74.
 
 
-Package natbib Warning: Citation `megatron2020' on page 2 undefined on input line 70.
+Package natbib Warning: Citation `beyond_chinchilla2024' on page 2 undefined on input line 77.
+
+
+Package natbib Warning: Citation `gopher2022' on page 2 undefined on input line 80.
+
+
+Package natbib Warning: Citation `deepseek2024' on page 2 undefined on input line 80.
+
+
+Package natbib Warning: Citation `qwen2024' on page 2 undefined on input line 80.
+
+
+Package natbib Warning: Citation `llama2_2023' on page 2 undefined on input line 81.
+
+
+Package natbib Warning: Citation `llama3' on page 2 undefined on input line 81.
+
+
+Package natbib Warning: Citation `gemma2024' on page 2 undefined on input line 81.
+
+
+Package natbib Warning: Citation `mistral2023' on page 2 undefined on input line 81.
+
+
+Package natbib Warning: Citation `megatron2021' on page 2 undefined on input line 83.
+
+
+Package natbib Warning: Citation `megatron2020' on page 2 undefined on input line 83.
+
+
+Package natbib Warning: Citation `data_mixing_llm2023' on page 2 undefined on input line 86.
+
+
+Package natbib Warning: Citation `long_context_benchmark2024' on page 2 undefined on input line 86.
 
 
 LaTeX Font Warning: Font shape `TU/SimSun(0)/m/it' undefined
-(Font)              using `TU/SimSun(0)/m/n' instead on input line 73.
+(Font)              using `TU/SimSun(0)/m/n' instead on input line 88.
 
 
-Package natbib Warning: Citation `zero2020' on page 2 undefined on input line 76.
+Package natbib Warning: Citation `zero2020' on page 2 undefined on input line 90.
 
 
-Package natbib Warning: Citation `zero2021' on page 2 undefined on input line 76.
+Package natbib Warning: Citation `zero2021' on page 2 undefined on input line 90.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
 
-Package natbib Warning: Citation `pytorch_ddp' on page 3 undefined on input line 80.
+Package natbib Warning: Citation `pytorch_ddp' on page 3 undefined on input line 94.
 
 
-Package natbib Warning: Citation `horovod' on page 3 undefined on input line 80.
+Package natbib Warning: Citation `horovod' on page 3 undefined on input line 94.
 
 
-Package natbib Warning: Citation `megatron2020' on page 3 undefined on input line 81.
+Package natbib Warning: Citation `megatron2020' on page 3 undefined on input line 95.
 
 
-Package natbib Warning: Citation `megatron2021' on page 3 undefined on input line 81.
+Package natbib Warning: Citation `megatron2021' on page 3 undefined on input line 95.
 
 
-Package natbib Warning: Citation `gpipe' on page 3 undefined on input line 82.
+Package natbib Warning: Citation `gpipe' on page 3 undefined on input line 96.
 
 
-Package natbib Warning: Citation `pipedream2019' on page 3 undefined on input line 82.
+Package natbib Warning: Citation `pipedream2019' on page 3 undefined on input line 96.
 
 
-Package natbib Warning: Citation `megatron2021' on page 3 undefined on input line 83.
+Package natbib Warning: Citation `megatron2021' on page 3 undefined on input line 97.
 
 
-Package natbib Warning: Citation `gshard' on page 3 undefined on input line 83.
+Package natbib Warning: Citation `gshard' on page 3 undefined on input line 97.
 
 
-Package natbib Warning: Citation `zero2020' on page 3 undefined on input line 85.
+Package natbib Warning: Citation `zero2020' on page 3 undefined on input line 99.
 
 
-Package natbib Warning: Citation `zero2021' on page 3 undefined on input line 85.
+Package natbib Warning: Citation `zero2021' on page 3 undefined on input line 99.
 
 
-Package natbib Warning: Citation `zero2021' on page 3 undefined on input line 86.
+Package natbib Warning: Citation `zero2021' on page 3 undefined on input line 100.
 
 
-Package natbib Warning: Citation `zeroplusplus' on page 3 undefined on input line 87.
+Package natbib Warning: Citation `zeroplusplus' on page 3 undefined on input line 101.
 
 
-Package natbib Warning: Citation `mixed_precision2018' on page 3 undefined on input line 88.
+Package natbib Warning: Citation `mixed_precision2018' on page 3 undefined on input line 102.
 
 
-Package natbib Warning: Citation `colossal_auto' on page 3 undefined on input line 88.
+Package natbib Warning: Citation `colossal_auto' on page 3 undefined on input line 102.
 
 
-Package natbib Warning: Citation `whale' on page 3 undefined on input line 100.
+Package natbib Warning: Citation `flash_attention_2022' on page 3 undefined on input line 103.
 
 
-Package natbib Warning: Citation `hetpipe2020' on page 3 undefined on input line 100.
+Package natbib Warning: Citation `flashattention3_2024' on page 3 undefined on input line 103.
 
 
-LaTeX Warning: Reference `fig:nvidia_gpu_evolution' on page 3 undefined on input line 102.
-
-
-Package natbib Warning: Citation `nvidia_a100' on page 3 undefined on input line 106.
-
-
-Package natbib Warning: Citation `nvidia_h100' on page 3 undefined on input line 107.
-
-
-Package natbib Warning: Citation `nvidia_blackwell' on page 3 undefined on input line 111.
+Package natbib Warning: Citation `fsdp2022' on page 3 undefined on input line 105.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3]
-File: figures//fig_nvidia_gpu_evolution.png Graphic file (type bmp)
-<figures//fig_nvidia_gpu_evolution.png>
+
+Package natbib Warning: Citation `whale' on page 4 undefined on input line 125.
 
 
-Package natbib Warning: Citation `megatron2021' on page 4 undefined on input line 129.
-
-
-Package natbib Warning: Citation `zero2020' on page 4 undefined on input line 129.
-
-
-Package natbib Warning: Citation `whale' on page 4 undefined on input line 131.
-
-
-Package natbib Warning: Citation `hetpipe2020' on page 4 undefined on input line 131.
-
-
-Package natbib Warning: Citation `llama3' on page 4 undefined on input line 138.
-
-
-Package natbib Warning: Citation `stable_diffusion' on page 4 undefined on input line 140.
-
-
-Package natbib Warning: Citation `unet' on page 4 undefined on input line 144.
-
-
-Package natbib Warning: Citation `blip2' on page 4 undefined on input line 146.
+Package natbib Warning: Citation `hetpipe2020' on page 4 undefined on input line 125.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [4]
 
-Package natbib Warning: Citation `blip2' on page 5 undefined on input line 157.
+Package natbib Warning: Citation `nvidia_a100' on page 5 undefined on input line 134.
 
 
-Package natbib Warning: Citation `nextgpt' on page 5 undefined on input line 161.
+Package natbib Warning: Citation `nvidia_h100' on page 5 undefined on input line 135.
 
 
-Package natbib Warning: Citation `dreamllm' on page 5 undefined on input line 161.
+Package natbib Warning: Citation `nvidia_blackwell' on page 5 undefined on input line 139.
+
+File: figures//fig_nvidia_gpu_evolution.png Graphic file (type bmp)
+<figures//fig_nvidia_gpu_evolution.png>
+
+Package natbib Warning: Citation `megatron2021' on page 5 undefined on input line 157.
 
 
-Package natbib Warning: Citation `adam' on page 5 undefined on input line 167.
+Package natbib Warning: Citation `zero2020' on page 5 undefined on input line 157.
 
 
-Package natbib Warning: Citation `galvatron2022' on page 5 undefined on input line 188.
+Package natbib Warning: Citation `whale' on page 5 undefined on input line 159.
 
 
-Package natbib Warning: Citation `pytorch_ddp' on page 5 undefined on input line 191.
+Package natbib Warning: Citation `hetpipe2020' on page 5 undefined on input line 159.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [5]
 
-Package natbib Warning: Citation `open_images' on page 6 undefined on input line 203.
+Package natbib Warning: Citation `llama3' on page 6 undefined on input line 175.
 
 
-Package natbib Warning: Citation `youtube8m' on page 6 undefined on input line 204.
+Package natbib Warning: Citation `stable_diffusion' on page 6 undefined on input line 177.
 
 
-Package natbib Warning: Citation `megatron2021' on page 6 undefined on input line 224.
+Package natbib Warning: Citation `unet' on page 6 undefined on input line 181.
 
 
-Package natbib Warning: Citation `megatron2020' on page 6 undefined on input line 224.
+Package natbib Warning: Citation `blip2' on page 6 undefined on input line 183.
 
 
-Package natbib Warning: Citation `zero2020' on page 6 undefined on input line 226.
+Package natbib Warning: Citation `blip2' on page 6 undefined on input line 193.
 
 
-Package natbib Warning: Citation `zero2021' on page 6 undefined on input line 226.
-
-[6]
-
-Package natbib Warning: Citation `megatron2021' on page 7 undefined on input line 230.
+Package natbib Warning: Citation `nextgpt' on page 6 undefined on input line 196.
 
 
-Package natbib Warning: Citation `megatron2020' on page 7 undefined on input line 230.
+Package natbib Warning: Citation `dreamllm' on page 6 undefined on input line 196.
 
 
-Package natbib Warning: Citation `megatron2023' on page 7 undefined on input line 234.
+Package natbib Warning: Citation `adam' on page 6 undefined on input line 200.
 
 
-LaTeX Warning: Reference `fig:megatron_mllm' on page 7 undefined on input line 242.
+Package natbib Warning: Citation `frenzy_memory2024' on page 6 undefined on input line 204.
 
 
-Package natbib Warning: Citation `whale' on page 7 undefined on input line 248.
+Package natbib Warning: Citation `cloud_llm_training' on page 6 undefined on input line 204.
 
 
-Package natbib Warning: Citation `hetpipe2020' on page 7 undefined on input line 248.
+Package natbib Warning: Citation `nvidia_training_guide' on page 6 undefined on input line 204.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6]
+
+Package natbib Warning: Citation `kaplan2020scaling' on page 7 undefined on input line 218.
+
+
+Package natbib Warning: Citation `chinchilla2022' on page 7 undefined on input line 219.
+
+
+Package natbib Warning: Citation `beyond_chinchilla2024' on page 7 undefined on input line 220.
+
+
+Package natbib Warning: Citation `galvatron2022' on page 7 undefined on input line 221.
+
+
+Package natbib Warning: Citation `pytorch_ddp' on page 7 undefined on input line 222.
+
+
+Package natbib Warning: Citation `lora2021' on page 7 undefined on input line 223.
+
+
+Package natbib Warning: Citation `qlora2023' on page 7 undefined on input line 223.
+
+
+Package natbib Warning: Citation `parameter_efficiency_survey2024' on page 7 undefined on input line 223.
+
+
+Package natbib Warning: Citation `vaswani2017' on page 7 undefined on input line 225.
+
+
+Package natbib Warning: Citation `bert' on page 7 undefined on input line 225.
+
+
+Package natbib Warning: Citation `gpt2' on page 7 undefined on input line 225.
+
+
+Package natbib Warning: Citation `t5' on page 7 undefined on input line 225.
+
+
+Package natbib Warning: Citation `brown2020gpt3' on page 7 undefined on input line 225.
+
+
+Package natbib Warning: Citation `openai2023' on page 7 undefined on input line 225.
+
+
+Package natbib Warning: Citation `deepseek2024' on page 7 undefined on input line 225.
+
+
+Package natbib Warning: Citation `qwen2024' on page 7 undefined on input line 225.
+
+
+Package natbib Warning: Citation `blip2' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `instructblip2023' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `llava2023' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `llava15_2023' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `flamingo2022' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `qwenvl2023' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `internvl2024' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `minigpt4' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `laion5b2022' on page 7 undefined on input line 226.
+
+
+Package natbib Warning: Citation `mllm_survey_acl2024' on page 7 undefined on input line 227.
+
+
+Package natbib Warning: Citation `comprehensive_mllm_survey2024' on page 7 undefined on input line 227.
+
+
+Package natbib Warning: Citation `mllm_datacentric2024' on page 7 undefined on input line 227.
+
+
+Package natbib Warning: Citation `megatron2021' on page 7 undefined on input line 228.
+
+
+Package natbib Warning: Citation `megatron2020' on page 7 undefined on input line 228.
+
+
+Package natbib Warning: Citation `zero2020' on page 7 undefined on input line 228.
+
+
+Package natbib Warning: Citation `zero2021' on page 7 undefined on input line 228.
+
+[7]
+
+Package natbib Warning: Citation `open_images' on page 8 undefined on input line 230.
+
+
+Package natbib Warning: Citation `coco2014' on page 8 undefined on input line 230.
+
+
+Package natbib Warning: Citation `pile2020' on page 8 undefined on input line 230.
+
+
+Package natbib Warning: Citation `youtube8m' on page 8 undefined on input line 230.
+
+
+Package natbib Warning: Citation `webvid2021' on page 8 undefined on input line 230.
+
+
+Package natbib Warning: Citation `vqav2' on page 8 undefined on input line 230.
+
+
+Package natbib Warning: Citation `textvqa2019' on page 8 undefined on input line 230.
+
+
+Package natbib Warning: Citation `long_context_benchmark2024' on page 8 undefined on input line 230.
+
+
+Package natbib Warning: Citation `megatron2021' on page 8 undefined on input line 233.
+
+
+Package natbib Warning: Citation `zero2020' on page 8 undefined on input line 233.
+
+
+Package natbib Warning: Citation `zero2021' on page 8 undefined on input line 233.
+
+
+Package natbib Warning: Citation `galvatron2022' on page 8 undefined on input line 234.
+
+
+Package natbib Warning: Citation `colossal_auto' on page 8 undefined on input line 234.
+
+
+Package natbib Warning: Citation `whale' on page 8 undefined on input line 236.
+
+
+Package natbib Warning: Citation `hetpipe2020' on page 8 undefined on input line 236.
+
+
+Package natbib Warning: Citation `efficient_mllm_survey2025' on page 8 undefined on input line 237.
+
+
+Package natbib Warning: Citation `pytorch_ddp' on page 8 undefined on input line 246.
+
+
+Package natbib Warning: Citation `horovod' on page 8 undefined on input line 246.
+
+
+Package natbib Warning: Citation `megatron2020' on page 8 undefined on input line 247.
+
+
+Package natbib Warning: Citation `megatron2021' on page 8 undefined on input line 247.
+
+
+Package natbib Warning: Citation `gpipe' on page 8 undefined on input line 248.
+
+
+Package natbib Warning: Citation `pipedream2019' on page 8 undefined on input line 248.
+
+
+Package natbib Warning: Citation `megatron2021' on page 8 undefined on input line 249.
+
+
+Package natbib Warning: Citation `gshard' on page 8 undefined on input line 249.
+
+
+Package natbib Warning: Citation `megatron2021' on page 8 undefined on input line 250.
+
+
+Package natbib Warning: Citation `megatron2020' on page 8 undefined on input line 250.
+
+
+Package natbib Warning: Citation `megatron2023' on page 8 undefined on input line 251.
+
+
+Package natbib Warning: Citation `zero2020' on page 8 undefined on input line 252.
+
+
+Package natbib Warning: Citation `zero2021' on page 8 undefined on input line 252.
+
+
+Package natbib Warning: Citation `zero2021' on page 8 undefined on input line 252.
+
+
+Package natbib Warning: Citation `zeroplusplus' on page 8 undefined on input line 252.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8]
+
+Package natbib Warning: Citation `whale' on page 9 undefined on input line 256.
+
+
+Package natbib Warning: Citation `hetpipe2020' on page 9 undefined on input line 256.
 
 File: figures//fig02_megatron_mllm.jpg Graphic file (type bmp)
 <figures//fig02_megatron_mllm.jpg>
 
-Package natbib Warning: Citation `zero2020' on page 7 undefined on input line 257.
+Package natbib Warning: Citation `hetpipe2020' on page 9 undefined on input line 266.
 
 
-Package natbib Warning: Citation `zero2021' on page 7 undefined on input line 257.
+Package natbib Warning: Citation `whale' on page 9 undefined on input line 267.
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [7] [8]) (./data/chap02.tex [9]
-
-Package natbib Warning: Citation `brown2020gpt3' on page 10 undefined on input line 6.
+Package natbib Warning: Citation `amp2022' on page 9 undefined on input line 268.
 
 
-Package natbib Warning: Citation `openai2023' on page 10 undefined on input line 6.
+Package natbib Warning: Citation `hethub2024' on page 9 undefined on input line 270.
 
 
-Package natbib Warning: Citation `vit2020' on page 10 undefined on input line 7.
+Package natbib Warning: Citation `hexiscale2024' on page 9 undefined on input line 271.
 
 
-Package natbib Warning: Citation `scaling_vit' on page 10 undefined on input line 7.
+Package natbib Warning: Citation `espresso2025' on page 9 undefined on input line 272.
 
 
-Package natbib Warning: Citation `clip2021' on page 10 undefined on input line 7.
+Package natbib Warning: Citation `zorse2025' on page 9 undefined on input line 272.
 
 
-Package natbib Warning: Citation `blip2' on page 10 undefined on input line 7.
-
-
-Package natbib Warning: Citation `kaplan2020scaling' on page 10 undefined on input line 9.
-
-
-Package natbib Warning: Citation `galvatron2022' on page 10 undefined on input line 11.
-
-
-Package natbib Warning: Citation `megatron2021' on page 10 undefined on input line 14.
-
-
-Package natbib Warning: Citation `zero2020' on page 10 undefined on input line 14.
-
-
-Package natbib Warning: Citation `zero2021' on page 10 undefined on input line 14.
-
-
-Package natbib Warning: Citation `whale' on page 10 undefined on input line 19.
-
-
-Package natbib Warning: Citation `hetpipe2020' on page 10 undefined on input line 19.
-
-
-LaTeX Warning: Reference `fig:mllm_components' on page 10 undefined on input line 36.
-
-
-Package natbib Warning: Citation `clip2021' on page 10 undefined on input line 40.
-
-
-Package natbib Warning: Citation `llava2023' on page 10 undefined on input line 40.
-
-
-Package natbib Warning: Citation `minigpt4' on page 10 undefined on input line 40.
-
-
-Package natbib Warning: Citation `vit2020' on page 10 undefined on input line 41.
-
-
-Package natbib Warning: Citation `scaling_vit' on page 10 undefined on input line 41.
-
-
-Package natbib Warning: Citation `flamingo2022' on page 10 undefined on input line 42.
+Package natbib Warning: Citation `cephalo2024' on page 9 undefined on input line 272.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [10
+ [9]
+
+Package natbib Warning: Citation `zero2020' on page 10 undefined on input line 275.
+
+
+Package natbib Warning: Citation `zero2021' on page 10 undefined on input line 275.
+
+
+Package natbib Warning: Citation `mics2022' on page 10 undefined on input line 275.
+
+
+Package natbib Warning: Citation `zeroplusplus' on page 10 undefined on input line 275.
+
+
+Package natbib Warning: Citation `amsp' on page 10 undefined on input line 275.
+
+
+Package natbib Warning: Citation `mmoh2025' on page 10 undefined on input line 277.
+
+
+Package natbib Warning: Citation `efficient_mllm_survey2025' on page 10 undefined on input line 277.
+
+[10] [11]) (./data/chap02.tex [12]
+
+Package natbib Warning: Citation `brown2020gpt3' on page 13 undefined on input line 9.
+
+
+Package natbib Warning: Citation `openai2023' on page 13 undefined on input line 9.
+
+
+Package natbib Warning: Citation `vit2020' on page 13 undefined on input line 10.
+
+
+Package natbib Warning: Citation `scaling_vit' on page 13 undefined on input line 10.
+
+
+Package natbib Warning: Citation `clip2021' on page 13 undefined on input line 10.
+
+
+Package natbib Warning: Citation `blip2' on page 13 undefined on input line 10.
+
+
+Package natbib Warning: Citation `kaplan2020scaling' on page 13 undefined on input line 12.
+
+
+Package natbib Warning: Citation `galvatron2022' on page 13 undefined on input line 14.
+
+
+Package natbib Warning: Citation `megatron2021' on page 13 undefined on input line 17.
+
+
+Package natbib Warning: Citation `zero2020' on page 13 undefined on input line 17.
+
+
+Package natbib Warning: Citation `zero2021' on page 13 undefined on input line 17.
+
+
+Package natbib Warning: Citation `whale' on page 13 undefined on input line 22.
+
+
+Package natbib Warning: Citation `hetpipe2020' on page 13 undefined on input line 22.
+
+[13
 
 
 ]
 
-Package natbib Warning: Citation `blip2' on page 11 undefined on input line 46.
+Package natbib Warning: Citation `clip2021' on page 14 undefined on input line 50.
 
 
-Package natbib Warning: Citation `blip2' on page 11 undefined on input line 50.
+Package natbib Warning: Citation `llava2023' on page 14 undefined on input line 50.
 
 
-Package natbib Warning: Citation `llava2023' on page 11 undefined on input line 50.
+Package natbib Warning: Citation `minigpt4' on page 14 undefined on input line 50.
 
 
-Package natbib Warning: Citation `brown2020gpt3' on page 11 undefined on input line 51.
+Package natbib Warning: Citation `vit2020' on page 14 undefined on input line 51.
 
 
-Package natbib Warning: Citation `gpt2' on page 11 undefined on input line 51.
+Package natbib Warning: Citation `scaling_vit' on page 14 undefined on input line 51.
 
 
-Package natbib Warning: Citation `llama3' on page 11 undefined on input line 52.
+Package natbib Warning: Citation `flamingo2022' on page 14 undefined on input line 52.
 
 
-Package natbib Warning: Citation `t5' on page 11 undefined on input line 52.
+Package natbib Warning: Citation `internvl2024' on page 14 undefined on input line 52.
 
 
-Package natbib Warning: Citation `stable_diffusion' on page 11 undefined on input line 56.
+Package natbib Warning: Citation `internvl2024' on page 14 undefined on input line 53.
 
 
-Package natbib Warning: Citation `unet' on page 11 undefined on input line 56.
+Package natbib Warning: Citation `qwenvl2023' on page 14 undefined on input line 54.
 
 
-Package natbib Warning: Citation `nextgpt' on page 11 undefined on input line 57.
+Package natbib Warning: Citation `vision_language_pretrain_survey2024' on page 14 undefined on input line 55.
 
 
-Package natbib Warning: Citation `dreamllm' on page 11 undefined on input line 57.
+Package natbib Warning: Citation `blip2' on page 14 undefined on input line 59.
 
 
-Package natbib Warning: Citation `blip2' on page 11 undefined on input line 59.
+Package natbib Warning: Citation `instructblip2023' on page 14 undefined on input line 60.
 
 
-Package natbib Warning: Citation `kaplan2020scaling' on page 11 undefined on input line 66.
+Package natbib Warning: Citation `blip2' on page 14 undefined on input line 64.
 
 
-LaTeX Warning: Reference `tab:mllm_data_scale' on page 11 undefined on input line 72.
+Package natbib Warning: Citation `llava2023' on page 14 undefined on input line 64.
 
 
-Package natbib Warning: Citation `open_images' on page 11 undefined on input line 73.
+Package natbib Warning: Citation `brown2020gpt3' on page 14 undefined on input line 65.
 
 
-Package natbib Warning: Citation `youtube8m' on page 11 undefined on input line 75.
+Package natbib Warning: Citation `gpt2' on page 14 undefined on input line 65.
 
 
-Package natbib Warning: Citation `galvatron2022' on page 11 undefined on input line 79.
+Package natbib Warning: Citation `llama3' on page 14 undefined on input line 66.
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Package natbib Warning: Citation `t5' on page 14 undefined on input line 66.
 
- [11]
 
-Package natbib Warning: Citation `open_images' on page 12 undefined on input line 89.
+Package natbib Warning: Citation `stable_diffusion' on page 14 undefined on input line 70.
 
 
-Package natbib Warning: Citation `youtube8m' on page 12 undefined on input line 90.
+Package natbib Warning: Citation `unet' on page 14 undefined on input line 70.
 
 
-Package natbib Warning: Citation `blip2' on page 12 undefined on input line 99.
+Package natbib Warning: Citation `nextgpt' on page 14 undefined on input line 71.
 
 
-Package natbib Warning: Citation `llava2023' on page 12 undefined on input line 99.
+Package natbib Warning: Citation `dreamllm' on page 14 undefined on input line 71.
 
+[14]
 
-Package natbib Warning: Citation `blip2' on page 12 undefined on input line 110.
+Package natbib Warning: Citation `blip2' on page 15 undefined on input line 73.
 
 
-LaTeX Warning: Reference `fig:mllm_training_stages' on page 12 undefined on input line 116.
+Package natbib Warning: Citation `kaplan2020scaling' on page 15 undefined on input line 88.
 
-File: figures//mllm_training_stage.png Graphic file (type bmp)
-<figures//mllm_training_stage.png>
 
-Package natbib Warning: Citation `parameter_server' on page 12 undefined on input line 132.
+Package natbib Warning: Citation `chinchilla2022' on page 15 undefined on input line 88.
 
 
-Package natbib Warning: Citation `horovod' on page 12 undefined on input line 132.
+Package natbib Warning: Citation `chinchilla2022' on page 15 undefined on input line 89.
 
 
-Package natbib Warning: Citation `pytorch_ddp' on page 12 undefined on input line 132.
+Package natbib Warning: Citation `beyond_chinchilla2024' on page 15 undefined on input line 90.
 
 
-LaTeX Warning: Reference `fig:data_parallel' on page 12 undefined on input line 133.
+Package natbib Warning: Citation `pile2020' on page 15 undefined on input line 93.
 
 
-Package natbib Warning: Citation `pytorch_ddp' on page 12 undefined on input line 135.
+Package natbib Warning: Citation `mmmu_benchmark2024' on page 15 undefined on input line 97.
 
 
-Package natbib Warning: Citation `horovod' on page 12 undefined on input line 135.
+Package natbib Warning: Citation `mllm_datacentric2024' on page 15 undefined on input line 97.
 
 
-Package natbib Warning: Citation `parallax' on page 12 undefined on input line 136.
+Package natbib Warning: Citation `open_images' on page 15 undefined on input line 101.
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Package natbib Warning: Citation `youtube8m' on page 15 undefined on input line 103.
 
- [12]
-File: figures//fig03_data_parallel.png Graphic file (type bmp)
-<figures//fig03_data_parallel.png>
 
-
-Package natbib Warning: Citation `megatron2020' on page 13 undefined on input line 149.
-
-
-Package natbib Warning: Citation `megatron2021' on page 13 undefined on input line 149.
-
-
-LaTeX Warning: Reference `fig:tensor_parallel' on page 13 undefined on input line 150.
-
-
-Package natbib Warning: Citation `megatron2020' on page 13 undefined on input line 152.
-
-
-Package natbib Warning: Citation `gshard' on page 13 undefined on input line 153.
-
-
-Package natbib Warning: Citation `megatron2021' on page 13 undefined on input line 154.
-
-
-Package natbib Warning: Citation `megatron2023' on page 13 undefined on input line 156.
-
-
-Package natbib Warning: Citation `ulysses2023' on page 13 undefined on input line 156.
-
-
-Package natbib Warning: Citation `ulysses2023' on page 13 undefined on input line 157.
-
-
-Package natbib Warning: Citation `megatron2023' on page 13 undefined on input line 159.
-
-[13]
-File: figures//fig04_tensor_parallel.png Graphic file (type bmp)
-<figures//fig04_tensor_parallel.png>
-
-
-Package natbib Warning: Citation `gpipe' on page 14 undefined on input line 170.
-
-
-LaTeX Warning: Reference `fig:pipeline_parallel' on page 14 undefined on input line 171.
-
-
-Package natbib Warning: Citation `gpipe' on page 14 undefined on input line 171.
-
-
-Package natbib Warning: Citation `pipedream2019' on page 14 undefined on input line 172.
-
-
-Package natbib Warning: Citation `terapipe' on page 14 undefined on input line 173.
-
-
-Package natbib Warning: Citation `zerobubble2024' on page 14 undefined on input line 174.
-
-
-Package natbib Warning: Citation `dualpipe2025' on page 14 undefined on input line 176.
-
-
-Package natbib Warning: Citation `megatron2020' on page 14 undefined on input line 177.
-
-File: figures//fig05_pipeline_parallel.png Graphic file (type bmp)
-<figures//fig05_pipeline_parallel.png>
-
-Package natbib Warning: Citation `megatron2023' on page 14 undefined on input line 189.
-
-
-Package natbib Warning: Citation `gshard' on page 14 undefined on input line 193.
-
-
-Package natbib Warning: Citation `gshard' on page 14 undefined on input line 196.
-
-
-Package natbib Warning: Citation `dualpipe2025' on page 14 undefined on input line 196.
-
-
-LaTeX Warning: Reference `fig:sp_cp_ep' on page 14 undefined on input line 198.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [14]
-
-./data/chap02.tex:213: LaTeX Error: Environment tikzpicture undefined.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.213   }
-         
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-./data/chap02.tex:213: Undefined control sequence.
-<argument> ...ngth=1.5mm]}, draw=black!60}] \node 
-                                                  [box, fill=black!8] (sp) {...
-l.213   }
-         
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-./data/chap02.tex:213: LaTeX Error: Something's wrong--perhaps a missing \item.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.213   }
-         
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-./data/chap02.tex:213: Undefined control sequence.
-<argument> ...sp) {\textbf {SP/CP}\\序列维划分}; \node 
-                                                  [box, right=of sp, fill=bl...
-l.213   }
-         
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-./data/chap02.tex:213: LaTeX Error: Something's wrong--perhaps a missing \item.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.213   }
-         
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-./data/chap02.tex:213: Undefined control sequence.
-<argument> ... (tp) {\textbf {TP}\\层内张量划分}; \node 
-                                                  [box, right=of tp, fill=bl...
-l.213   }
-         
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-./data/chap02.tex:213: LaTeX Error: Something's wrong--perhaps a missing \item.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.213   }
-         
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-./data/chap02.tex:213: Undefined control sequence.
-<argument> ...] (ep) {\textbf {EP}\\专家维划分}; \node 
-                                                  [below=0.25cm of sp, font=...
-l.213   }
-         
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 8.99994pt on input line 213.
-LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 6.29996pt on input line 213.
-LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 4.49997pt on input line 213.
-./data/chap02.tex:213: Undefined control sequence.
-<argument> ...otnotesize ] {长序列 $\to $ 多卡}; \node 
-                                                  [below=0.25cm of tp, font=...
-l.213   }
-         
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-./data/chap02.tex:213: Undefined control sequence.
-<argument> ...ootnotesize ] {单层 $\to $ 多卡}; \node 
-                                                  [below=0.25cm of ep, font=...
-l.213   }
-         
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-./data/chap02.tex:213: LaTeX Error: \begin{figure} on input line 200 ended by \end{tikzpicture}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.213   }
-         
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-Package natbib Warning: Citation `zero2020' on page 15 undefined on input line 220.
-
-
-Package natbib Warning: Citation `zero2021' on page 15 undefined on input line 220.
-
-
-LaTeX Warning: Reference `fig:zero' on page 15 undefined on input line 222.
-
-
-Package natbib Warning: Citation `zero2021' on page 15 undefined on input line 223.
-
-
-Package natbib Warning: Citation `zeroplusplus' on page 15 undefined on input line 224.
-
-
-Package natbib Warning: Citation `mics2022' on page 15 undefined on input line 224.
-
-
-Package natbib Warning: Citation `amsp' on page 15 undefined on input line 224.
+Package natbib Warning: Citation `galvatron2022' on page 15 undefined on input line 108.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [15]
-File: figures//fig06_zero.png Graphic file (type bmp)
-<figures//fig06_zero.png>
+
+Package natbib Warning: Citation `open_images' on page 16 undefined on input line 118.
 
 
-Package natbib Warning: Citation `hetpipe2020' on page 16 undefined on input line 250.
+Package natbib Warning: Citation `youtube8m' on page 16 undefined on input line 119.
 
 
-Package natbib Warning: Citation `whale' on page 16 undefined on input line 258.
+Package natbib Warning: Citation `blip2' on page 16 undefined on input line 128.
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [16]
-
-Package natbib Warning: Citation `amp2022' on page 17 undefined on input line 266.
+Package natbib Warning: Citation `llava2023' on page 16 undefined on input line 128.
 
 
-Package natbib Warning: Citation `espresso2025' on page 17 undefined on input line 276.
+Package natbib Warning: Citation `llava2023' on page 16 undefined on input line 139.
 
 
-Package natbib Warning: Citation `zorse2025' on page 17 undefined on input line 286.
+Package natbib Warning: Citation `instructblip2023' on page 16 undefined on input line 140.
 
 
-Package natbib Warning: Citation `zero2020' on page 17 undefined on input line 295.
+Package natbib Warning: Citation `qwenvl2023' on page 16 undefined on input line 140.
 
 
-Package natbib Warning: Citation `zero2021' on page 17 undefined on input line 295.
+Package natbib Warning: Citation `llava_next2024' on page 16 undefined on input line 140.
 
 
-Package natbib Warning: Citation `mics2022' on page 17 undefined on input line 296.
+Package natbib Warning: Citation `gemini2023' on page 16 undefined on input line 141.
 
 
-Package natbib Warning: Citation `zeroplusplus' on page 17 undefined on input line 297.
+Package natbib Warning: Citation `palm2022' on page 16 undefined on input line 141.
 
 
-Package natbib Warning: Citation `amsp' on page 17 undefined on input line 298.
+Package natbib Warning: Citation `blip2' on page 16 undefined on input line 146.
+
+[16]
+File: figures//mllm_training_stages.pdf Graphic file (type pdf)
+<use figures//mllm_training_stages.pdf>
+
+
+Package natbib Warning: Citation `parameter_server' on page 17 undefined on input line 170.
+
+
+Package natbib Warning: Citation `horovod' on page 17 undefined on input line 170.
+
+
+Package natbib Warning: Citation `pytorch_ddp' on page 17 undefined on input line 170.
+
+
+Package natbib Warning: Citation `pytorch_ddp' on page 17 undefined on input line 173.
+
+
+Package natbib Warning: Citation `horovod' on page 17 undefined on input line 173.
+
+
+Package natbib Warning: Citation `fsdp2022' on page 17 undefined on input line 174.
+
+
+Package natbib Warning: Citation `parallax' on page 17 undefined on input line 175.
+
+File: figures//fig03_data_parallel.pdf Graphic file (type pdf)
+<use figures//fig03_data_parallel.pdf>
+
+Package natbib Warning: Citation `megatron2020' on page 17 undefined on input line 188.
+
+
+Package natbib Warning: Citation `megatron2021' on page 17 undefined on input line 188.
+
+
+Package natbib Warning: Citation `megatron2020' on page 17 undefined on input line 191.
+
+
+Package natbib Warning: Citation `gshard' on page 17 undefined on input line 192.
+
+
+Package natbib Warning: Citation `megatron2021' on page 17 undefined on input line 193.
+
+
+Package natbib Warning: Citation `megatron2023' on page 17 undefined on input line 195.
+
+
+Package natbib Warning: Citation `ulysses2023' on page 17 undefined on input line 195.
+
+
+Package natbib Warning: Citation `ulysses2023' on page 17 undefined on input line 196.
+
+
+Package natbib Warning: Citation `megatron2023' on page 17 undefined on input line 198.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [17]
+File: figures//fig04_tensor_parallel_left.pdf Graphic file (type pdf)
+<use figures//fig04_tensor_parallel_left.pdf>
+File: figures//fig04_tensor_parallel_right.pdf Graphic file (type pdf)
+<use figures//fig04_tensor_parallel_right.pdf>
 
-Package natbib Warning: Citation `chen2016checkpoint' on page 18 undefined on input line 309.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
+ [18]
 
-Package natbib Warning: Citation `chen2016checkpoint' on page 18 undefined on input line 316.
-
-
-Package natbib Warning: Citation `chen2016checkpoint' on page 18 undefined on input line 317.
-
-
-Package natbib Warning: Citation `chen2016checkpoint' on page 18 undefined on input line 324.
-
-
-Package natbib Warning: Citation `korthikanti2023activation' on page 18 undefined on input line 335.
+Package natbib Warning: Citation `gpipe' on page 19 undefined on input line 216.
 
 
-Package natbib Warning: Citation `korthikanti2023activation' on page 18 undefined on input line 338.
-
-[18]
-
-Package natbib Warning: Citation `korthikanti2023activation' on page 19 undefined on input line 350.
+Package natbib Warning: Citation `pipedream2019' on page 19 undefined on input line 217.
 
 
-Package natbib Warning: Citation `colossal_auto' on page 19 undefined on input line 356.
+Package natbib Warning: Citation `terapipe' on page 19 undefined on input line 218.
+
+
+Package natbib Warning: Citation `terapipe_icml2022' on page 19 undefined on input line 218.
+
+
+Package natbib Warning: Citation `chimera_pp2023' on page 19 undefined on input line 219.
+
+
+Package natbib Warning: Citation `hanayo_pp' on page 19 undefined on input line 220.
+
+
+Package natbib Warning: Citation `zerobubble2024' on page 19 undefined on input line 221.
+
+
+Package natbib Warning: Citation `dualpipe2025' on page 19 undefined on input line 223.
+
+
+Package natbib Warning: Citation `megatron2020' on page 19 undefined on input line 224.
+
+
+Package natbib Warning: Citation `ring_attention2024' on page 19 undefined on input line 227.
+
+File: figures//fig05_pipeline_parallel.pdf Graphic file (type pdf)
+<use figures//fig05_pipeline_parallel.pdf>
+
+Package natbib Warning: Citation `megatron2023' on page 19 undefined on input line 240.
+
+
+Package natbib Warning: Citation `gshard' on page 19 undefined on input line 244.
+
+
+Package natbib Warning: Citation `gshard' on page 19 undefined on input line 247.
+
+
+Package natbib Warning: Citation `deepseek_moe2024' on page 19 undefined on input line 247.
+
+
+Package natbib Warning: Citation `dualpipe2025' on page 19 undefined on input line 248.
+
+
+Underfull \vbox (badness 3291) has occurred while \output is active []
+
+ [19]
+File: figures//fig06_expert_parallel.pdf Graphic file (type pdf)
+<use figures//fig06_expert_parallel.pdf>
+
+
+Package natbib Warning: Citation `zero2020' on page 20 undefined on input line 262.
+
+
+Package natbib Warning: Citation `zero2021' on page 20 undefined on input line 262.
+
+
+Package natbib Warning: Citation `zero2021' on page 20 undefined on input line 265.
+
+
+Package natbib Warning: Citation `zeroplusplus' on page 20 undefined on input line 266.
+
+
+Package natbib Warning: Citation `mics2022' on page 20 undefined on input line 266.
+
+
+Package natbib Warning: Citation `amsp' on page 20 undefined on input line 266.
+
+
+Package natbib Warning: Citation `zero3_tp_pp' on page 20 undefined on input line 268.
+
+
+Package natbib Warning: Citation `tensor_parallelism_survey' on page 20 undefined on input line 268.
+
+
+Package natbib Warning: Citation `flash_attention_2022' on page 20 undefined on input line 270.
+
+
+Package natbib Warning: Citation `flashattention3_2024' on page 20 undefined on input line 271.
+
+File: figures//fig07_zero.pdf Graphic file (type pdf)
+<use figures//fig07_zero.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20]
+
+Package natbib Warning: Citation `hetpipe2020' on page 21 undefined on input line 298.
+
+
+Package natbib Warning: Citation `whale' on page 21 undefined on input line 306.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [21]
+
+Package natbib Warning: Citation `amp2022' on page 22 undefined on input line 314.
+
+
+Package natbib Warning: Citation `espresso2025' on page 22 undefined on input line 324.
+
+
+Package natbib Warning: Citation `hethub2024' on page 22 undefined on input line 334.
+
+
+Package natbib Warning: Citation `hexiscale2024' on page 22 undefined on input line 337.
+
+
+Package natbib Warning: Citation `zorse2025' on page 22 undefined on input line 341.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [22]
+
+Package natbib Warning: Citation `zero2020' on page 23 undefined on input line 350.
+
+
+Package natbib Warning: Citation `zero2021' on page 23 undefined on input line 350.
+
+
+Package natbib Warning: Citation `mics2022' on page 23 undefined on input line 351.
+
+
+Package natbib Warning: Citation `zeroplusplus' on page 23 undefined on input line 352.
+
+
+Package natbib Warning: Citation `amsp' on page 23 undefined on input line 353.
+
+
+Package natbib Warning: Citation `frenzy_memory2024' on page 23 undefined on input line 360.
+
+
+Package natbib Warning: Citation `espresso2025' on page 23 undefined on input line 361.
+
+
+Package natbib Warning: Citation `zorse2025' on page 23 undefined on input line 361.
+
+
+Package natbib Warning: Citation `chen2016checkpoint' on page 23 undefined on input line 371.
+
+File: figures//fig08_recomputation.pdf Graphic file (type pdf)
+<use figures//fig08_recomputation.pdf>
+
+Package natbib Warning: Citation `chen2016checkpoint' on page 23 undefined on input line 387.
+
+[23]
+
+Package natbib Warning: Citation `korthikanti2023activation' on page 24 undefined on input line 394.
+
+
+Package natbib Warning: Citation `korthikanti2023activation' on page 24 undefined on input line 397.
+
+
+Package natbib Warning: Citation `selective_checkpoint_megatron' on page 24 undefined on input line 399.
+
+
+Package natbib Warning: Citation `nemo_activation_recomp' on page 24 undefined on input line 399.
+
+
+Package natbib Warning: Citation `selective_checkpoint_megatron' on page 24 undefined on input line 408.
+
+
+Package natbib Warning: Citation `nemo_activation_recomp' on page 24 undefined on input line 408.
+
+
+Package natbib Warning: Citation `lynx2024' on page 24 undefined on input line 410.
+
+[24]
+
+Package natbib Warning: Citation `korthikanti2023activation' on page 25 undefined on input line 423.
+
+
+Package natbib Warning: Citation `selective_checkpoint_megatron' on page 25 undefined on input line 429.
+
+
+Package natbib Warning: Citation `nemo_activation_recomp' on page 25 undefined on input line 429.
+
+
+Package natbib Warning: Citation `colossal_auto' on page 25 undefined on input line 430.
+
+
+Package natbib Warning: Citation `stage_wise_checkpoint2023' on page 25 undefined on input line 430.
+
+
+Package natbib Warning: Citation `llm_systems_survey2024' on page 25 undefined on input line 436.
+
+
+Package natbib Warning: Citation `distributed_dl_survey2022' on page 25 undefined on input line 436.
 
 )
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [19] (./data/ack.tex [20]) [21
+ [25] (./data/ack.tex [26]) [27
 
-] [22
+] [28
 
 ]
 No file thesis_blind.bbl.
-(./data/resume.tex) [23
+(./data/resume.tex) [29
 
-] (./data/appendix01.tex)
+] (./data/appendix01.tex
+Underfull \hbox (badness 10000) in paragraph at lines 45--46
+[]|\TU/TimesNewRoman(0)/m/n/10.95 Contrastive Language-Image Pre-Training
+ []
+
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 9.85492pt on input line 113.
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 7.19995pt on input line 113.
+LaTeX Font Info:    Font shape `U/fsy/m/n' will be
+(Font)              scaled to size 5.39996pt on input line 113.
+[30
+
+
+
+] [31])
 \tf@thm=\write8
 \openout8 = `thesis_blind.thm'.
 
@@ -1936,11 +2198,7 @@ No file thesis_blind.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[24
-
-
-
-] (./thesis_blind.aux)
+[32] (./thesis_blind.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.22pt have occurred.
@@ -1948,28 +2206,16 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `thesis_blind.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `thesis_blind.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  47E9F058DF4785EC1BA3CCA166F17FB3;3770.
+Package rerunfilecheck Info: File `thesis_blind.out' has not changed.
+(rerunfilecheck)             Checksum: 10D41FDC9304692B15D8DCDDC292AD90;3809.
  ) 
 Here is how much of TeX's memory you used:
- 24343 strings out of 476179
- 489439 string characters out of 5813072
- 883001 words of memory out of 5000000
- 44611 multiletter control sequences out of 15000+600000
- 501844 words of font info for 213 fonts, out of 8000000 for 9000
+ 24425 strings out of 476179
+ 493380 string characters out of 5813072
+ 900592 words of memory out of 5000000
+ 44680 multiletter control sequences out of 15000+600000
+ 502030 words of font info for 211 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 125i,11n,120p,2293b,602s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 125i,10n,120p,2293b,677s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis_blind.pdf (33 pages).
+Output written on thesis_blind.pdf (41 pages).

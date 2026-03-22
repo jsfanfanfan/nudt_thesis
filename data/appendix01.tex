@@ -1,46 +1,115 @@
 % TeX
-\chapter{模板提供的希腊字母命令列表}
+\chapter{本文中英文对照表}
 
-大写希腊字母：
-\begin{table}[htbp]
-\centering
-\begin{tabular}{llll}
-\toprule
-$\Gamma$~\verb|\Gamma| & $\Lambda$~\verb|\Lambda| & $\Sigma$~\verb|\Sigma| & $\Psi$~\verb|\Psi| \\
-$\Delta$~\verb|\Delta| & $\Xi$~\verb|\Xi| & $\Upsilon$~\verb|\Upsilon| & $\Omega$~\verb|\Omega| \\
-$\Theta$~\verb|\Theta| & $\Pi$~\verb|\Pi| & $\Phi$~\verb|\Phi| & \\
-\midrule
-$\varGamma$~\verb|\varGamma| & $\varLambda$~\verb|\varLambda| & $\varSigma$~\verb|\varSigma| & $\varPsi$~\verb|\varPsi| \\
-$\varDelta$~\verb|\varDelta| & $\varXi$~\verb|\varXi| & $\varUpsilon$~\verb|\varUpsilon| & $\varOmega$~\verb|\varOmega| \\
-$\varTheta$~\verb|\varTheta| & $\varPi$~\verb|\varPi| & $\varPhi$~\verb|\varPhi| & \\
-\bottomrule
-\end{tabular}
-\end{table}
+表~\ref{tab:appendix-bilingual} 给出正文常用术语的中英文对照；第二列在必要时附缩写或原文记号。
 
-小写希腊字母：
-\begin{table}[htbp]
-\centering
-\begin{tabular}{llll}
-\toprule
-$\alpha$~\verb|\alpha| & $\theta$~\verb|\theta| & $o$~\verb|o| & $\tau$~\verb|\tau| \\ 
-$\beta$~\verb|\beta| & $\vartheta$~\verb|\vartheta| & $\pi$~\verb|\pi| & $\upsilon$~\verb|\upsilon| \\ 
-$\gamma$~\verb|\gamma| & $\iota$~\verb|\iota| & $\varpi$~\verb|\varpi| & $\phi$~\verb|\phi| \\ 
-$\delta$~\verb|\delta| & $\kappa$~\verb|\kappa| & $\rho$~\verb|\rho| & $\varphi$~\verb|\varphi| \\ 
-$\epsilon$~\verb|\epsilon| & $\lambda$~\verb|\lambda| & $\varrho$~\verb|\varrho| & $\chi$~\verb|\chi| \\ 
-$\varepsilon$~\verb|\varepsilon| & $\mu$~\verb|\mu| & $\sigma$~\verb|\sigma| & $\psi$~\verb|\psi| \\ 
-$\zeta$~\verb|\zeta| & $\nu$~\verb|\nu| & $\varsigma$~\verb|\varsigma| & $\omega$~\verb|\omega| \\ 
-$\eta$~\verb|\eta| & $\xi$~\verb|\xi| & $\varkappa$~\verb|\varkappa| & $\digamma$~\verb|\digamma| \\ 
-\midrule
-$\upalpha$~\verb|\upalpha| & $\uptheta$~\verb|\uptheta| & $\mathrm{o}$~\verb|\mathrm{o}| & $\uptau$~\verb|\uptau| \\ 
-$\upbeta$~\verb|\upbeta| & $\upvartheta$~\verb|\upvartheta| & $\uppi$~\verb|\uppi| & $\upupsilon$~\verb|\upupsilon| \\ 
-$\upgamma$~\verb|\upgamma| & $\upiota$~\verb|\upiota| & $\upvarpi$~\verb|\upvarpi| & $\upphi$~\verb|\upphi| \\ 
-$\updelta$~\verb|\updelta| & $\upkappa$~\verb|\upkappa| & $\uprho$~\verb|\uprho| & $\upvarphi$~\verb|\upvarphi| \\ 
-$\upepsilon$~\verb|\upepsilon| & $\uplambda$~\verb|\uplambda| & $\upvarrho$~\verb|\upvarrho| & $\upchi$~\verb|\upchi| \\ 
-$\upvarepsilon$~\verb|\upvarepsilon| & $\upmu$~\verb|\upmu| & $\upsigma$~\verb|\upsigma| & $\uppsi$~\verb|\uppsi| \\ 
-$\upzeta$~\verb|\upzeta| & $\upnu$~\verb|\upnu| & $\upvarsigma$~\verb|\upvarsigma| & $\upomega$~\verb|\upomega| \\ 
-$\upeta$~\verb|\upeta| & $\upxi$~\verb|\upxi| & & \\ 
-\bottomrule
-\end{tabular}
-\end{table}
-
-希腊字母属于数学符号类别，请用\verb|\bm|命令加粗，其余向量、矩阵可用\verb|\mathbf|。
+\begingroup
+\small
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{@{}p{5.6cm}p{7.4cm}@{}}
+	\caption{本文主要术语中英文对照表}\label{tab:appendix-bilingual} \\
+	\toprule
+	\textbf{中文} & \textbf{英文} \\
+	\midrule
+	\endfirsthead
+	\multicolumn{2}{@{}l@{}}{\small 续表~\thetable} \\
+	\toprule
+	\textbf{中文} & \textbf{英文} \\
+	\midrule
+	\endhead
+	\midrule
+	\multicolumn{2}{r@{}}{\small 续下页} \\
+	\endfoot
+	\bottomrule
+	\endlastfoot
+	% --- 第 1 章：基础概念与模型 ---
+	自注意力机制 & Self-Attention \\
+	Transformer 架构 & Transformer \\
+	深度神经网络 & Deep Neural Network (DNN) \\
+	卷积神经网络 & Convolutional Neural Network (CNN) \\
+	循环神经网络 & Recurrent Neural Network (RNN) \\
+	计算机视觉 & Computer Vision (CV) \\
+	自然语言处理 & Natural Language Processing (NLP) \\
+	语音识别 & Speech Recognition (SR) \\
+	大语言模型 & Large Language Model (LLM) \\
+	多模态大语言模型 & Multimodal Large Language Model (MLLM) \\
+	通用人工智能 & Artificial General Intelligence (AGI) \\
+	自回归（建模） & Autoregressive \\
+	编码器—解码器（结构） & Encoder–Decoder \\
+	迁移学习 & Transfer Learning \\
+	少样本学习 & Few-Shot Learning \\
+	零样本学习 & Zero-Shot Learning \\
+	扩展定律 & Scaling Laws \\
+	图文对比学习 & Contrastive Language-Image Pre-Training (CLIP) \\
+	词嵌入 & word embedding \\
+	图像描述 & Image Captioning \\
+	视觉问答 & Visual Question Answering (VQA) \\
+	图文对话 & Visual–Text Dialog \\
+	文档理解 & Document Understanding \\
+	具身智能 & Embodied Intelligence \\
+	医疗影像理解 & Medical Image Understanding \\
+	最优先进水平 & state-of-the-art (SOTA) \\
+	% --- 第 1--2 章：MLLM 结构 ---
+	模态编码器 & Modality Encoder \\
+	输入投影层 & Input Projector \\
+	LLM 骨干/主体 & LLM Backbone \\
+	输出投影层 & Output Projector \\
+	模态生成器 & Modality Generator \\
+	扩散模型 & diffusion model \\
+	模块异构 & module heterogeneity \\
+	% --- 第 2 章：训练阶段与数据 ---
+	模态对齐 & modality alignment \\
+	指令微调 & instruction tuning \\
+	多模态生成微调 & multimodal generative fine-tuning \\
+	% --- 并行、通信与显存 ---
+	数据并行 & data parallelism (DP) \\
+	分布式数据并行 & Distributed Data Parallel (DDP) \\
+	张量并行 & tensor parallelism (TP) \\
+	流水线并行 & pipeline parallelism (PP) \\
+	序列并行 & sequence parallelism (SP) \\
+	上下文并行 & context parallelism (CP) \\
+	专家并行 & expert parallelism (EP) \\
+	混合专家 & Mixture of Experts (MoE) \\
+	三维混合并行 & 3D parallelism (DP+TP+PP) \\
+	微批次 & micro-batch \\
+	小批量 & mini-batch \\
+	一前向一反向调度 & One-Forward-One-Backward (1F1B) \\
+	全归约 & AllReduce \\
+	全收集 & All-Gather \\
+	归约分散 & Reduce-Scatter \\
+	全对全通信 & All-to-All \\
+	点对点通信 & Peer-to-Peer (P2P) \\
+	参数服务器 & parameter server \\
+	主流水级 & master pipeline stage \\
+	流水级/流水线阶段 & pipeline stage \\
+	流水线气泡 & pipeline bubble \\
+	混合并行 & hybrid parallelism \\
+	混合精度训练 & mixed-precision training \\
+	Flash Attention / FlashAttention-3 & Flash Attention / FlashAttention-3 \\
+	全分片数据并行 & Fully Sharded Data Parallel (FSDP) \\
+	零冗余优化器 & Zero Redundancy Optimizer (ZeRO) \\
+	ZeRO-Infinity / ZeRO++ & ZeRO-Infinity / ZeRO++ \\
+	环形注意力 & Ring Attention \\
+	激活/激活值 & activation \\
+	显存溢出 & Out Of Memory (OOM) \\
+	负载均衡 & load balancing \\
+	剖析/性能剖析 & profiling \\
+	设备拓扑 & device topology \\
+	整数规划 & integer programming \\
+	复合粒度（模型抽象） & multi-granularity model abstraction \\
+	成本模型 & cost model \\
+	服务等级目标 & Service Level Objective (SLO) \\
+	模型算力利用率 & Model FLOPs Utilization (MFU) \\
+	% --- 框架与代表性系统（第 1--2 章） ---
+	虚拟工作节点 & Virtual Worker (VW) \\
+	剖析器/性能估计器 & Profiler / Performance Estimator \\
+	GPU 分配器 & GPU Allocator \\
+	阶段放置器 & Stage Placer \\
+	全部重计算 & full recomputation \\
+	选择重计算 & selective recomputation \\
+	细粒度重计算 & fine-grained recomputation \\
+	Top-$k$（专家路由） & Top-$k$ (expert routing) \\
+\end{longtable}
+\endgroup
