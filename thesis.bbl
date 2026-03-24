@@ -3,7 +3,8 @@
 
 \bibitem{galvatron2022}
 Miao~X, Wang~Y, Jiang~Y, et~al.
-Galvatron: Efficient Transformer Training over Multiple GPUs Using Automatic Parallelism~[J].
+Galvatron: Efficient Transformer Training over Multiple GPUs Using Automatic
+  Parallelism~[J].
 Proceedings of the VLDB Endowment.
 2022, 16~(3):  470--479.
 
@@ -15,7 +16,8 @@ Advances in Neural Information Processing Systems.
 
 \bibitem{bert}
 Devlin~J, Chang~M-W, Lee~K, et~al.
-BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding~[C].
+BERT: Pre-training of Deep Bidirectional Transformers for Language
+  Understanding~[C].
 Proceedings of NAACL-HLT.
 2019:  4171--4186.
 
@@ -27,7 +29,8 @@ OpenAI blog.
 
 \bibitem{t5}
 Raffel~C, Shazeer~N, Roberts~A, et~al.
-Exploring the Limits of Transfer Learning with a Unified Text-to-text Transformer~[J].
+Exploring the Limits of Transfer Learning with a Unified Text-to-text
+  Transformer~[J].
 Journal of Machine Learning Research.
 2020, 21~(1):  5485--5551.
 
@@ -55,21 +58,10 @@ Zhai~X, Kolesnikov~A, Houlsby~N, et~al.
 Scaling Vision Transformers~[J].
 2022:  12104--12113.
 
-\bibitem{clip2021}
-Radford~A, Kim~J~W, Hallacy~C, et~al.
-Learning Transferable Visual Models from Natural Language Supervision~[C].
-International Conference on Machine Learning.
-2021:  8748--8763.
-
-\bibitem{dalle2021}
-Ramesh~A, Pavlov~M, Goh~G, et~al.
-Zero-shot Text-to-image Generation~[C].
-International Conference on Machine Learning.
-2021:  8821--8831.
-
 \bibitem{blip2}
 Li~J, Li~D, Savarese~S, et~al.
-BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models~[J].
+BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders
+  and Large Language Models~[J].
 International Conference on Machine Learning.
 2023:  19730--19742.
 
@@ -85,9 +77,22 @@ Flamingo: a Visual Language Model for Few-shot Learning~[J].
 Advances in Neural Information Processing Systems.
 2022, 35:  23716--23736.
 
+\bibitem{clip2021}
+Radford~A, Kim~J~W, Hallacy~C, et~al.
+Learning Transferable Visual Models from Natural Language Supervision~[C].
+International Conference on Machine Learning.
+2021:  8748--8763.
+
+\bibitem{dalle2021}
+Ramesh~A, Pavlov~M, Goh~G, et~al.
+Zero-shot Text-to-image Generation~[C].
+International Conference on Machine Learning.
+2021:  8821--8831.
+
 \bibitem{instructblip2023}
 Dai~W, Li~J, Li~D, et~al.
-InstructBLIP: Towards General-purpose Vision-Language Models with Instruction Tuning~[C].
+InstructBLIP: Towards General-purpose Vision-Language Models with Instruction
+  Tuning~[C].
 Advances in Neural Information Processing Systems (NeurIPS).
 2023:  49250--49267.
 
@@ -100,19 +105,23 @@ LLaVA-1.5.
 
 \bibitem{qwenvl2023}
 Bai~J, Bai~S, Chu~Y, et~al.
-Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond~[J].
+Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization,
+  Text Reading, and Beyond~[J].
 arXiv preprint arXiv:2308.12966.
 2023.
 
 \bibitem{internvl2024}
 Chen~Z, Wu~J, Wang~W, et~al.
-InternVL: Scaling up Vision Foundation Models and Aligning for Generic Visual-Language Tasks~[C].
-Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR).
+InternVL: Scaling up Vision Foundation Models and Aligning for Generic
+  Visual-Language Tasks~[C].
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+  Recognition (CVPR).
 2024:  13142--13153.
 
 \bibitem{minigpt4}
 Zhu~D, Chen~J, Shen~X, et~al.
-MiniGPT-4: Enhancing Vision-language Understanding with Advanced Large Language Models~[J].
+MiniGPT-4: Enhancing Vision-language Understanding with Advanced Large Language
+  Models~[J].
 arXiv preprint arXiv:2304.10592.
 2023.
 
@@ -134,27 +143,26 @@ Medical Vision-Language Models: A Survey~[J].
 arXiv preprint arXiv:2312.06203.
 2024.
 
-\bibitem{science_doc_mllm2024}
-Lu~P, et~al.
-MathVista: Evaluating Mathematical Reasoning in Visual Contexts~[J].
-arXiv preprint arXiv:2310.02255.
-2024.
-
 \bibitem{vqav2}
 Goyal~Y, Khanna~G, Gupta~A, et~al.
-Making the {V} in {VQA} Matter: Elevating the Role of Image Understanding in Visual Question Answering~[C].
-Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR).
+Making the {V} in {VQA} Matter: Elevating the Role of Image Understanding in
+  Visual Question Answering~[C].
+Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition
+  (CVPR).
 2017:  6904--6913.
 
 \bibitem{gqa2019}
 Hudson~D~A, Manning~C~D.
-GQA: A New Dataset for Real-World Visual Reasoning and Compositional Question Answering~[C].
-Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR).
+GQA: A New Dataset for Real-World Visual Reasoning and Compositional Question
+  Answering~[C].
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+  Recognition (CVPR).
 2019:  6700--6709.
 
 \bibitem{mmmu_benchmark2024}
 Yue~X, Ni~Y, Zhang~K, et~al.
-MMMU: A Massive Multi-discipline Multimodal Understanding and Reasoning Benchmark for Expert AGI~[J].
+MMMU: A Massive Multi-discipline Multimodal Understanding and Reasoning
+  Benchmark for Expert AGI~[J].
 arXiv preprint arXiv:2311.14402.
 2024.
 
@@ -172,13 +180,15 @@ Advances in Neural Information Processing Systems (NeurIPS).
 
 \bibitem{beyond_chinchilla2024}
 Sardana~N, Frankle~J.
-Beyond Chinchilla-Optimal: Accounting for Inference in Language Model Scaling Laws~[C].
+Beyond Chinchilla-Optimal: Accounting for Inference in Language Model Scaling
+  Laws~[C].
 Proceedings of the International Conference on Machine Learning (ICML).
 2024:  29891--29922.
 
 \bibitem{gopher2022}
 Rae~J~W, et~al.
-Scaling Language Models: Methods, Analysis and Insights from Training Gopher~[J].
+Scaling Language Models: Methods, Analysis and Insights from Training
+  Gopher~[J].
 arXiv preprint arXiv:2112.11446.
 2022.
 
@@ -220,13 +230,16 @@ arXiv preprint arXiv:2310.06825.
 
 \bibitem{megatron2021}
 Narayanan~D, Shoeybi~M, Casper~J, et~al.
-Efficient Large-scale Language Model Training on GPU Clusters Using Megatron-LM~[C].
-Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis.
+Efficient Large-scale Language Model Training on GPU Clusters Using
+  Megatron-LM~[C].
+Proceedings of the International Conference for High Performance Computing,
+  Networking, Storage and Analysis.
 2021:  1--15.
 
 \bibitem{megatron2020}
 Shoeybi~M, Patwary~M, Puri~R, et~al.
-Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism~[J].
+Megatron-LM: Training Multi-Billion Parameter Language Models Using Model
+  Parallelism~[J].
 arXiv preprint.
 2020.
 
@@ -245,12 +258,14 @@ arXiv preprint arXiv:2308.14508.
 \bibitem{zero2020}
 Rajbhandari~S, Rasley~J, Ruwase~O, et~al.
 ZeRO: Memory Optimizations Toward Training Trillion Parameter Models~[C].
-SC20: International Conference for High Performance Computing, Networking, Storage and Analysis.
+SC20: International Conference for High Performance Computing, Networking,
+  Storage and Analysis.
 2020:  1--16.
 
 \bibitem{zero2021}
 Rajbhandari~S, Ruwase~O, Rasley~J, et~al.
-ZeRO-Infinity: Breaking the GPU Memory Wall for Extreme Scale Deep Learning~[J].
+ZeRO-Infinity: Breaking the GPU Memory Wall for Extreme Scale Deep
+  Learning~[J].
 arXiv preprint.
 2021.
 
@@ -268,7 +283,8 @@ arXiv preprint.
 
 \bibitem{gpipe}
 Huang~Y, Cheng~Y, Bapna~A, et~al.
-GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism~[J].
+GPipe: Efficient Training of Giant Neural Networks using Pipeline
+  Parallelism~[J].
 arXiv preprint.
 2019.
 
@@ -280,12 +296,14 @@ Proceedings of the 27th ACM Symposium on Operating Systems Principles.
 
 \bibitem{gshard}
 Chen~Z, Lepikhin~D~D, Lee~H, et~al.
-GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding~[J].
+GShard: Scaling Giant Models with Conditional Computation and Automatic
+  Sharding~[J].
 2020.
 
 \bibitem{zeroplusplus}
 Wang~G, Qin~H, Jacobs~S~A, et~al.
-ZeRO++: Extremely Efficient Collective Communication for Giant Model Training~[J].
+ZeRO++: Extremely Efficient Collective Communication for Giant Model
+  Training~[J].
 arXiv preprint.
 2023.
 
@@ -297,19 +315,22 @@ International Conference on Learning Representations.
 
 \bibitem{colossal_auto}
 Liu~Y, Li~S, Fang~J, et~al.
-Colossal-Auto: Unified Automation of Parallelization and Activation Checkpoint for Large-scale Models~[J].
+Colossal-Auto: Unified Automation of Parallelization and Activation Checkpoint
+  for Large-scale Models~[J].
 arXiv preprint.
 2023.
 
 \bibitem{flash_attention_2022}
 Dao~T, Fu~D~Y, Ermon~S, et~al.
-FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness~[C].
+FlashAttention: Fast and Memory-Efficient Exact Attention with
+  IO-Awareness~[C].
 Advances in Neural Information Processing Systems (NeurIPS).
 2022:  16344--16359.
 
 \bibitem{flashattention3_2024}
 Dao~T, Fu~D~Y, Ermon~S, et~al.
-FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision~[C].
+FlashAttention-3: Fast and Accurate Attention with Asynchrony and
+  Low-precision~[C].
 Advances in Neural Information Processing Systems (NeurIPS).
 2024.
 
@@ -327,7 +348,8 @@ Whale: Efficient Giant Model Training over Heterogeneous GPUs~[J].
 
 \bibitem{hetpipe2020}
 Park~J~H, Yun~G, Chang~M~Y, et~al.
-HetPipe: Enabling Large DNN Training on (Whimpy) Heterogeneous GPU Clusters through Integration of Pipelined Model Parallelism and Data Parallelism~[C].
+HetPipe: Enabling Large DNN Training on (Whimpy) Heterogeneous GPU Clusters
+  through Integration of Pipelined Model Parallelism and Data Parallelism~[C].
 2020 USENIX Annual Technical Conference (USENIX ATC 20).
 2020:  307--321.
 
@@ -352,7 +374,8 @@ GTC 2024.
 \bibitem{stable_diffusion}
 Rombach~R, Blattmann~A, Lorenz~D, et~al.
 High-resolution Image Synthesis with Latent Diffusion Models~[C].
-Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition.
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+  Recognition.
 2022:  10684--10695.
 
 \bibitem{unet}
@@ -419,26 +442,31 @@ arXiv preprint arXiv:2303.15647.
 
 \bibitem{laion5b2022}
 Schuhmann~C, Beaumont~R, Vencu~R, et~al.
-{LAION-5B}: An Open Large-Scale Dataset for Training Next Generation Image-Text Models~[C].
-Advances in Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track.
+{LAION-5B}: An Open Large-Scale Dataset for Training Next Generation Image-Text
+  Models~[C].
+Advances in Neural Information Processing Systems (NeurIPS) Datasets and
+  Benchmarks Track.
 2022.
 arXiv:2210.08402.
 
 \bibitem{comprehensive_mllm_survey2024}
 Zhang~Y, et~al.
-A Comprehensive Survey and Guide to Multimodal Large Language Models in Vision-Language Tasks~[C].
+A Comprehensive Survey and Guide to Multimodal Large Language Models in
+  Vision-Language Tasks~[C].
 arXiv preprint arXiv:2411.06284.
 2024.
 
 \bibitem{mllm_datacentric2024}
 Zhou~B, Khashabi~D, et~al.
-A Survey of Multimodal Large Language Model from A Data-centric Perspective~[J].
+A Survey of Multimodal Large Language Model from A Data-centric
+  Perspective~[J].
 arXiv preprint arXiv:2405.10739.
 2024.
 
 \bibitem{open_images}
 Kuznetsova~A, Rom~H, Alldrin~N, et~al.
-The Open Images Dataset V4: Unified Image Classification, Object Detection, and Visual Relationship Detection at Scale~[J].
+The Open Images Dataset V4: Unified Image Classification, Object Detection, and
+  Visual Relationship Detection at Scale~[J].
 International Journal of Computer Vision.
 2020, 128~(7):  1956--1981.
 
@@ -468,15 +496,9 @@ arXiv preprint arXiv:2104.00650.
 \bibitem{textvqa2019}
 Singh~A, Natarajan~V, Shah~M, et~al.
 Towards {VQA} Models That Can Read~[C].
-Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR).
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+  Recognition (CVPR).
 2019:  8317--8326.
-
-\bibitem{efficient_mllm_survey2025}
-Jin~X, Li~Y, Gu~Y, et~al.
-Efficient Multimodal Large Language Models: A Survey~[J].
-Visual Intelligence.
-2025.
-arXiv:2405.10739.
 
 \bibitem{megatron2023}
 Korthikanti~V~A, Casper~J, Lym~S, et~al.
@@ -486,38 +508,44 @@ Proceedings of Machine Learning and Systems (MLSys).
 
 \bibitem{amp2022}
 Li~D, Wang~H, Xing~E, et~al.
-AMP: Automatically Finding Model Parallel Strategies with Heterogeneity Awareness~[C].
+AMP: Automatically Finding Model Parallel Strategies with Heterogeneity
+  Awareness~[C].
 Advances in Neural Information Processing Systems.
 2022:  6630--6639.
 
 \bibitem{hethub2024}
 Xu~S, Huang~Z, Zeng~Y, et~al.
-{HETHUB}: A Distributed Training System with Heterogeneous Cluster for Large-Scale Models~[J].
+{HETHUB}: A Distributed Training System with Heterogeneous Cluster for
+  Large-Scale Models~[J].
 arXiv preprint arXiv:2405.16256.
 2024.
 
 \bibitem{hexiscale2024}
 Yan~R, Jiang~Y, Nie~X, et~al.
-HexiScale: Accommodating Large Language Model Training over Heterogeneous Environment~[J].
+HexiScale: Accommodating Large Language Model Training over Heterogeneous
+  Environment~[J].
 arXiv preprint arXiv:2409.01143.
 2024.
 
 \bibitem{espresso2025}
 {iCloud Lab, ECNU}.
-Espresso: Cost-efficient Resource Provisioning for Large Model Training on Heterogeneous {GPU} Clusters.
+Espresso: Cost-efficient Resource Provisioning for Large Model Training on
+  Heterogeneous {GPU} Clusters.
 \url{https://github.com/icloud-ecnu/Espresso}.
 2025.
 Heterogeneous {GPU} allocation and stage placement for distributed training.
 
 \bibitem{zorse2025}
 Guo~R~B, Anand~U, Daudjee~K, et~al.
-Zorse: Optimizing {LLM} Training Efficiency on Heterogeneous {GPU} Clusters~[J].
+Zorse: Optimizing {LLM} Training Efficiency on Heterogeneous {GPU}
+  Clusters~[J].
 arXiv preprint arXiv:2507.10392.
 2025.
 
 \bibitem{cephalo2024}
 Guo~R~B, Anand~U, Chen~A, et~al.
-Cephalo: Harnessing Heterogeneous {GPU} Clusters for Training Transformer Models~[C].
+Cephalo: Harnessing Heterogeneous {GPU} Clusters for Training Transformer
+  Models~[C].
 Proceedings of the International Conference on Supercomputing (ICS).
 2025.
 arXiv:2411.01075, 2024.
@@ -533,12 +561,6 @@ Chen~Q, Hu~Q, Ye~Z, et~al.
 AMSP: Super-Scaling LLM Training via Advanced Model States Partitioning~[J].
 arXiv preprint.
 2023.
-
-\bibitem{mmoh2025}
-Fan~J, Lai~Z, Liu~W, et~al.
-{MMoH}: Efficient Training of Multimodal Large Language Models on Heterogeneous Clusters~[C].
-Proceedings of IEEE/ACM International Conference.
-Changsha, China, 2025.
 
 \bibitem{vision_language_pretrain_survey2024}
 Zhu~L, et~al.
@@ -568,7 +590,8 @@ arXiv:2204.02311, 2022.
 \bibitem{parameter_server}
 Li~M.
 Scaling Distributed Machine Learning with the Parameter Server~[C].
-Proceedings of the 2014 International Conference on Big Data Science and Computing.
+Proceedings of the 2014 International Conference on Big Data Science and
+  Computing.
 Beijing, China, 2014:  1--1.
 
 \bibitem{parallax}
@@ -579,26 +602,31 @@ Dresden, Germany, 2019:  1--15.
 
 \bibitem{ulysses2023}
 Jacobs~S~A, Khabbazan~M, Baydin~A~G, et~al.
-DeepSpeed Ulysses: System Optimizations for Enabling Training of Extreme Long Sequence Transformer Models~[J].
+DeepSpeed Ulysses: System Optimizations for Enabling Training of Extreme Long
+  Sequence Transformer Models~[J].
 arXiv preprint arXiv:2309.14509.
 2023.
 
 \bibitem{terapipe}
 Li~Z, Zhuang~S, Guo~S, et~al.
-TeraPipe: Token-Level Pipeline Parallelism for Training Large-Scale Language Models~[J].
+TeraPipe: Token-Level Pipeline Parallelism for Training Large-Scale Language
+  Models~[J].
 arXiv preprint.
 2021.
 
 \bibitem{terapipe_icml2022}
 Li~Z, Zhuang~S, Guo~S, et~al.
-TeraPipe: Token-Level Pipeline Parallelism for Training Large-Scale Language Models~[C].
+TeraPipe: Token-Level Pipeline Parallelism for Training Large-Scale Language
+  Models~[C].
 Proceedings of the International Conference on Machine Learning (ICML).
 2022.
 
 \bibitem{chimera_pp2023}
 Li~S, Hoefler~T.
-Chimera: Efficiently Training Large-Scale Neural Networks with Bidirectional Pipelines~[J].
-Proceedings of the International Conference for High Performance Computing (SC).
+Chimera: Efficiently Training Large-Scale Neural Networks with Bidirectional
+  Pipelines~[J].
+Proceedings of the International Conference for High Performance Computing
+  (SC).
 2023.
 
 \bibitem{hanayo_pp}
@@ -628,7 +656,8 @@ arXiv preprint arXiv:2310.01889.
 
 \bibitem{deepseek_moe2024}
 DeepSeek-AI.
-DeepSeek-MoE: Scaling Mixture-of-Experts Language Models with Limited Resources~[J].
+DeepSeek-MoE: Scaling Mixture-of-Experts Language Models with Limited
+  Resources~[J].
 arXiv preprint arXiv:2401.06066.
 2024.
 
@@ -640,7 +669,8 @@ Microsoft Research Blog.
 
 \bibitem{tensor_parallelism_survey}
 Rasley~J, Rajbhandari~S, Awni~Y, et~al.
-DeepSpeed: System Optimizations Enable Training Deep Learning Models with Over 100 Billion Parameters~[J].
+DeepSpeed: System Optimizations Enable Training Deep Learning Models with Over
+  100 Billion Parameters~[J].
 Proceedings of the ACM SIGKDD.
 2020.
 
@@ -670,13 +700,15 @@ NVIDIA NeMo Documentation.
 
 \bibitem{lynx2024}
 Li~Z, Lin~Z, Wang~C, et~al.
-Lynx: Efficient Memory Management for Large Model Training with Overlapped Activation Recomputation~[J].
+Lynx: Efficient Memory Management for Large Model Training with Overlapped
+  Activation Recomputation~[J].
 arXiv preprint arXiv:2406.08756.
 2024.
 
 \bibitem{stage_wise_checkpoint2023}
 Liu~Y, et~al.
-Colossal-Auto: Unified Automation of Parallelization and Activation Checkpoint for Large-scale Models~[J].
+Colossal-Auto: Unified Automation of Parallelization and Activation Checkpoint
+  for Large-scale Models~[J].
 Journal of Machine Learning Research.
 2023.
 

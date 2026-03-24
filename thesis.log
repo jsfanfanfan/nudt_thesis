@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  22 MAR 2026 21:57
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  24 MAR 2026 13:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1335,10 +1335,7 @@ Package fontspec Info: Font family 'SimSun(1)' created for font 'SimSun' with
 LaTeX Font Warning: Font shape `TU/SimSun(1)/b/n' undefined
 (Font)              using `TU/SimSun(1)/m/n' instead on input line 4.
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [1
+[1
 
 
 
@@ -1367,47 +1364,37 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
-LaTeX Font Info:    Calculating math sizes for size <12.045> on input line 11.
+LaTeX Font Info:    Calculating math sizes for size <12.045> on input line 15.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 11.
+(Font)              size <8> substituted on input line 15.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 11.
+(Font)              size <8> substituted on input line 15.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 11.
+(Font)              size <8> substituted on input line 15.
 
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 10.84042pt on input line 11.
+(Font)              scaled to size 10.84042pt on input line 15.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 7.58826pt on input line 11.
+(Font)              scaled to size 7.58826pt on input line 15.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 5.4202pt on input line 11.
+(Font)              scaled to size 5.4202pt on input line 15.
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 11.
+(Font)              size <8> substituted on input line 15.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 11.
+(Font)              size <8> substituted on input line 15.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 11.
-
-
-Overfull \hbox (3.55667pt too wide) in paragraph at lines 11--12
-[]\TU/TimesNewRoman(0)/m/n/12.045 This thesis addresses the problem from two aspects: pipeline partitioning and schedul-
- []
-
-
-Overfull \hbox (1.38702pt too wide) in paragraph at lines 11--12
-\TU/TimesNewRoman(0)/m/n/12.045 framework: it uses demand-driven device topology identification, multi-granularity model
- []
+(Font)              size <8> substituted on input line 15.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1426,14 +1413,14 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 File: figures//fig01_mllm_components.png Graphic file (type bmp)
 <figures//fig01_mllm_components.png>
 
-
-LaTeX Font Warning: Font shape `TU/SimSun(0)/m/it' undefined
-(Font)              using `TU/SimSun(0)/m/n' instead on input line 88.
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
+
+LaTeX Font Warning: Font shape `TU/SimSun(0)/m/it' undefined
+(Font)              using `TU/SimSun(0)/m/n' instead on input line 89.
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3]
@@ -1448,7 +1435,10 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [5]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [6] [7]
+ [6]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [8]
@@ -1457,7 +1447,10 @@ File: figures//fig02_megatron_mllm.jpg Graphic file (type bmp)
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [9] [10]) (./data/chap02.tex [11] [12
+ [9]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10]) (./data/chap02.tex [11] [12
 
 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1471,6 +1464,9 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [14] [15]
 File: figures//mllm_training_stages.pdf Graphic file (type pdf)
 <use figures//mllm_training_stages.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [16]
 File: figures//fig03_data_parallel.pdf Graphic file (type pdf)
 <use figures//fig03_data_parallel.pdf>
@@ -1479,33 +1475,29 @@ File: figures//fig04_tensor_parallel_left.pdf Graphic file (type pdf)
 File: figures//fig04_tensor_parallel_right.pdf Graphic file (type pdf)
 <use figures//fig04_tensor_parallel_right.pdf>
 
-Underfull \vbox (badness 1694) has occurred while \output is active []
+Underfull \vbox (badness 4254) has occurred while \output is active []
 
- [17]
+ [17] [18]
 File: figures//fig05_pipeline_parallel.pdf Graphic file (type pdf)
 <use figures//fig05_pipeline_parallel.pdf>
- [18]
 File: figures//fig06_expert_parallel.pdf Graphic file (type pdf)
 <use figures//fig06_expert_parallel.pdf>
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
  [19]
 File: figures//fig07_zero.pdf Graphic file (type pdf)
 <use figures//fig07_zero.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [20]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [21]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [22]
+ [21] [22]
 File: figures//fig08_recomputation.pdf Graphic file (type pdf)
 <use figures//fig08_recomputation.pdf>
- [23] [24]) (./data/chap03.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
+ [23]
+Underfull \vbox (badness 3482) has occurred while \output is active []
 
- [25] [26] [27
+ [24]) (./data/chap03.tex [25] [26] [27
 
 
 ]
@@ -1545,31 +1537,41 @@ File: figures//MMoH-figs/hybrid-granularity-split.pdf Graphic file (type pdf)
  [34] [35]
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 276.
+(Font)              size <8> substituted on input line 270.
 
-[36] [37] [38]
+[36] [37] [38] [39]
 File: figures//MMoH-figs/freeze-optimization.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/freeze-optimization.pdf>
- [39] [40]
-File: figures//chimera-hanayo.png Graphic file (type bmp)
-<figures//chimera-hanayo.png>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [40]
+File: figures//chimera.pdf Graphic file (type pdf)
+<use figures//chimera.pdf>
+File: figures//hanayo.pdf Graphic file (type pdf)
+<use figures//hanayo.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [41]
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/it' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 465.
+(Font)              size <10.95> substituted on input line 462.
 
 [42]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [43]
 File: figures//MMoH-figs/e2e_3B.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/e2e_3B.pdf>
 File: figures//MMoH-figs/e2e_12B.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/e2e_12B.pdf>
- [43]
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [44]
+Underfull \vbox (badness 7291) has occurred while \output is active []
+
+ [44] [45]
 File: figures//MMoH-figs/load_balance.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/load_balance.pdf>
- [45]
 File: figures//MMoH-figs/early_termination.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/early_termination.pdf>
 File: figures//MMoH-figs/ET-time.pdf Graphic file (type pdf)
@@ -1579,140 +1581,146 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [46]) (./data/chap04.tex [47] [48
 
-]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [49
+] [49
 
 
 ]
-Overfull \hbox (41.08725pt too wide) in paragraph at lines 39--43
+File: figures//HR-MMoH.pdf Graphic file (type pdf)
+<use figures//HR-MMoH.pdf>
+
+Overfull \hbox (41.08725pt too wide) in paragraph at lines 59--63
 []\TU/SimSun(1)/m/n/12.045 表 []\TU/TimesNewRoman(0)/m/n/12.045 4.1[] \TU/SimSun(1)/m/n/12.045 归 纳 了 与 重 计 算 直 接 相 关 的 主 要 字 段 及 含 义。|  其 中 \TU/CourierNew(0)/m/n/12.045 recompute_granularity
  []
 
 
-Overfull \hbox (17.83044pt too wide) in paragraph at lines 39--43
+Overfull \hbox (17.83044pt too wide) in paragraph at lines 59--63
 \TU/SimSun(1)/m/n/12.045 决 定 整 层  |（\TU/TimesNewRoman(0)/m/n/12.045 full\TU/SimSun(1)/m/n/12.045 ）|  或 子 模 块 级  |（\TU/TimesNewRoman(0)/m/n/12.045 selective\TU/SimSun(1)/m/n/12.045 ）|  重 计 算；| \TU/TimesNewRoman(0)/m/n/12.045 full \TU/SimSun(1)/m/n/12.045 时 须 同 时 指 定 \TU/CourierNew(0)/m/n/12.045 recompute_method
  []
 
 
-Overfull \hbox (25.68599pt too wide) in paragraph at lines 39--43
+Overfull \hbox (25.68599pt too wide) in paragraph at lines 59--63
 \TU/SimSun(1)/m/n/12.045 与 \TU/CourierNew(0)/m/n/12.045 recompute_num_layers\TU/SimSun(1)/m/n/12.045 ，| \TU/TimesNewRoman(0)/m/n/12.045 selective \TU/SimSun(1)/m/n/12.045 时 二 者 须 为 \TU/CourierNew(0)/m/n/12.045 None\TU/SimSun(1)/m/n/12.045 ，|  仅 由 \TU/CourierNew(0)/m/n/12.045 recompute_modules
  []
 
 
-Underfull \hbox (badness 5548) in paragraph at lines 52--52
+Underfull \hbox (badness 5548) in paragraph at lines 72--72
 []|\TU/CourierNew(0)/m/n/10.53937 None $\OMS/cmsy/m/n/10.95 j$ \TU/CourierNew(0)/m/n/10.53937 full $\OMS/cmsy/m/n/10.95 j$
  []
 
 
-Underfull \hbox (badness 1448) in paragraph at lines 52--53
+Underfull \hbox (badness 1448) in paragraph at lines 72--73
 []|\TU/SimSun(0)/m/n/10.53937 重 计 算 粒 度。| \TU/CourierNew(0)/m/n/10.53937 None \TU/SimSun(0)/m/n/10.53937 表 示 不 重 计 算；| \TU/CourierNew(0)/m/n/10.53937 full
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 52--53
+Underfull \hbox (badness 10000) in paragraph at lines 72--73
 \TU/SimSun(0)/m/n/10.53937 对 整 层 做 重 计 算；| \TU/CourierNew(0)/m/n/10.53937 selective \TU/SimSun(0)/m/n/10.53937 仅 对
  []
 
 
-Underfull \hbox (badness 1888) in paragraph at lines 52--53
+Underfull \hbox (badness 1888) in paragraph at lines 72--73
 \TU/CourierNew(0)/m/n/10.53937 recompute_modules \TU/SimSun(0)/m/n/10.53937 中 列 出 的 子 模 块 重
  []
 
 
-Overfull \hbox (1.60976pt too wide) in paragraph at lines 53--53
+Overfull \hbox (1.60976pt too wide) in paragraph at lines 73--73
 []|\TU/CourierNew(0)/m/n/10.53937 recompute_method| 
  []
 
 
-Overfull \hbox (7.93442pt too wide) in paragraph at lines 55--55
+Overfull \hbox (7.93442pt too wide) in paragraph at lines 75--75
 []|\TU/CourierNew(0)/m/n/10.53937 distribute_saved_| 
  []
 
 
-Overfull \hbox (7.9344pt too wide) in paragraph at lines 56--56
+Overfull \hbox (7.9344pt too wide) in paragraph at lines 76--76
 []|\TU/CourierNew(0)/m/n/10.53937 recompute_modules| 
  []
 
 
-Overfull \hbox (12.01181pt too wide) in paragraph at lines 61--65
+Overfull \hbox (12.01181pt too wide) in paragraph at lines 81--85
 \TU/CourierNew(0)/m/n/12.045 recompute_num_layers \TU/SimSun(1)/m/n/12.045 共 同 规 定  |“隔 多 少 层 留 一 个 激 活” 。| \TU/CourierNew(0)/m/n/12.045 recompute_method
+ []
+
+[50] [51]
+Overfull \hbox (54.93782pt too wide) in paragraph at lines 92--95
+\TU/SimSun(1)/m/n/12.045 算，|  其 余 算 子 仍 按 常 规 模 式 存 激 活。|  这 时 \TU/CourierNew(0)/m/n/12.045 recompute_method \TU/SimSun(1)/m/n/12.045 与 \TU/CourierNew(0)/m/n/12.045 recompute_num_layers
+ []
+
+
+Overfull \hbox (60.82506pt too wide) in paragraph at lines 92--95
+\TU/SimSun(1)/m/n/12.045 必 须 置 为 \TU/CourierNew(0)/m/n/12.045 None\TU/SimSun(1)/m/n/12.045 ；| \TU/TimesNewRoman(0)/m/n/12.045 selective \TU/SimSun(1)/m/n/12.045 会 作 用 到 所 有 流 水 级 上 的 每 一 层。|  各 子 模 块 按 \TU/CourierNew(0)/m/n/12.045 recompute_modules
+ []
+
+[52]
+Overfull \hbox (1.28691pt too wide) in paragraph at lines 159--159
+[]|$\OML/cmm/m/it/10.95 N[]$| 
+ []
+
+File: figures//recomputation_attention.pdf Graphic file (type pdf)
+<use figures//recomputation_attention.pdf>
+[53]
+File: figures//recomputation_mlp.pdf Graphic file (type pdf)
+<use figures//recomputation_mlp.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [54]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [55]
+Underfull \hbox (badness 10000) in paragraph at lines 250--250
+[]|\TU/CourierNew(0)/m/n/10.53937 selective
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 252--252
+[]|\TU/CourierNew(0)/m/n/10.53937 selective
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 252--252
+\TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 254--254
+[]|\TU/CourierNew(0)/m/n/10.53937 selective
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 254--254
+\TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 254--254
+\TU/CourierNew(0)/m/n/10.53937 mlp\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [50]
-Overfull \hbox (54.93782pt too wide) in paragraph at lines 72--75
-\TU/SimSun(1)/m/n/12.045 算，|  其 余 算 子 仍 按 常 规 模 式 存 激 活。|  这 时 \TU/CourierNew(0)/m/n/12.045 recompute_method \TU/SimSun(1)/m/n/12.045 与 \TU/CourierNew(0)/m/n/12.045 recompute_num_layers
- []
+ [56]
+Underfull \vbox (badness 3118) has occurred while \output is active []
 
-
-Overfull \hbox (60.82506pt too wide) in paragraph at lines 72--75
-\TU/SimSun(1)/m/n/12.045 必 须 置 为 \TU/CourierNew(0)/m/n/12.045 None\TU/SimSun(1)/m/n/12.045 ；| \TU/TimesNewRoman(0)/m/n/12.045 selective \TU/SimSun(1)/m/n/12.045 会 作 用 到 所 有 流 水 级 上 的 每 一 层。|  各 子 模 块 按 \TU/CourierNew(0)/m/n/12.045 recompute_modules
- []
-
-[51]
-Overfull \hbox (1.28691pt too wide) in paragraph at lines 138--138
-[]|$\OML/cmm/m/it/10.95 N[]$| 
- []
-
-
-Underfull \vbox (badness 1057) has occurred while \output is active []
-
- [52]
-File: figures//recomputation_attention.pdf Graphic file (type pdf)
-<use figures//recomputation_attention.pdf>
-File: figures//recomputation_mlp.pdf Graphic file (type pdf)
-<use figures//recomputation_mlp.pdf>
- [53]
-Underfull \hbox (badness 10000) in paragraph at lines 229--229
-[]|\TU/CourierNew(0)/m/n/10.53937 selective
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 231--231
-[]|\TU/CourierNew(0)/m/n/10.53937 selective
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 231--231
-\TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 233--233
-[]|\TU/CourierNew(0)/m/n/10.53937 selective
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 233--233
-\TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 233--233
-\TU/CourierNew(0)/m/n/10.53937 mlp\TU/TimesNewRoman(0)/m/n/10.53937 ,
- []
-
-[54] [55] [56]
-Underfull \vbox (badness 1189) has occurred while \output is active []
-
- [57]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 316.
+ [57] [58]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 328.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 8.99994pt on input line 320.
+(Font)              scaled to size 8.99994pt on input line 332.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 6.29996pt on input line 320.
+(Font)              scaled to size 6.29996pt on input line 332.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 4.49997pt on input line 320.
+(Font)              scaled to size 4.49997pt on input line 332.
 
-Underfull \hbox (badness 3250) in paragraph at lines 321--322
-[] []\TU/SimSun(0)/m/n/10 全 序 候 选 $\OT1/cmr/m/n/10 ^^B = (\OML/cmm/m/it/10 ^^R[]; [] ; ^^R[]\OT1/cmr/m/n/10 )$ |\TU/SimSun(0)/m/n/10 （$\OML/cmm/m/it/10 K[]\OT1/cmr/m/n/10 8$\TU/SimSun(0)/m/n/10 ，| $[][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R[]\OT1/cmr/m/n/10 )$ \TU/SimSun(0)/m/n/10 随 $\OML/cmm/m/it/10 i$ \TU/SimSun(0)/m/n/10 增 大 非 增） ；|  剖 析 表
+Underfull \hbox (badness 3568) in paragraph at lines 333--334
+[] []\TU/SimSun(0)/m/n/10 全 序 候 选 $\OT1/cmr/m/n/10 ^^B = (\OML/cmm/m/it/10 ^^R[]; [] ; ^^R[]\OT1/cmr/m/n/10 )$ |\TU/SimSun(0)/m/n/10 （$\OML/cmm/m/it/10 R[]\OT1/cmr/m/n/10 6$\TU/SimSun(0)/m/n/10 ，| $[][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R[]\OT1/cmr/m/n/10 )$ \TU/SimSun(0)/m/n/10 随 $\OML/cmm/m/it/10 i$ \TU/SimSun(0)/m/n/10 增 大 非 增） ；|  剖 析 表
  []
 
-[58]
+
+Underfull \vbox (badness 3482) has occurred while \output is active []
+
+ [59] [60]
 File: figures//e2e_no-freeze.pdf Graphic file (type pdf)
 <use figures//e2e_no-freeze.pdf>
 File: figures//e2e_freeze-enc.pdf Graphic file (type pdf)
@@ -1721,74 +1729,65 @@ File: figures//e2e_freeze-lm.pdf Graphic file (type pdf)
 <use figures//e2e_freeze-lm.pdf>
 File: figures//e2e_freeze-both.pdf Graphic file (type pdf)
 <use figures//e2e_freeze-both.pdf>
-
+ [61]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [59]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [60]
+ [62]
 File: figures//e2e_HR.pdf Graphic file (type pdf)
 <use figures//e2e_HR.pdf>
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [61]
+ [63]
 File: figures//HR_ablation.pdf Graphic file (type pdf)
 <use figures//HR_ablation.pdf>
 
-Underfull \vbox (badness 1102) has occurred while \output is active []
+Underfull \vbox (badness 1990) has occurred while \output is active []
 
- [62]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [63]) (./data/chap05.tex [64] [65
+ [64]) (./data/chap05.tex [65] [66] [67
 
 
 ]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [66] [67]) (./data/ack.tex [68]) [69
+ [68]) [69] (./data/ack.tex [70]) [71
 
-] [70
+] [72
 
 ] (./thesis.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [71
+ [73
 
 
 ]
-Underfull \hbox (badness 3884) in paragraph at lines 102--106
+Underfull \hbox (badness 3884) in paragraph at lines 107--112
 []\TU/TimesNewRoman(0)/m/n/12.045 Bai J, Bai S, Chu Y, et al. Qwen-VL: A Versatile Vision-Language
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [72]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [73]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
  [74]
-Underfull \hbox (badness 10000) in paragraph at lines 347--351
-[]\TU/TimesNewRoman(0)/m/n/12.045 NVIDIA Corporation. NVIDIA Blackwell Architecture and GPU
- []
-
-
-Underfull \hbox (badness 1742) in paragraph at lines 359--363
-[]\TU/TimesNewRoman(0)/m/n/12.045 Ronneberger O, Fischer P, Brox T. U-Net: Convolutional Networks for
- []
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [75]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [76]
+Underfull \hbox (badness 10000) in paragraph at lines 369--373
+[]\TU/TimesNewRoman(0)/m/n/12.045 NVIDIA Corporation. NVIDIA Blackwell Architecture and GPU
+ []
+
+
+Underfull \hbox (badness 1742) in paragraph at lines 382--386
+[]\TU/TimesNewRoman(0)/m/n/12.045 Ronneberger O, Fischer P, Brox T. U-Net: Convolutional Networks for
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [77]
 
 Package fontspec Warning: Font "Times New Roman" does not contain requested
 (fontspec)                Script "CJK".
@@ -1822,52 +1821,46 @@ Package fontspec Info: Font family 'TimesNewRoman(1)' created for font 'Times
 (fontspec)             Roman/BI/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
 
 
-Underfull \hbox (badness 2951) in paragraph at lines 506--511
+Underfull \hbox (badness 2951) in paragraph at lines 531--537
 []\TU/TimesNewRoman(0)/m/n/12.045 iCloud Lab, ECNU. Espresso: Cost-efficient Resource Provisioning for
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [77]
-Underfull \hbox (badness 2401) in paragraph at lines 660--664
+ [78]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [79]
+Underfull \hbox (badness 2401) in paragraph at lines 690--694
 []\TU/TimesNewRoman(0)/m/n/12.045 NVIDIA. Megatron-LM: Activation Recomputation [J]. NVIDIA Deep
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [78]
-Underfull \hbox (badness 1043) in paragraph at lines 672--676
-[]\TU/TimesNewRoman(0)/m/n/12.045 Li Z, Lin Z, Wang C, et al. Lynx: Efficient Memory Management for
- []
+ [80]) (./data/resume.tex [81] [82
 
-) (./data/resume.tex [79] [80
+]) [83
 
-]) [81
-
-] [82
+] [84
 
 ] (./data/appendix01.tex
-Underfull \hbox (badness 10000) in paragraph at lines 45--46
-[]|\TU/TimesNewRoman(0)/m/n/10.95 Contrastive Language-Image Pre-Training
- []
-
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 9.85492pt on input line 113.
+(Font)              scaled to size 9.85492pt on input line 99.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 7.19995pt on input line 113.
+(Font)              scaled to size 7.19995pt on input line 99.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 5.39996pt on input line 113.
-[83
+(Font)              scaled to size 5.39996pt on input line 99.
+ [85
 
 
 
-] [84])
+] [86])
 \tf@thm=\write9
 \openout9 = `thesis.thm'.
 
- [85] (./thesis.aux)
+ [87] (./thesis.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.22pt have occurred.
@@ -1876,15 +1869,15 @@ LaTeX Font Warning: Size substitutions with differences
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 199608A16F488C364A3E9B1831FA85A7;8830.
+(rerunfilecheck)             Checksum: 403A19EFA1F3D54BB1118959A2FF4E26;8922.
  ) 
 Here is how much of TeX's memory you used:
- 37091 strings out of 476179
- 798736 string characters out of 5813072
- 1137463 words of memory out of 5000000
- 57046 multiletter control sequences out of 15000+600000
+ 37043 strings out of 476179
+ 794922 string characters out of 5813072
+ 1134542 words of memory out of 5000000
+ 56999 multiletter control sequences out of 15000+600000
  507413 words of font info for 261 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 125i,19n,120p,2286b,997s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 125i,19n,120p,1200b,993s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (100 pages).
+Output written on thesis.pdf (102 pages).

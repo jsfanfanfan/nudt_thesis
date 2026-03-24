@@ -5,61 +5,56 @@
 
 \subsection{训练多模态大语言模型面临的挑战}
 
-深度神经网络（Deep Neural Network, DNN）在计算机视觉（Computer Vision, CV）、自然语言处理（Natural Language Processing, NLP）、语音识别（Speech Recognition, SR）等众多领域得到了广泛应用，
-并逐步演变为诸多关键技术领域的核心基础\cite{galvatron2022}。
+深度神经网络（Deep Neural Network, DNN）在计算机视觉（Computer Vision, CV）、自然语言处理（Natural Language Processing, NLP）、语音识别（Speech Recognition, SR）等众多前沿领域取得了优异的效果，
+近年来逐步演变为诸多关键前沿技术领域的核心基础\cite{galvatron2022}。
 2017 年，Vaswani 等人提出基于自注意力机制（Self-Attention）的 Transformer 架构%
 \cite{vaswani2017}，
-摒弃了传统的循环神经网络（Recurrent Neural Network, RNN）与卷积神经网络（Convolutional Neural Network, CNN）结构，凭借并行化友好与长距离依赖的建模能力，
-迅速成为自然语言处理与跨模态建模的主流模型结构。
+摒弃了传统的循环神经网络（Recurrent Neural Network, RNN）与卷积神经网络（Convolutional Neural Network, CNN）结构，由于可以并行计算而且对于长距离信息捕捉能力强，Transformer 架构迅速成为自然语言处理与跨模态建模的主流模型结构。
 
 在自然语言处理方面，
-基于 Transformer 的预训练大语言模型（Large Language Models, LLMs）不断刷新各类基准。
-BERT\cite{bert} 通过双向编码与掩码预训练在理解类任务上取得显著优势；
-GPT-2\cite{gpt2}、T5\cite{t5} 等自回归（Autoregressive）或编码器-解码器（Encoder-Decoder）模型则在生成与迁移学习上表现突出；
-GPT-3\cite{brown2020gpt3} 与后续的 GPT-4\cite{openai2023} 等大规模语言模型更在少样本（Few-Shot）与零样本（Zero-Shot）设定下展现出接近人类的泛化能力。
+基于 Transformer 的预训练大语言模型（Large Language Models, LLMs）不断刷新在何种基准测试成绩。
+BERT\cite{bert} 通过双向编码与掩码预训练在语言理解类任务上表现突出；
+GPT-2\cite{gpt2}、T5\cite{t5} 等自回归（Autoregressive）或编码器-解码器（Encoder-Decoder）模型则在文本生成上有优势；
+GPT-3\cite{brown2020gpt3} 与后续的 GPT-4\cite{openai2023} 等大规模语言模型更在少样本（Few-Shot）与零样本（Zero-Shot）设定下展现出接近人类的表达能力。
 在计算机视觉领域，
 Vision Transformer（ViT）\cite{vit2020} 及后续的规模化工作\cite{scaling_vit} 表明：
-将图像切分为块（patch）并经 Transformer 编码，即可在 ImageNet 等基准数据集上超越传统卷积网络。
-CLIP\cite{clip2021} （Contrastive Language-Image Pre-Training）通过图文对比学习实现了开放词汇的视觉表征，
-DALL-E\cite{dalle2021} 则展示了从文本到图像生成的可行性。
-以 Transformer 为基座（Backbone）、依靠规模扩展提升模型能力的技术路线，已在实践中被证明高度有效。
-随着单模态任务性能的趋于成熟，将视觉、语言、音频等多模态信息纳入统一的模型框架进行联合表示与推理，已成为当前研究的重要演进方向。
+将图像切分为块（patch）并经 Transformer 编码，即可在 ImageNet 等基准数据集上超越传统卷积神经网络。
+这表明 Transformer 架构的模型不仅可以处理文本，还具有处理视觉等其余模态信息的潜力。
 
-多模态（Multimodality）是指对两种或两种以上模态信息进行联合表示、推理与生成的技术范畴。
-在机器学习与人工智能中，常见模态包括文本、图像、视频、音频、表格以及各类传感器数据。
-多模态大语言模型（Multimodal Large Language Models, MLLMs）特指
-在参数规模巨大的语言模型基础上，
-融合对视觉、听觉等非文本模态的感知与生成能力的一类模型%
+随着单模态模型已经接近甚至超越人类水平，将语言、视觉、
+音频、表格等多模态信息纳入统一的模型框架进行联合表示与推理，成为当前学术界和工业界研究的新方向。
+多模态（Multimodality）是指可以同时处理两种或两种以上模态信息的能力。
+在机器学习与人工智能中，常见模态包括文本、图像、视频、音频、表格以及各类传感器数据，更贴近于人类接触到的复杂信息。
+多模态大语言模型（Multimodal Large Language Models, MLLMs）特指在大语言模型的基础上，融合对视觉、听觉等其它模态的感知与生成能力的一类模型%
 \cite{blip2,llava2023,flamingo2022}。
-近年来，MLLMs 在架构与训练范式上发展迅速：BLIP-2\cite{blip2} 提出 Q-Former 连接冻结视觉编码器与 LLM；
-InstructBLIP\cite{instructblip2023} 在此基础上引入指令感知的视觉特征抽取，在多项零样本任务上取得 SOTA；
-LLaVA\cite{llava2023} 与 LLaVA-1.5\cite{llava15_2023} 采用简单线性投影实现视觉与语言模态对齐，验证了“小连接器 + 大模型”的有效性；
-Qwen-VL\cite{qwenvl2023}、InternVL\cite{internvl2024} 等系列模型则进一步在长上下文、高分辨率与多图理解上扩展模型能力。
+MLLMs 的先驱工作 CLIP\cite{clip2021} （Contrastive Language-Image Pre-Training）通过使用图像文本对进行训练，使得模型拥有理解图片的能力，DALL-E\cite{dalle2021} 则与 CLIP 相反，展示了从文本生成图像的可行性。
+近年来，MLLMs 在架构与训练范式上发展迅速：BLIP-2\cite{blip2} 提出 Q-Former 连接冻结的视觉编码器与 LLM 进行训练；
+InstructBLIP\cite{instructblip2023} 在此基础上加强了视觉信息的提取能力，在多项零样本任务上取得 SOTA 结果；
+LLaVA\cite{llava2023} 与 LLaVA-1.5\cite{llava15_2023} 采用简单线性投影层实现视觉与语言模态对齐，验证了“小连接器 + 大模型”的有效性；
+Qwen-VL\cite{qwenvl2023}、InternVL\cite{internvl2024} 等系列多模态模型则进一步在长上下文、高分辨率与多图理解上扩展模型能力。
 这类模型既保留 LLMs 在语言理解、推理与生成上的优势，
 又能够直接处理图像、视频等多模态输入，实现跨模态交互与推理任务，
 因而被认为是迈向通用人工智能（Artificial General Intelligence, AGI）的潜在路径\cite{minigpt4,mllm_survey_acl2024}。
-模型能力的拓展既依赖参数与数据规模的提升，也依赖编码器、投影层、语言骨干与可选生成器等模块的协同设计：前者关系任务可达的性能上限，后者则直接决定训练阶段中计算与显存在各模块间的分布形态。
+多模态大语言模型能力的拓展既依赖参数与数据规模的提升，也依赖编码器、投影层、基座模型与可选生成器等模块的协同设计：前者关系到模型可达的效果上限，后者则直接决定训练阶段中计算与显存在各模块间的分布形态。
 
-从功能表现来看，MLLMs 可完成图像描述、视觉问答、图文对话、文档理解，
-以及基于文本的图像或视频生成等复杂任务，
-在智能助手、自动驾驶、内容创作、教育培训、工业质检等场景具有广阔应用前景。
-在垂直领域，MLLMs 已延伸至具身智能\cite{embodied_mllm2024}、医疗影像理解\cite{medical_vlm2024}、
-科学文档与图表推理\cite{science_doc_mllm2024}等，相关评估常依托 VQAv2\cite{vqav2}、GQA\cite{gqa2019}、
+从功能表现来看，MLLMs 可完成图像描述、视觉问答、图文对话、文档理解，以及基于文本的图像或视频生成等复杂任务，
+在诸多前沿领域比如自动驾驶、智能助手等场景具有广阔应用前景；
+在垂直领域，MLLMs 已延伸至具身智能\cite{embodied_mllm2024}、医疗影像理解\cite{medical_vlm2024}等。
+多模态大模型的相关评估常使用 VQAv2\cite{vqav2}、GQA\cite{gqa2019}、
 MMMU\cite{mmmu_benchmark2024} 等多模态基准，对模型规模与训练数据提出了更高要求。
-从结构上看，MLLMs 通常包含以下核心组件（见图\ref{fig:mllm_components}）：
+从结构上看，MLLMs 通常包含以下核心组件，如图\ref{fig:mllm_components}：
 （1）\emph{Modality Encoder}，负责将图像、视频等非文本输入编码为特征表示，
     常采用预训练的视觉模型（如 CLIP、ViT）作为 backbone；
 （2）\emph{Input Projector}，将编码后的多模态特征映射到与 LLM 词嵌入对齐的语义空间，
     常见形式包括线性层、Q-Former\cite{blip2} 等轻量模块；
 （3）\emph{LLM Backbone}，即大规模语言模型主体，承担主要的理解与生成计算，
-    参数量通常占整体模型的 80\%--90\%；
+    参数量通常占整体模型的 70\%--80\%；
 （4）\emph{Output Projector}（在需要多模态生成时），
     将 LLM 输出映射到与目标模态生成器对齐的表示空间；
 （5）\emph{Modality Generator}（在需要多模态生成时），
-    根据投影表示生成图像、音频等目标模态，
+    负责生成图像、音频等目标模态，
     常采用扩散模型（如 Stable Diffusion）等。
-可见，LLMs 处于 MLLMs 架构的核心，多模态能力是在其基础上进行的扩展与增强；
-在大语言模型占据主体参数量的架构下，针对 LLMs 总结出的扩展定律（Scaling Laws）与数据规模规律，同样深刻影响着 MLLMs 训练的资源需求。
+其中 LLMs 处于 MLLMs 架构的核心，多模态能力是在其基础上进行的扩展与增强。
 
 \begin{figure}[htbp]
   \centering
@@ -68,12 +63,13 @@ MMMU\cite{mmmu_benchmark2024} 等多模态基准，对模型规模与训练数�
   \label{fig:mllm_components}
 \end{figure}
 
-已有实证研究表明，模型性能通常会随参数规模与训练数据规模的增加而稳定提升，
-这一现象被总结为“扩展定律”（Scaling Laws）\cite{kaplan2020scaling}。
-Kaplan 等\cite{kaplan2020scaling} 的早期工作表明，在给定算力预算下，模型规模与数据规模应按幂律关系共同扩展；
+
+在大语言模型占据主体参数量的架构下，针对 LLMs 总结出的扩展定律（Scaling Laws）与数据规模规律，同样深刻影响着 MLLMs 训练的资源需求。
+已有实证研究表明，模型性能通常会随参数规模与训练数据规模的增加而稳定提升，这一现象被总结为“扩展定律”（Scaling Laws）\cite{kaplan2020scaling}。
+Kaplan 等\cite{kaplan2020scaling} 的早期工作表明，在给定算力预算下，模型规模与数据规模应按幂律关系共同扩展。
 Hoffmann 等\cite{chinchilla2022}进一步指出，当前大语言模型普遍“训练不足”，
 在计算最优意义下，模型参数量与训练 token 数应近似同比例扩展（约 20 倍 token/参数），
-该结论对预训练数据规模与模型架构选择产生了深远影响；
+该结论对预训练数据规模与模型架构选择产生了深远影响。
 近期工作\cite{beyond_chinchilla2024} 则从推理成本角度拓展了 Chinchilla 最优，指出在考虑部署与推理时，
 最优扩展策略会随推理请求规模发生变化。
 为追求更强性能，工业界与学术界不断推出参数量更大、数据规模更大的模型，
@@ -85,15 +81,14 @@ LLaMA 2/3\cite{llama2_2023,llama3}、Gemma\cite{gemma2024}、Mistral\cite{mistra
 从数百万图文对到数十亿级样本，单机算力、存储与 I/O 同样成为瓶颈；
 数据质量与混合比例对下游性能同样有显著影响\cite{data_mixing_llm2023}，长上下文与多模态联合基准\cite{long_context_benchmark2024} 的普及进一步推高了对训练规模与效率的需求。
 在上述模型与数据规模的约束下，单台计算设备的显存与算力均难以独立支撑完整的训练流程。
-因此，\emph{必须借助分布式与并行训练}，将模型参数、优化器状态、激活值与数据
-分散至多台设备，通过节点间的通信协同完成前反向计算，才能实现大规模模型的训练%
+因此必须借助分布式与并行训练技术，将模型参数、优化器状态、激活值与数据分散至多台设备，通过节点间的通信协同完成大规模模型的训练%
 \cite{zero2020,zero2021}。
 
 目前，支撑大规模 MLLMs 训练的主流并行策略可归纳为两大类。
-第一类是以计算与张量切分为核心的多维混合并行：
+第一类是以计算与模型切分为核心的多维混合并行：
 \emph{数据并行}\cite{pytorch_ddp,horovod} 在各设备上复制完整模型、按批次划分样本，通信集中在梯度 AllReduce，实现简单且在小模型上扩展性好；
-\emph{张量并行}\cite{megatron2020,megatron2021}（如 Megatron-LM）将单层内的矩阵按行或列切分到多卡，降低单卡显存并保留层内并行，是千亿级稠密模型的主流选择；
-\emph{流水线并行}\cite{gpipe,pipedream2019}（如 GPipe、PipeDream）将模型按层划分为若干阶段并分配到不同设备，通过微批次与调度重叠计算与通信，缓解单设备层数过多的问题；
+\emph{张量并行}\cite{megatron2020,megatron2021} 将单层内的矩阵按行或列切分到多卡，降低单卡显存并保留层内并行，是千亿级稠密模型的主流选择；
+\emph{流水线并行}\cite{gpipe,pipedream2019} 将模型按层划分为若干流水级并分配到不同设备，通过微批次与调度重叠计算与通信，缓解单设备层数过多的问题；
 \emph{序列并行}\cite{megatron2021} 与 \emph{专家并行}\cite{gshard} 则分别在长序列注意力与混合专家（MoE）结构中沿序列维或专家维切分，与张量、流水线并行组合后可进一步扩展模型规模。
 第二类是以显存优化为核心的零冗余优化器系列：
 ZeRO\cite{zero2020,zero2021} 将优化器状态、梯度与参数分片存于各卡，前向与反向时按需聚合，在保持数据并行通信量的同时显著降低单卡显存；
@@ -103,12 +98,8 @@ ZeRO++\cite{zeroplusplus} 通过量化与通信重算技术减少跨节点通信
 Flash Attention\cite{flash_attention_2022,flashattention3_2024} 等显存与计算优化技术结合，
 共同构成当前大模型与 MLLMs 训练的基础设施；
 PyTorch 的 FSDP\cite{fsdp2022} 与 DeepSpeed ZeRO 类似，通过全分片参数与优化器状态实现单卡显存的大幅降低。
-然而，上述策略在设计时多假设\emph{同构}集群与\emph{单一形态}的 Transformer 模型，
-其划分粒度、负载均衡与通信优化均围绕“各层计算与显存相对均匀”这一前提展开；
-在面对异构 GPU 集群与模块异构的 MLLMs 时，负载与显存分布的不均匀性被放大，
-仍存在效率与可扩展性方面的挑战，
-这也是本文关注的重点之一。
 
+然而，上述策略在设计时多假设同构集群与单一形态的 Transformer 模型，其划分粒度、负载均衡与通信优化均围绕“各层计算与显存相对均匀”这一前提展开；在面对异构 GPU 集群与模块异构的 MLLMs 时，负载与显存分布的不均匀性被放大，仍存在效率与可扩展性方面的挑战。
 在实际应用中，企业与研究机构常面临定制化多模态模型的高频微调需求，这要求训练系统具备较高的可扩展性与资源利用率。
 然而，受预算与硬件采购周期的限制，多数集群难以维持绝对的同构性，往往需要在现有的异构设备组合上开展预训练与微调实验。
 因此，提升异构 GPU 集群下的训练效率、使其逼近同构环境的表现，具有迫切的现实需求。
@@ -118,7 +109,7 @@ PyTorch 的 FSDP\cite{fsdp2022} 与 DeepSpeed ZeRO 类似，通过全分片参�
 \subsection{异构 GPU 集群下的并行训练挑战}
 
 多模态大语言模型的训练效率与成本高度依赖底层硬件平台。
-目前，工业界与学术界普遍采用 NVIDIA GPU 作为大模型与 MLLMs 训练的主要加速器，
+目前，工业界与学术界普遍采用 NVIDIA GPU 作为 MLLMs 训练的主要加速器，
 并通过多卡、多机集群进行分布式训练。
 然而，NVIDIA 约每 1--2 年迭代一代计算架构并推出多款不同定位的 GPU，
 导致显存容量、算力与互联方式持续分化，实际部署中的集群往往由多代、多型号 GPU 混合组成，
@@ -171,7 +162,7 @@ PyTorch 的 FSDP\cite{fsdp2022} 与 DeepSpeed ZeRO 类似，通过全分片参�
 
 除设备侧算力、显存与通信差异外，\emph{模型结构异构}也会显著改变并行划分与负载形态。
 典型 MLLM 中，\emph{Modality Encoder} 多采用视觉主干（如 CLIP、ViT 等），将图像或视频编码为特征；
-\emph{LLM Backbone} 常为 GPT 类或 Llama 类等大语言模型\cite{llama3}，参数量往往占整模型的约 70\%--80\%；
+\emph{LLMs Backbone} 常为 GPT 类或 Llama 类等大语言模型\cite{llama3}，参数量往往占整模型的约 70\%--80\%；
 可选的 \emph{Modality Generator} 则可能是扩散模型（如 Stable Diffusion\cite{stable_diffusion}）等，用于生成图像、视频或音频。
 LLM 部分通常由大量同构 Transformer 层堆叠；Encoder 与 Generator 往往融合卷积、U-Net\cite{unet} 或扩散去噪网络等不同算子；
 Input/Output Projector 则可能是线性层、小型 Transformer 或 Q-Former\cite{blip2} 等轻量连接器。
@@ -194,10 +185,9 @@ BLIP-2\cite{blip2} 较早系统性地采用“冻结视觉编码器与 LLM、主
 
 硬件层面的设备异构与模型层面的模块异构、分阶段冻结交织，构成了当前有限资源下高效训练的核心难点。
 为此，本课题拟结合现有并行策略，深入分析实际 GPU 集群中的异构场景，
-基于 Megatron 等主流并行训练框架，针对 MLLMs 的结构特点以及集群内显存、算力与带宽的非均匀性，
+基于 Megatron 等主流并行训练框架，针对 MLLMs 的结构特点以及集群内显存、算力与带宽的异构性，
 研究细粒度的混合并行技术和重计算显存优化技术，
-旨在提出一套面向异构复杂环境的自适应并行训练方案，
-以期缓解异构集群下训练 MLLMs 效率低、显存利用不充分等问题。
+旨在提出一套面向异构复杂环境的自适应并行训练方案来缓解异构集群下训练 MLLMs 效率的问题。
 
 \section{国内外研究现状}
 
@@ -258,9 +248,9 @@ HetPipe\cite{hetpipe2020} 较早将流水线并行与数据并行结合，通过
 Whale\cite{whale} 针对显存与算力异构提出基于硬件感知的负载均衡方法，按比例为各设备分配不同大小的模型分片与批次，但未考虑网络异构，划分粒度相对粗糙。
 AMP\cite{amp2022} 在异构环境下为大模型自动搜索并行策略，同时考虑模型异构与设备异构，通过开销模型与动态规划求解近似最优配置，但划分粒度为全局粗粒度，对通信与显存估计的准确性有限。
 近年来，面向异构集群的分布式训练系统与调度方法受到持续关注。
-HetHub\cite{hethub2024} 支持 AMD、NVIDIA 等多厂商异构 GPU 集群，通过统一通信器、性能预测器与自动并行规划，在 768 张异构卡上训练 Llama-140B 达到理论性能上界的 97.49\%；
-HexiScale\cite{hexiscale2024} 将数据、流水线与张量并行的非对称划分形式化，采用层次图划分算法在异构环境下分配计算，在 7B--30B LLM 上取得与同构系统接近的 MFU（平均差距约 3.5\%）；
-Espresso\cite{espresso2025} 面向成本效益的异构 GPU 资源供给与阶段放置，集成 Profiler、GPU Allocator、Stage Placer 与 Performance Estimator；Zorse\cite{zorse2025} 直接针对异构集群上的 LLM 训练效率优化，支持非对称流水线阶段与异构数据并行组；Cephalo\cite{cephalo2024} 通过解耦计算分布与训练状态分配在异构集群上为 Transformer 训练分配算力与显存。
+HetHub\cite{hethub2024} 支持 AMD、NVIDIA 等多厂商异构 GPU 集群，将通信器、性能预测器与自动并行统一规划；
+HexiScale\cite{hexiscale2024} 将数据、流水线与张量并行的非对称划分形式化，采用层次图划分算法在异构环境下分配计算；
+Espresso\cite{espresso2025} 面向成本效益的异构 GPU 资源供给与阶段放置，集成 Profiler、GPU Allocator、Stage Placer 与 Performance Estimator；
 上述工作多为通用 LLM 或同构扩展设计，对 MLLM 的\emph{模块异构、分阶段冻结}与显存—算力—通信三重异构的联合优化仍不足。
 
 ZeRO\cite{zero2020,zero2021} 的梯度/参数 All-Gather 等通信在跨节点异构网络中易成为瓶颈；MiCS\cite{mics2022} 对异构网络下的高带宽链路利用仍有不足；ZeRO++\cite{zeroplusplus} 的量化与通信重算可能引入精度与通用性代价；AMSP\cite{amsp} 等侧重跨节点通信削减，对集群内存储、算力与带宽的细粒度异构利用仍有限。
@@ -315,6 +305,6 @@ MLLM 训练通常划分为多阶段（如对齐、指令微调等），各阶段
 
 第三章介绍本文提出的 MMoH 框架，重点阐述需求驱动的设备拓扑识别、复合粒度模型抽象、冻结感知划分及提前终止流水线调度方法，并给出实验评估。
 
-第四章介绍 HR-MMoH 异构重计算优化，详细说明如何在异构计算资源与不同模型模块间实现检查点策略的细粒度自适应配置并进行实验验证。
+第四章介绍 HR-MMoH 异构重计算优化，详细说明如何在异构计算资源与不同模型模块间实现重计算策略的细粒度自适应配置并进行实验验证。
 
 第五章为总结与展望。对全文工作进行回顾，并探讨后续可能的研究方向。
