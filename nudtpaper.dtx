@@ -525,6 +525,8 @@
 \DeclareOption{doctor}{\ismasterfalse}
 \newif\ifisanon\isanonfalse
 \DeclareOption{anon}{\isanontrue}
+\newif\ifisprof\isproffalse
+\DeclareOption{prof}{\isproftrue}
 \newif\ifistwoside\istwosidefalse
 \DeclareOption{twoside}{\istwosidetrue}
 \DeclareOption{ttf}{\isttftrue}
@@ -1642,9 +1644,9 @@
   \end{tabular}}
   \vfill\vfill\vfill\vfill
   {\sanhao[1.5]
-A dissertation\\
+A \ifisprof{thesis}\else{dissertation} \fi \\
 Submitted in partial fulfillment of the requirements\\
-for the degree of \textsf{\@optionpaperclassen{} of \@enpapertype}\\
+for the \ifisprof{professional }\else{}\fi degree of \textsf{\@optionpaperclassen{} of \@enpapertype}\\
 in \textsf{\@ensubject}\\
 \makebox[\textwidth]{\ifisanon{~}\else{Graduate School of National University of %
 Defense Technology}\fi}\\

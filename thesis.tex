@@ -34,12 +34,20 @@
 %5. 如果想生成盲评，传递anon即可，仍需修改个人成果部分
 % \documentclass[master,otf,anon]{nudtpaper}
 %
-\documentclass[master,ttf,twoside]{nudtpaper}
+\documentclass[master,ttf,twoside,prof]{nudtpaper}
 \usepackage{mynudt}
 \usepackage{multirow,array,makecell}
 \usepackage{arydshln}
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric,calc}
+\raggedbottom
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.8}
 
 \classification{TP302}
 \serialno{23023014}
@@ -49,7 +57,7 @@
 \displaytitle{面向异构 GPU 集群的多模态大语言模型并行训练技术研究}
 \author{范锦山}
 \zhdate{\zhtoday}
-\entitle{Parallel Training Strategy for Training Multimodal Large Language Models on Heterogeneous GPU Clusters}
+\entitle{Research on Parallel Training Techniques for Multimodal Large Language Models in Heterogeneous GPU Clusters}
 \enauthor{Jinshan Fan}
 \endate{\entoday}
 \subject{电子信息}
@@ -58,7 +66,7 @@
 \supervisor{李东升\quad{}研究员}
 \cosupervisor{赖志权\quad{}副研究员}  % 协助指导教师，没有就空着
 \ensupervisor{Prof. Dongsheng Li}
-\encosupervisor{Prof. Zhiquan Lai} % 协助指导教师英文，没有就空着
+\encosupervisor{Associate Prof. Zhiquan Lai} % 协助指导教师英文，没有就空着
 \papertype{工学}
 \enpapertype{Engineering}
 % 加入makenomenclature命令可用nomencl制作符号列表。
@@ -113,7 +121,8 @@
 \bibliography{ref/refs}
 
 \input{data/resume}    %在学期间成果
-% \input{data/reviewinfo} %公开评阅信息
+\input{data/reviewinfo} %公开评阅信息
+\input{data/defensecommittee} %答辩委员会
 % 最后，需要的话还要生成附录，全文随之结束。
 \appendix
 \backmatter

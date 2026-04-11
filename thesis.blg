@@ -4,44 +4,46 @@ The top-level auxiliary file: thesis.aux
 The style file: bstutf8.bst
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-Reallocated field_info (elt_size=4) to 10040 items from 5000.
 Database file #1: ref/refs.bib
 -- BUPTThesis.bst version 1.0 Beta 1 (2009/05/31) by Yu Zhang.
 -- http://code.google.com/p/buptthesis/
 -- See the "userguide.pdf" manual for usage information.
 Warning--The editor in vaswani2017 is missing.
 Warning--empty editor in vaswani2017
-Warning--empty pages in vaswani2017
 Warning--The editor in bert is missing.
 Warning--empty editor in bert
 Warning--empty pages in openai2023
 Warning--The editor in vit2020 is missing.
 Warning--empty editor in vit2020
-Warning--empty pages in vit2020
-Warning--empty journal in scaling_vit
-Warning--empty pages in llava2023
+Warning--The editor in scaling_vit is missing.
+Warning--empty editor in scaling_vit
+Warning--The editor in blip2 is missing.
+Warning--empty editor in blip2
+Warning--The editor in llava2023 is missing.
+Warning--empty editor in llava2023
 Warning--The editor in clip2021 is missing.
 Warning--empty editor in clip2021
 Warning--The editor in dalle2021 is missing.
 Warning--empty editor in dalle2021
 Warning--The editor in instructblip2023 is missing.
 Warning--empty editor in instructblip2023
-Warning--empty pages in llava15_2023
+Warning--The editor in llava15_2023 is missing.
+Warning--empty editor in llava15_2023
 Warning--empty pages in qwenvl2023
 Warning--The editor in internvl2024 is missing.
 Warning--empty editor in internvl2024
+Warning--The editor in minigpt4 is missing.
+Warning--empty editor in minigpt4
 Warning--empty pages in minigpt4
 Warning--The editor in mllm_survey_acl2024 is missing.
 Warning--empty editor in mllm_survey_acl2024
-Warning--empty pages in mllm_survey_acl2024
 Warning--empty pages in embodied_mllm2024
-Warning--empty pages in medical_vlm2024
 Warning--The editor in vqav2 is missing.
 Warning--empty editor in vqav2
 Warning--The editor in gqa2019 is missing.
 Warning--empty editor in gqa2019
-Warning--empty pages in mmmu_benchmark2024
-Warning--empty pages in kaplan2020scaling
+Warning--The editor in mmmu_benchmark2024 is missing.
+Warning--empty editor in mmmu_benchmark2024
 Warning--The editor in chinchilla2022 is missing.
 Warning--empty editor in chinchilla2022
 Warning--The editor in beyond_chinchilla2024 is missing.
@@ -55,68 +57,65 @@ Warning--empty pages in gemma2024
 Warning--empty pages in mistral2023
 Warning--The editor in megatron2021 is missing.
 Warning--empty editor in megatron2021
-Warning--empty pages in megatron2020
-Warning--empty pages in data_mixing_llm2023
-Warning--empty pages in long_context_benchmark2024
+Warning--The editor in long_context_benchmark2024 is missing.
+Warning--empty editor in long_context_benchmark2024
 Warning--The editor in zero2020 is missing.
 Warning--empty editor in zero2020
-Warning--empty pages in zero2021
-Warning--empty pages in horovod
-Warning--empty pages in gpipe
+Warning--The editor in zero2021 is missing.
+Warning--empty editor in zero2021
+Warning--empty pages in sergeev2018horovod
+Warning--The editor in gpipe is missing.
+Warning--empty editor in gpipe
 Warning--The editor in pipedream2019 is missing.
 Warning--empty editor in pipedream2019
-Warning--empty journal in gshard
+Warning--The editor in gshard is missing.
+Warning--empty editor in gshard
 Warning--empty pages in gshard
+Warning--The editor in zeroplusplus is missing.
+Warning--empty editor in zeroplusplus
 Warning--empty pages in zeroplusplus
 Warning--The editor in mixed_precision2018 is missing.
 Warning--empty editor in mixed_precision2018
-Warning--empty pages in mixed_precision2018
 Warning--empty pages in colossal_auto
 Warning--The editor in flash_attention_2022 is missing.
 Warning--empty editor in flash_attention_2022
 Warning--The editor in flashattention3_2024 is missing.
 Warning--empty editor in flashattention3_2024
-Warning--empty pages in flashattention3_2024
 Warning--The editor in fsdp2022 is missing.
 Warning--empty editor in fsdp2022
-Warning--empty journal in whale
-Warning--empty pages in whale
+Warning--The editor in stable_diffusion is missing.
+Warning--empty editor in stable_diffusion
+Warning--The editor in nextgpt is missing.
+Warning--empty editor in nextgpt
+Warning--The editor in dreamllm is missing.
+Warning--empty editor in dreamllm
+Warning--empty pages in dreamllm
+Warning--The editor in whale is missing.
+Warning--empty editor in whale
 Warning--The editor in hetpipe2020 is missing.
 Warning--empty editor in hetpipe2020
 Warning--there's neither address nor publisher in nvidia_a100
 Warning--there's neither address nor publisher in nvidia_h100
 Warning--there's neither address nor publisher in nvidia_blackwell
-Warning--The editor in stable_diffusion is missing.
-Warning--empty editor in stable_diffusion
-Warning--The editor in unet is missing.
-Warning--empty editor in unet
-Warning--empty pages in nextgpt
-Warning--empty pages in dreamllm
-Warning--The editor in adam is missing.
-Warning--empty editor in adam
-Warning--empty pages in adam
 Warning--empty pages in frenzy_memory2024
 Warning--empty pages in cloud_llm_training
 Warning--empty journal in nvidia_training_guide
 Warning--empty pages in nvidia_training_guide
 Warning--The editor in lora2021 is missing.
 Warning--empty editor in lora2021
-Warning--empty pages in lora2021
-Warning--empty pages in qlora2023
+Warning--The editor in qlora2023 is missing.
+Warning--empty editor in qlora2023
 Warning--empty pages in parameter_efficiency_survey2024
 Warning--The editor in laion5b2022 is missing.
 Warning--empty editor in laion5b2022
-Warning--empty pages in laion5b2022
-Warning--The editor in comprehensive_mllm_survey2024 is missing.
-Warning--empty editor in comprehensive_mllm_survey2024
-Warning--empty pages in comprehensive_mllm_survey2024
 Warning--empty pages in mllm_datacentric2024
 Warning--The editor in coco2014 is missing.
 Warning--empty editor in coco2014
 Warning--empty pages in pile2020
-Warning--empty journal in youtube8m
-Warning--empty pages in youtube8m
-Warning--empty pages in webvid2021
+Warning--The editor in youtube8m is missing.
+Warning--empty editor in youtube8m
+Warning--The editor in webvid2021 is missing.
+Warning--empty editor in webvid2021
 Warning--The editor in textvqa2019 is missing.
 Warning--empty editor in textvqa2019
 Warning--The editor in megatron2023 is missing.
@@ -125,85 +124,75 @@ Warning--The editor in amp2022 is missing.
 Warning--empty editor in amp2022
 Warning--empty pages in hethub2024
 Warning--empty pages in hexiscale2024
-Warning--empty pages in zorse2025
-Warning--The editor in cephalo2024 is missing.
-Warning--empty editor in cephalo2024
-Warning--empty pages in cephalo2024
+Warning--The editor in espresso2025 is missing.
+Warning--empty editor in espresso2025
 Warning--empty pages in amsp
 Warning--empty pages in vision_language_pretrain_survey2024
-Warning--empty pages in llava_next2024
+Warning--The editor in unet is missing.
+Warning--empty editor in unet
 Warning--empty pages in gemini2023
-Warning--empty pages in palm2022
 Warning--The editor in parameter_server is missing.
 Warning--empty editor in parameter_server
 Warning--The editor in parallax is missing.
 Warning--empty editor in parallax
 Warning--empty pages in ulysses2023
-Warning--empty pages in terapipe
 Warning--The editor in terapipe_icml2022 is missing.
 Warning--empty editor in terapipe_icml2022
-Warning--empty pages in terapipe_icml2022
-Warning--empty pages in chimera_pp2023
-Warning--empty pages in hanayo_pp
+Warning--The editor in chimera_pp2023 is missing.
+Warning--empty editor in chimera_pp2023
+Warning--The editor in hanayo_pp is missing.
+Warning--empty editor in hanayo_pp
 Warning--The editor in zerobubble2024 is missing.
 Warning--empty editor in zerobubble2024
-Warning--empty pages in zerobubble2024
-Warning--empty pages in ring_attention2024
-Warning--empty pages in deepseek_moe2024
-Warning--empty pages in zero3_tp_pp
-Warning--empty pages in tensor_parallelism_survey
-Warning--empty pages in chen2016checkpoint
-Warning--The editor in korthikanti2023activation is missing.
-Warning--empty editor in korthikanti2023activation
-Warning--empty pages in korthikanti2023activation
-Warning--empty pages in selective_checkpoint_megatron
-Warning--empty pages in nemo_activation_recomp
+Warning--The editor in deepseek_moe2024 is missing.
+Warning--empty editor in deepseek_moe2024
+Warning--The editor in tensor_parallelism_survey is missing.
+Warning--empty editor in tensor_parallelism_survey
+Warning--empty pages in zorse2025
+Warning--The editor in chen2016checkpoint is missing.
+Warning--empty editor in chen2016checkpoint
 Warning--empty pages in lynx2024
-Warning--empty pages in stage_wise_checkpoint2023
-Warning--empty pages in llm_systems_survey2024
-Warning--empty pages in distributed_dl_survey2022
-Warning--empty pages in load_balance_heterogeneous
 
 Done.
-You've used 112 entries,
+You've used 99 entries,
             4554 wiz_defined-function locations,
-            1469 strings with 24195 characters,
-and the built_in function-call counts, 60511 in all, are:
-= -- 6655
-> -- 1198
-< -- 33
-+ -- 724
-- -- 362
-* -- 4944
-:= -- 6919
-add.period$ -- 454
-call.type$ -- 112
+            1470 strings with 24926 characters,
+and the built_in function-call counts, 61417 in all, are:
+= -- 6888
+> -- 1113
+< -- 65
++ -- 676
+- -- 338
+* -- 4981
+:= -- 6988
+add.period$ -- 409
+call.type$ -- 99
 change.case$ -- 0
 chr.to.int$ -- 0
-cite$ -- 266
-duplicate$ -- 3969
-empty$ -- 6648
-format.name$ -- 362
-if$ -- 14501
+cite$ -- 243
+duplicate$ -- 3968
+empty$ -- 6539
+format.name$ -- 338
+if$ -- 14868
 int.to.chr$ -- 0
-int.to.str$ -- 112
+int.to.str$ -- 99
 missing$ -- 0
-newline$ -- 682
-num.names$ -- 112
-pop$ -- 508
+newline$ -- 611
+num.names$ -- 99
+pop$ -- 447
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 1574
+skip$ -- 1685
 stack$ -- 0
-substring$ -- 6415
-swap$ -- 926
-text.length$ -- 33
+substring$ -- 7028
+swap$ -- 1170
+text.length$ -- 65
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 1214
-warning$ -- 154
-while$ -- 571
-width$ -- 115
-write$ -- 940
-(There were 154 warnings)
+type$ -- 944
+warning$ -- 144
+while$ -- 626
+width$ -- 101
+write$ -- 877
+(There were 144 warnings)
