@@ -19,6 +19,12 @@
 \HyPL@Entry{14<</S/r>>}
 \@writefile{toc}{\contentsline {chapter}{摘\hspace  {1em}要}{i}{section*.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{\textsf  {Abstract}}{ii}{section*.5}\protected@file@percent }
+\gdef \LT@i {\LT@entry 
+    {1}{165.3356pt}\LT@entry 
+    {1}{216.55022pt}}
+\@writefile{toc}{\contentsline {chapter}{本文中英文对照表}{iv}{chapter*.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 本文主要术语中英文对照表\relax }}{iv}{table.0.1}\protected@file@percent }
+\newlabel{tab:appendix-bilingual}{{1}{iv}{本文主要术语中英文对照表\relax }{table.0.1}{}}
 \citation{galvatron2022}
 \citation{vaswani2017}
 \citation{bert}
@@ -38,12 +44,11 @@
 \citation{qwenvl2023}
 \citation{internvl2024}
 \citation{minigpt4,mllm_survey_acl2024}
-\HyPL@Entry{17<</S/D>>}
+\HyPL@Entry{20<</S/D>>}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}绪论}{1}{chapter.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.1}研究背景}{1}{section.1.1}\protected@file@percent }
-\newlabel{sec:chap1-background}{{1.1}{1}{研究背景}{section.1.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}训练多模态大语言模型面临的挑战}{1}{subsection.1.1.1}\protected@file@percent }
-\citation{embodied_mllm2024}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}研究背景与意义}{1}{section.1.1}\protected@file@percent }
+\newlabel{sec:chap1-background}{{1.1}{1}{研究背景与意义}{section.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}多模态大语言模型的训练}{1}{subsection.1.1.1}\protected@file@percent }
 \citation{medical_vlm2024}
 \citation{vqav2}
 \citation{gqa2019}
@@ -62,36 +67,24 @@
 \citation{megatron2021,megatron2020}
 \citation{long_context_benchmark2024}
 \citation{zero2020,zero2021}
-\citation{pytorch_ddp,sergeev2018horovod}
-\citation{megatron2020,megatron2021}
-\citation{gpipe,pipedream2019}
-\citation{megatron2021}
-\citation{gshard}
+\citation{pytorch_ddp,megatron2020,megatron2021,gpipe,pipedream2019,gshard}
 \citation{zero2020,zero2021}
-\citation{zero2021}
-\citation{zeroplusplus}
 \citation{mixed_precision2018}
 \citation{colossal_auto}
 \citation{flash_attention_2022,flashattention3_2024}
-\citation{fsdp2022}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces 多模态大语言模型的核心组成部分\relax }}{3}{figure.caption.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces 多模态大语言模型的核心组成部分\relax }}{3}{figure.caption.8}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:mllm_components}{{1.1}{3}{多模态大语言模型的核心组成部分\relax }{figure.caption.7}{}}
-\citation{llama3}
-\citation{stable_diffusion}
-\citation{blip2}
-\citation{nextgpt}
-\citation{dreamllm}
-\citation{whale,hetpipe2020}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}异构 GPU 集群下的并行训练挑战}{4}{subsection.1.1.2}\protected@file@percent }
+\newlabel{fig:mllm_components}{{1.1}{3}{多模态大语言模型的核心组成部分\relax }{figure.caption.8}{}}
 \citation{nvidia_a100}
 \citation{nvidia_h100}
 \citation{nvidia_blackwell}
+\citation{whale,hetpipe2020}
 \citation{megatron2021,zero2020}
 \citation{whale,hetpipe2020}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces NVIDIA GPU 架构与代表性产品演进\relax }}{5}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:nvidia_gpu_evolution}{{1.2}{5}{NVIDIA GPU 架构与代表性产品演进\relax }{figure.caption.8}{}}
-\citation{frenzy_memory2024,cloud_llm_training,nvidia_training_guide}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}异构 GPU 集群下的并行训练}{4}{subsection.1.1.2}\protected@file@percent }
+\citation{frenzy_memory2024,nvidia_training_guide,arnold2025}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces NVIDIA GPU 架构与代表性产品演进\relax }}{5}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:nvidia_gpu_evolution}{{1.2}{5}{NVIDIA GPU 架构与代表性产品演进\relax }{figure.caption.9}{}}
 \citation{kaplan2020scaling}
 \citation{chinchilla2022}
 \citation{beyond_chinchilla2024}
@@ -99,7 +92,6 @@
 \citation{lora2021}
 \citation{qlora2023}
 \citation{parameter_efficiency_survey2024}
-\@writefile{toc}{\contentsline {section}{\numberline {1.2}国内外研究现状}{6}{section.1.2}\protected@file@percent }
 \citation{vaswani2017}
 \citation{bert}
 \citation{gpt2}
@@ -119,6 +111,8 @@
 \citation{mllm_survey_acl2024,comprehensive_mllm_survey2024,mllm_datacentric2024}
 \citation{megatron2021,megatron2020}
 \citation{zero2020,zero2021}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}国内外研究现状}{6}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}多模态大语言模型并行训练策略研究现状}{6}{subsection.1.2.1}\protected@file@percent }
 \citation{open_images}
 \citation{coco2014}
 \citation{pile2020}
@@ -129,9 +123,10 @@
 \citation{long_context_benchmark2024}
 \citation{megatron2021,zero2020,zero2021}
 \citation{galvatron2022}
+\citation{aceso2024}
+\citation{uniap2025}
 \citation{colossal_auto}
 \citation{whale,hetpipe2020}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}多模态大语言模型并行训练策略研究现状}{7}{subsection.1.2.1}\protected@file@percent }
 \citation{pytorch_ddp,sergeev2018horovod}
 \citation{megatron2020,megatron2021}
 \citation{gpipe}
@@ -143,6 +138,8 @@
 \citation{zero2020,zero2021}
 \citation{zero2021}
 \citation{zeroplusplus}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}异构 GPU 集群并行训练策略研究现状}{7}{subsection.1.2.2}\protected@file@percent }
+\citation{disttrain2025}
 \citation{whale,hetpipe2020}
 \citation{hetpipe2020}
 \citation{whale}
@@ -150,17 +147,20 @@
 \citation{hethub2024}
 \citation{hexiscale2024}
 \citation{espresso2025}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}异构 GPU 集群并行训练策略研究现状}{8}{subsection.1.2.2}\protected@file@percent }
+\citation{metis2024}
+\citation{hap2024}
+\citation{distmm2024}
+\citation{disttrain2025}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces 使用 Megatron 训练多模态大语言模型\relax }}{8}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:megatron_mllm}{{1.3}{8}{使用 Megatron 训练多模态大语言模型\relax }{figure.caption.10}{}}
 \citation{zero2020,zero2021}
 \citation{mics2022}
 \citation{zeroplusplus}
 \citation{amsp}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces 使用 Megatron 训练多模态大语言模型\relax }}{9}{figure.caption.9}\protected@file@percent }
-\newlabel{fig:megatron_mllm}{{1.3}{9}{使用 Megatron 训练多模态大语言模型\relax }{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}研究内容与贡献}{10}{section.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}MMoH：多模态大语言模型在异构 GPU 集群上的混合并行技术}{10}{subsection.1.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}研究内容与贡献}{9}{section.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}MMoH：多模态大语言模型在异构 GPU 集群上的混合并行技术}{9}{subsection.1.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}HR-MMoH：多模态大语言模型在异构 GPU 集群上的重计算技术}{10}{subsection.1.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.4}论文组织结构}{11}{section.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}论文组织结构}{10}{section.1.4}\protected@file@percent }
 \citation{clip2021}
 \citation{llava2023}
 \citation{minigpt4}
@@ -170,15 +170,18 @@
 \citation{internvl2024}
 \citation{internvl2024}
 \citation{qwenvl2023}
+\citation{docvqa2021}
+\citation{chartqa2022}
 \citation{vision_language_pretrain_survey2024}
 \citation{blip2}
 \citation{instructblip2023}
+\citation{scienceqa2022}
 \citation{blip2,llava2023}
 \citation{brown2020gpt3,gpt2}
 \citation{llama3}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}相关工作}{13}{chapter.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}多模态大语言模型}{13}{section.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}多模态大语言模型的模型架构}{13}{subsection.2.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}多模态大语言模型及并行训练技术}{13}{section.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}多模态大语言模型的模型架构与训练数据}{13}{subsection.2.1.1}\protected@file@percent }
 \citation{stable_diffusion}
 \citation{unet}
 \citation{nextgpt}
@@ -188,41 +191,34 @@
 \citation{pile2020}
 \citation{mmmu_benchmark2024}
 \citation{mllm_datacentric2024}
-\citation{long_context_benchmark2024}
-\citation{llava_next2024}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}多模态大语言模型的训练数据}{14}{subsection.2.1.2}\protected@file@percent }
 \citation{open_images}
 \citation{youtube8m}
+\citation{long_context_benchmark2024}
+\citation{llava_next2024}
 \citation{open_images}
 \citation{youtube8m}
 \citation{blip2,llava2023}
-\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces 多模态大语言模型训练中常用的数据集类型与规模\relax }}{15}{table.caption.11}\protected@file@percent }
-\newlabel{tab:mllm_data_scale}{{2.1}{15}{多模态大语言模型训练中常用的数据集类型与规模\relax }{table.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces 多模态大语言模型训练中常用的数据集类型与规模\relax }}{15}{table.caption.12}\protected@file@percent }
+\newlabel{tab:mllm_data_scale}{{2.1}{15}{多模态大语言模型训练中常用的数据集类型与规模\relax }{table.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}多模态大语言模型的训练过程}{15}{subsection.2.1.2}\protected@file@percent }
 \citation{llava2023}
 \citation{instructblip2023}
 \citation{qwenvl2023}
 \citation{llava_next2024}
 \citation{gemini2023}
 \citation{palm2022}
-\citation{blip2}
 \citation{parameter_server,sergeev2018horovod,pytorch_ddp}
 \citation{pytorch_ddp}
 \citation{sergeev2018horovod}
 \citation{fsdp2022}
 \citation{parallax}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}多模态大语言模型的训练过程}{16}{subsection.2.1.3}\protected@file@percent }
+\citation{edit2025}
+\citation{halos2025}
+\citation{promisepractice2025}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces MLLM 多阶段训练中典型模块冻结\relax }}{16}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:mllm_training_stages}{{2.1}{16}{MLLM 多阶段训练中典型模块冻结\relax }{figure.caption.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}多维混合并行训练方法}{16}{subsection.2.1.3}\protected@file@percent }
 \citation{megatron2020,megatron2021}
-\citation{gshard}
-\citation{megatron2021}
-\citation{megatron2023,ulysses2023}
-\citation{ulysses2023}
-\citation{megatron2023}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces MLLM 多阶段训练中典型模块冻结与更新关系示意\relax }}{17}{figure.caption.12}\protected@file@percent }
-\newlabel{fig:mllm_training_stages}{{2.1}{17}{MLLM 多阶段训练中典型模块冻结与更新关系示意\relax }{figure.caption.12}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}并行与分布式训练技术}{17}{section.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}数据并行与模型并行}{17}{subsection.2.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{数据并行（DP）。}{17}{paragraph*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{张量并行（TP）与序列并行（SP）。}{17}{paragraph*.15}\protected@file@percent }
 \citation{gpipe}
 \citation{pipedream2019}
 \citation{terapipe_icml2022}
@@ -230,146 +226,138 @@
 \citation{hanayo_pp}
 \citation{zerobubble2024}
 \citation{dualpipe2025}
+\citation{adapipe2024}
+\citation{mepipe2025}
+\citation{weipipe2025}
+\citation{attnchecker2025}
 \citation{megatron2020}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces 数据并行示意\relax }}{18}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:data_parallel}{{2.2}{18}{数据并行示意\relax }{figure.caption.14}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces 张量并行示意（左、右分别示意两类典型矩阵切分与通信模式；二者在注意力子层与前馈子层中均需组合使用）\relax }}{18}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:tensor_parallel}{{2.3}{18}{张量并行示意（左、右分别示意两类典型矩阵切分与通信模式；二者在注意力子层与前馈子层中均需组合使用）\relax }{figure.caption.16}{}}
-\@writefile{toc}{\contentsline {paragraph}{流水线并行（PP）。}{18}{paragraph*.17}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces 数据并行示意\relax }}{17}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:data_parallel}{{2.2}{17}{数据并行示意\relax }{figure.caption.14}{}}
+\citation{megatron2023,ulysses2023}
+\citation{ulysses2023}
+\citation{megatron2023}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces 张量并行示意（左、右分别示意两类典型矩阵切分与通信模式；二者在注意力子层与前馈子层中均需组合使用）\relax }}{18}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:tensor_parallel}{{2.3}{18}{张量并行示意（左、右分别示意两类典型矩阵切分与通信模式；二者在注意力子层与前馈子层中均需组合使用）\relax }{figure.caption.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces 流水线并行示意\relax }}{18}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:pipeline_parallel}{{2.4}{18}{流水线并行示意\relax }{figure.caption.16}{}}
 \citation{megatron2023}
 \citation{gshard}
 \citation{gshard}
 \citation{deepseek_moe2024}
 \citation{dualpipe2025}
 \citation{zero2020,zero2021}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces 专家并行中的门控路由与专家分布示意\relax }}{19}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:expert_parallel}{{2.5}{19}{专家并行中的门控路由与专家分布示意\relax }{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.4}零冗余优化器（ZeRO）}{19}{subsection.2.1.4}\protected@file@percent }
 \citation{zero2021}
 \citation{zeroplusplus}
 \citation{mics2022}
 \citation{amsp}
 \citation{zero2020,zero2021,tensor_parallelism_survey}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces 流水线并行示意\relax }}{19}{figure.caption.18}\protected@file@percent }
-\newlabel{fig:pipeline_parallel}{{2.4}{19}{流水线并行示意\relax }{figure.caption.18}{}}
-\@writefile{toc}{\contentsline {paragraph}{上下文并行（CP）与专家并行（EP）。}{19}{paragraph*.19}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces 零冗余优化器 ZeRO 示意\relax }}{20}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:zero}{{2.6}{20}{零冗余优化器 ZeRO 示意\relax }{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}异构 GPU 集群并行训练}{20}{section.2.2}\protected@file@percent }
+\newlabel{sec:chap2-hetero}{{2.2}{20}{异构 GPU 集群并行训练}{section.2.2}{}}
 \citation{hetpipe2020}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces 专家并行（EP）中门控路由与专家分布示意\relax }}{20}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:expert_parallel}{{2.5}{20}{专家并行（EP）中门控路由与专家分布示意\relax }{figure.caption.20}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}零冗余优化器（ZeRO）}{20}{subsection.2.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}异构集群上的大模型并行训练}{20}{section.2.3}\protected@file@percent }
-\newlabel{sec:chap2-hetero}{{2.3}{20}{异构集群上的大模型并行训练}{section.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}异构 GPU 集群下的并行训练策略}{20}{subsection.2.3.1}\protected@file@percent }
 \citation{whale}
 \citation{amp2022}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces 零冗余优化器 ZeRO 示意\relax }}{21}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:zero}{{2.6}{21}{零冗余优化器 ZeRO 示意\relax }{figure.caption.21}{}}
+\citation{metis2024}
+\citation{hap2024}
 \citation{espresso2025}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}异构 GPU 集群并行训练策略}{21}{subsection.2.2.1}\protected@file@percent }
 \citation{hethub2024}
 \citation{hexiscale2024}
 \citation{zorse2025}
+\citation{helix2025}
+\citation{distmm2024}
+\citation{disttrain2025}
 \citation{zero2020,zero2021}
 \citation{mics2022}
 \citation{zeroplusplus}
+\citation{paro2024}
+\citation{optireduce2025}
 \citation{amsp}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}异构 GPU 集群并行训练的工业实践}{22}{subsection.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}异构 GPU 集群并行训练的工业实践}{22}{subsection.2.2.2}\protected@file@percent }
 \citation{frenzy_memory2024}
 \citation{chen2016checkpoint}
 \citation{chen2016checkpoint}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}重计算技术}{23}{section.2.4}\protected@file@percent }
-\newlabel{sec:chap2-recomputation}{{2.4}{23}{重计算技术}{section.2.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}重计算基本原理与分类}{23}{subsection.2.4.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算示意图\relax }}{23}{figure.caption.22}\protected@file@percent }
-\newlabel{fig:recomputation}{{2.7}{23}{重计算示意图\relax }{figure.caption.22}{}}
-\@writefile{toc}{\contentsline {paragraph}{全部重计算。}{23}{paragraph*.23}\protected@file@percent }
-\citation{megatron2023}
-\citation{megatron2023}
-\citation{megatron2023}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}重计算技术}{23}{section.2.3}\protected@file@percent }
+\newlabel{sec:chap2-recomputation}{{2.3}{23}{重计算技术}{section.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}重计算基本原理与分类}{23}{subsection.2.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算示意图\relax }}{23}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:recomputation}{{2.7}{23}{重计算示意图\relax }{figure.caption.19}{}}
 \citation{megatron2023}
 \citation{lynx2024}
 \citation{megatron2023}
-\@writefile{toc}{\contentsline {paragraph}{选择重计算。}{24}{paragraph*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{细粒度重计算。}{24}{paragraph*.25}\protected@file@percent }
-\citation{megatron2023}
+\citation{mist2025}
+\citation{adapipe2024}
 \citation{colossal_auto}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}重计算的主流实现及其局限性}{25}{subsection.2.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}本章小结}{25}{section.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}重计算的主流实现及其局限性}{24}{subsection.2.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}本章小结}{24}{section.2.4}\protected@file@percent }
 \citation{whale}
 \citation{espresso2025}
+\citation{metis2024}
 \citation{blip2}
 \citation{blip2,llava2023}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}MMoH：多模态大语言模型在异构 GPU 集群上的高效混合并行技术}{27}{chapter.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3.1}引言}{27}{section.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}问题与动机}{27}{subsection.3.1.1}\protected@file@percent }
 \citation{blip2}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces 主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。\relax }}{28}{figure.caption.27}\protected@file@percent }
-\newlabel{fig:chap3_moti_a}{{3.1}{28}{主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。\relax }{figure.caption.27}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。\relax }}{29}{figure.caption.28}\protected@file@percent }
-\newlabel{fig:chap3_moti_b}{{3.2}{29}{LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。\relax }{figure.caption.28}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces 主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。\relax }}{28}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:chap3_moti_a}{{3.1}{28}{主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。\relax }{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。\relax }}{29}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:chap3_moti_b}{{3.2}{29}{LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。\relax }{figure.caption.22}{}}
 \citation{whale}
 \citation{espresso2025}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces 不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间，MMoH1/MMoH2 为 MMoH 规划器针对各场景得到的策略。\relax }}{30}{figure.caption.29}\protected@file@percent }
-\newlabel{fig:chap3_moti_c}{{3.3}{30}{不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间，MMoH1/MMoH2 为 MMoH 规划器针对各场景得到的策略。\relax }{figure.caption.29}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces 不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间，MMoH1/MMoH2 为 MMoH 规划器针对各场景得到的策略。\relax }}{30}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:chap3_moti_c}{{3.3}{30}{不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间，MMoH1/MMoH2 为 MMoH 规划器针对各场景得到的策略。\relax }{figure.caption.23}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}MMoH 框架概览}{30}{subsection.3.1.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces MMoH 框架总览。\relax }}{31}{figure.caption.30}\protected@file@percent }
-\newlabel{fig:chap3_overview}{{3.4}{31}{MMoH 框架总览。\relax }{figure.caption.30}{}}
-\@writefile{toc}{\contentsline {paragraph}{并行策略规划器}{32}{paragraph*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{提前终止调度器}{32}{paragraph*.32}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}异构设备映射与复合粒度模型划分}{32}{section.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces MMoH 框架总览。\relax }}{31}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:chap3_overview}{{3.4}{31}{MMoH 框架总览。\relax }{figure.caption.24}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}MMoH 并行策略规划器}{32}{section.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}需求驱动的设备拓扑识别}{33}{subsection.3.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{符号与假设}{33}{paragraph*.33}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{需求趋势与供给趋势}{33}{paragraph*.34}\protected@file@percent }
 \citation{whale}
-\@writefile{toc}{\contentsline {paragraph}{匹配度度量}{34}{paragraph*.35}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}复合粒度抽象}{34}{subsection.3.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces 复合粒度抽象示意。（a）编码器：将连续多层合并为编码器层块；（b）LLM Backbone：将单层拆分为注意力块与 FFN 块，不增加流水级间通信量。\relax }}{35}{figure.caption.36}\protected@file@percent }
-\newlabel{fig:chap3_hybrid}{{3.5}{35}{复合粒度抽象示意。（a）编码器：将连续多层合并为编码器层块；（b）LLM Backbone：将单层拆分为注意力块与 FFN 块，不增加流水级间通信量。\relax }{figure.caption.36}{}}
-\@writefile{toc}{\contentsline {paragraph}{模态编码器}{35}{paragraph*.37}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{LLM Backbone}{35}{paragraph*.38}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{非 Transformer 层}{35}{paragraph*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}复合粒度模型抽象}{34}{subsection.3.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces 复合粒度抽象示意。（a）编码器：将连续多层合并为编码器层块；（b）LLM Backbone：将单层拆分为注意力块与 FFN 块，不增加流水级间通信量。\relax }}{35}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:chap3_hybrid}{{3.5}{35}{复合粒度抽象示意。（a）编码器：将连续多层合并为编码器层块；（b）LLM Backbone：将单层拆分为注意力块与 FFN 块，不增加流水级间通信量。\relax }{figure.caption.25}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}冻结感知的模型划分}{36}{subsection.3.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{决策变量与目标}{36}{paragraph*.40}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{约束条件}{37}{paragraph*.41}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3.3}提前终止流水线调度策略}{37}{section.3.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}冗余识别与剪枝规则}{38}{subsection.3.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}调度流程与实现细节}{39}{subsection.3.3.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces 提前终止调度器效果示意。\relax }}{40}{figure.caption.42}\protected@file@percent }
-\newlabel{fig:chap3_et}{{3.6}{40}{提前终止调度器效果示意。\relax }{figure.caption.42}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces 提前终止调度器效果示意。\relax }}{40}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:chap3_et}{{3.6}{40}{提前终止调度器效果示意。\relax }{figure.caption.26}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}对成本模型与划分策略的影响}{40}{subsection.3.3.3}\protected@file@percent }
+\citation{chimera_pp2023}
+\citation{hanayo_pp}
 \citation{megatron2020}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}实现要点}{41}{subsection.3.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}实验验证}{41}{section.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces 提前终止在其它流水线调度机制上的适用性。上：Chimera（双向流水线）；下：Hanayo（波式流水线）。\relax }}{41}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:chap3_chimera_hanayo}{{3.7}{41}{提前终止在其它流水线调度机制上的适用性。上：Chimera（双向流水线）；下：Hanayo（波式流水线）。\relax }{figure.caption.27}{}}
 \citation{llava2023}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces 提前终止在其它流水线调度机制上的适用性。上：Chimera（双向流水线）；下：Hanayo（波式流水线）。\relax }}{42}{figure.caption.43}\protected@file@percent }
-\newlabel{fig:chap3_chimera_hanayo}{{3.7}{42}{提前终止在其它流水线调度机制上的适用性。上：Chimera（双向流水线）；下：Hanayo（波式流水线）。\relax }{figure.caption.43}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}实现要点}{42}{subsection.3.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}实验验证}{42}{section.3.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}实验设置}{42}{subsection.3.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{实验平台与异构集群配置}{42}{paragraph*.44}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{模型与数据集}{42}{paragraph*.46}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces 实验用异构 GPU 集群配置\relax }}{42}{table.caption.28}\protected@file@percent }
+\newlabel{tab:chap3-cluster}{{3.1}{42}{实验用异构 GPU 集群配置\relax }{table.caption.28}{}}
 \citation{megatron2020}
 \citation{whale}
 \citation{espresso2025}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces 实验用异构 GPU 集群配置\relax }}{43}{table.caption.45}\protected@file@percent }
-\newlabel{tab:chap3-cluster}{{3.1}{43}{实验用异构 GPU 集群配置\relax }{table.caption.45}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces 实验用 MLLM 模块配置（模型参数）\relax }}{43}{table.caption.47}\protected@file@percent }
-\newlabel{tab:chap3-module}{{3.2}{43}{实验用 MLLM 模块配置（模型参数）\relax }{table.caption.47}{}}
-\@writefile{toc}{\contentsline {paragraph}{对比方法与评价指标}{43}{paragraph*.48}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces 实验用 MLLM 模块配置（模型参数）\relax }}{43}{table.caption.29}\protected@file@percent }
+\newlabel{tab:chap3-module}{{3.2}{43}{实验用 MLLM 模块配置（模型参数）\relax }{table.caption.29}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}实验结果}{43}{subsection.3.4.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces 四种冻结场景下 MMoH 与基线在两种异构集群上的训练吞吐对比。柱越长表示吞吐越高，OOM 表示显存溢出。\relax }}{44}{figure.caption.49}\protected@file@percent }
-\newlabel{fig:chap3_e2e}{{3.8}{44}{四种冻结场景下 MMoH 与基线在两种异构集群上的训练吞吐对比。柱越长表示吞吐越高，OOM 表示显存溢出。\relax }{figure.caption.49}{}}
-\@writefile{toc}{\contentsline {paragraph}{MLLM-3B 在 Cluster-S 上}{44}{paragraph*.50}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{MLLM-12B 在 Cluster-L 上}{44}{paragraph*.51}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}实验分析}{45}{subsection.3.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{划分策略对比}{45}{paragraph*.52}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces 不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }}{45}{table.caption.53}\protected@file@percent }
-\newlabel{tab:chap3_partition}{{3.3}{45}{不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }{table.caption.53}{}}
-\@writefile{toc}{\contentsline {paragraph}{负载均衡}{45}{paragraph*.54}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{提前终止调度器消融}{45}{paragraph*.55}\protected@file@percent }
-\citation{zerobubble2024}
-\citation{dualpipe2025}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。\relax }}{46}{figure.caption.56}\protected@file@percent }
-\newlabel{fig:chap3_load}{{3.9}{46}{MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。\relax }{figure.caption.56}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。\relax }}{46}{figure.caption.57}\protected@file@percent }
-\newlabel{fig:chap3_early}{{3.10}{46}{提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。\relax }{figure.caption.57}{}}
-\@writefile{toc}{\contentsline {paragraph}{局限与扩展}{47}{paragraph*.58}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}本章小结}{47}{section.3.5}\protected@file@percent }
-\citation{chen2016checkpoint}
+\@writefile{toc}{\contentsline {paragraph}{MLLM-3B 在 Cluster-S 上}{43}{paragraph*.31}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces 四种冻结场景下 MMoH 与基线在两种异构集群上的训练吞吐对比。柱越长表示吞吐越高，OOM 表示显存溢出。\relax }}{44}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:chap3_e2e}{{3.8}{44}{四种冻结场景下 MMoH 与基线在两种异构集群上的训练吞吐对比。柱越长表示吞吐越高，OOM 表示显存溢出。\relax }{figure.caption.30}{}}
+\@writefile{toc}{\contentsline {paragraph}{MLLM-12B 在 Cluster-L 上}{44}{paragraph*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}实验分析}{44}{subsection.3.4.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces 不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }}{45}{table.caption.33}\protected@file@percent }
+\newlabel{tab:chap3_partition}{{3.3}{45}{不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }{table.caption.33}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}本章小结}{45}{section.3.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。\relax }}{46}{figure.caption.34}\protected@file@percent }
+\newlabel{fig:chap3_load}{{3.9}{46}{MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。\relax }{figure.caption.34}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。\relax }}{46}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:chap3_early}{{3.10}{46}{提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。\relax }{figure.caption.35}{}}
+\citation{adapipe2024}
+\citation{mist2025}
 \@writefile{toc}{\contentsline {chapter}{\numberline {4}HR-MMoH: 多模态大语言模型在异构 GPU 集群上的重计算技术}{49}{chapter.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}引言}{49}{section.4.1}\protected@file@percent }
 \newlabel{sec:HR-MMoH-intro}{{4.1}{49}{引言}{section.4.1}{}}
@@ -382,62 +370,49 @@
 \newlabel{sec:HR-MMoH-method}{{4.2}{50}{异构 GPU 重计算}{section.4.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}现有的重计算策略与定量分析}{50}{subsection.4.2.1}\protected@file@percent }
 \newlabel{sec:megatron-recompute}{{4.2.1}{50}{现有的重计算策略与定量分析}{subsection.4.2.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与冻结感知调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构显存与算力。\relax }}{51}{figure.caption.60}\protected@file@percent }
-\newlabel{fig:chap4-hr-mmoh-overview}{{4.1}{51}{HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与冻结感知调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构显存与算力。\relax }{figure.caption.60}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Megatron-LM 重计算相关配置参数\relax }}{52}{table.caption.61}\protected@file@percent }
-\newlabel{tab:chap4-megatron-params}{{4.1}{52}{Megatron-LM 重计算相关配置参数\relax }{table.caption.61}{}}
-\@writefile{toc}{\contentsline {paragraph}{重计算技术的定量分析}{52}{paragraph*.63}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Megatron selective 粒度下可配置的子模块\relax }}{53}{table.caption.62}\protected@file@percent }
-\newlabel{tab:chap4-megatron-modules}{{4.2}{53}{Megatron selective 粒度下可配置的子模块\relax }{table.caption.62}{}}
-\@writefile{toc}{\contentsline {paragraph}{注意力子层}{53}{paragraph*.65}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{MLP 子层}{53}{paragraph*.67}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces 定量分析小节主要符号说明\relax }}{54}{table.caption.64}\protected@file@percent }
-\newlabel{tab:chap4-symbols}{{4.3}{54}{定量分析小节主要符号说明\relax }{table.caption.64}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces 注意力子层中间激活示意\relax }}{54}{figure.caption.66}\protected@file@percent }
-\newlabel{fig:chap4-recomp-attn}{{4.2}{54}{注意力子层中间激活示意\relax }{figure.caption.66}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces MLP 子层中间激活示意\relax }}{55}{figure.caption.68}\protected@file@percent }
-\newlabel{fig:chap4-recomp-mlp}{{4.3}{55}{MLP 子层中间激活示意\relax }{figure.caption.68}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces 单层 Transformer 中间激活量\relax }}{56}{table.caption.69}\protected@file@percent }
-\newlabel{tab:chap4-activation}{{4.4}{56}{单层 Transformer 中间激活量\relax }{table.caption.69}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与冻结感知调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构显存与算力。\relax }}{51}{figure.caption.37}\protected@file@percent }
+\newlabel{fig:chap4-hr-mmoh-overview}{{4.1}{51}{HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与冻结感知调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构显存与算力。\relax }{figure.caption.37}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Megatron-LM 重计算相关配置参数\relax }}{52}{table.caption.38}\protected@file@percent }
+\newlabel{tab:chap4-megatron-params}{{4.1}{52}{Megatron-LM 重计算相关配置参数\relax }{table.caption.38}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Megatron-LM 选择重计算下可配置的子模块\relax }}{52}{table.caption.39}\protected@file@percent }
+\newlabel{tab:chap4-megatron-modules}{{4.2}{52}{Megatron-LM 选择重计算下可配置的子模块\relax }{table.caption.39}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces 本章主要符号说明\relax }}{53}{table.caption.40}\protected@file@percent }
+\newlabel{tab:chap4-symbols}{{4.3}{53}{本章主要符号说明\relax }{table.caption.40}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces 注意力子层中间激活示意\relax }}{54}{figure.caption.41}\protected@file@percent }
+\newlabel{fig:chap4-recomp-attn}{{4.2}{54}{注意力子层中间激活示意\relax }{figure.caption.41}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces MLP 子层中间激活示意\relax }}{54}{figure.caption.42}\protected@file@percent }
+\newlabel{fig:chap4-recomp-mlp}{{4.3}{54}{MLP 子层中间激活示意\relax }{figure.caption.42}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces 单层 Transformer 中间激活量\relax }}{56}{table.caption.43}\protected@file@percent }
+\newlabel{tab:chap4-activation}{{4.4}{56}{单层 Transformer 中间激活量\relax }{table.caption.43}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}异构 GPU 重计算策略设计}{56}{subsection.4.2.2}\protected@file@percent }
 \newlabel{sec:HR-MMoH-design}{{4.2.2}{56}{异构 GPU 重计算策略设计}{subsection.4.2.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{记号说明}{57}{paragraph*.70}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{显存分解与决策变量}{57}{paragraph*.71}\protected@file@percent }
-\newlabel{eq:hr-mmoh-recomp-opt}{{4.9}{57}{显存分解与决策变量}{equation.4.2.9}{}}
-\@writefile{toc}{\contentsline {paragraph}{基于剖析的可行配置生成}{57}{paragraph*.72}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{冻结状态与流水级位置的启发式}{58}{paragraph*.73}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{多路分支搜索与全序候选集}{58}{paragraph*.74}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{实现与配置使用}{59}{paragraph*.75}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{与 MMoH 的协同}{59}{paragraph*.76}\protected@file@percent }
+\newlabel{eq:hr-mmoh-recomp-opt}{{4.12}{57}{异构 GPU 重计算策略设计}{equation.4.2.12}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {4.1}{\ignorespaces HR-MMoH 多路分支重计算配置搜索\relax }}{60}{algorithm.4.1}\protected@file@percent }
 \newlabel{alg:hr-mmoh-recomp-search}{{4.1}{60}{HR-MMoH 多路分支重计算配置搜索\relax }{algorithm.4.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}实验验证}{61}{section.4.3}\protected@file@percent }
-\newlabel{sec:HR-MMoH-exp}{{4.3}{61}{实验验证}{section.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}实验设置}{61}{subsection.4.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{平台与配置思路验证}{61}{paragraph*.77}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{对比与指标}{61}{paragraph*.78}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}实验验证}{60}{section.4.3}\protected@file@percent }
+\newlabel{sec:HR-MMoH-exp}{{4.3}{60}{实验验证}{section.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}实验设置}{60}{subsection.4.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}实验结果}{61}{subsection.4.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{迭代时间对比}{61}{paragraph*.79}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces 不同冻结策略下各框架迭代时间 (seconds/iteration) 对比（自左至右、自上至下依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。\relax }}{62}{figure.caption.80}\protected@file@percent }
-\newlabel{fig:hr-mmoh-throughput-freeze}{{4.4}{62}{不同冻结策略下各框架迭代时间 (seconds/iteration) 对比（自左至右、自上至下依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。\relax }{figure.caption.80}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces 不同冻结策略下各框架在 \texttt  {none}、\texttt  {full}、\texttt  {selective} 及 HR-MMoH 配置族上的最短 iteration time（seconds/iteration）对比。\relax }}{63}{figure.caption.81}\protected@file@percent }
-\newlabel{fig:hr-mmoh-e2e-hr}{{4.5}{63}{不同冻结策略下各框架在 \texttt {none}、\texttt {full}、\texttt {selective} 及 HR-MMoH 配置族上的最短 iteration time（seconds/iteration）对比。\relax }{figure.caption.81}{}}
-\@writefile{toc}{\contentsline {paragraph}{消融实验以及配置策略}{64}{paragraph*.82}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces 不同冻结策略下 MMoH 与 HR-MMoH 的迭代时间对比\relax }}{65}{figure.caption.83}\protected@file@percent }
-\newlabel{fig:hr-mmoh-ablation}{{4.6}{65}{不同冻结策略下 MMoH 与 HR-MMoH 的迭代时间对比\relax }{figure.caption.83}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces 不同冻结策略下各框架迭代时间对比（自左至右、自上至下依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。\relax }}{62}{figure.caption.44}\protected@file@percent }
+\newlabel{fig:hr-mmoh-throughput-freeze}{{4.4}{62}{不同冻结策略下各框架迭代时间对比（自左至右、自上至下依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。\relax }{figure.caption.44}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces 不同冻结策略下各框架在 \texttt  {none}、\texttt  {full}、\texttt  {selective} 及 HR-MMoH 配置族上的最短迭代时间对比。\relax }}{63}{figure.caption.45}\protected@file@percent }
+\newlabel{fig:hr-mmoh-e2e-hr}{{4.5}{63}{不同冻结策略下各框架在 \texttt {none}、\texttt {full}、\texttt {selective} 及 HR-MMoH 配置族上的最短迭代时间对比。\relax }{figure.caption.45}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces 不同冻结策略下 MMoH 与 HR-MMoH 的迭代时间对比\relax }}{64}{figure.caption.46}\protected@file@percent }
+\newlabel{fig:hr-mmoh-ablation}{{4.6}{64}{不同冻结策略下 MMoH 与 HR-MMoH 的迭代时间对比\relax }{figure.caption.46}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}实验分析}{65}{subsection.4.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{异构重计算的优势}{65}{paragraph*.84}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{与 MMoH 划分的配合}{65}{paragraph*.85}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}本章小结}{65}{section.4.4}\protected@file@percent }
-\newlabel{sec:HR-MMoH-summary}{{4.4}{65}{本章小结}{section.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces 训练收敛性验证：三种配置下 MLLM-12B 在 Cluster-L freeze-both 场景的训练损失对比。(a) Espresso + selective（基线），(b) MMoH + 提前终止 + selective，(c) HR-MMoH（提前终止 + 异构重计算）。\relax }}{66}{figure.caption.47}\protected@file@percent }
+\newlabel{fig:chap4-loss-curve}{{4.7}{66}{训练收敛性验证：三种配置下 MLLM-12B 在 Cluster-L freeze-both 场景的训练损失对比。(a) Espresso + selective（基线），(b) MMoH + 提前终止 + selective，(c) HR-MMoH（提前终止 + 异构重计算）。\relax }{figure.caption.47}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}本章小结}{66}{section.4.4}\protected@file@percent }
+\newlabel{sec:HR-MMoH-summary}{{4.4}{66}{本章小结}{section.4.4}{}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {5}总结与展望}{67}{chapter.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {5.1}全文工作总结}{67}{section.5.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}主要创新点}{67}{subsection.5.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}研究的局限性}{68}{subsection.5.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}未来工作展望}{68}{section.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}理论深化}{69}{subsection.5.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}应用拓展}{69}{subsection.5.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{致谢}{71}{chapter*.87}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}局限性及未来工作展望}{68}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}研究局限性}{68}{subsection.5.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}未来研究工作}{68}{subsection.5.2.2}\protected@file@percent }
+\citation{zerobubble2024}
+\citation{dualpipe2025}
+\@writefile{toc}{\contentsline {chapter}{致谢}{71}{chapter*.49}\protected@file@percent }
 \bibstyle{bstutf8}
 \bibdata{ref/refs}
 \bibcite{galvatron2022}{{1}{}{{}}{{}}}
@@ -452,7 +427,7 @@
 \bibcite{blip2}{{10}{}{{}}{{}}}
 \bibcite{llava2023}{{11}{}{{}}{{}}}
 \bibcite{flamingo2022}{{12}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{参考文献}{73}{section*.88}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{参考文献}{73}{section*.50}\protected@file@percent }
 \bibcite{clip2021}{{13}{}{{}}{{}}}
 \bibcite{dalle2021}{{14}{}{{}}{{}}}
 \bibcite{instructblip2023}{{15}{}{{}}{{}}}
@@ -461,96 +436,107 @@
 \bibcite{internvl2024}{{18}{}{{}}{{}}}
 \bibcite{minigpt4}{{19}{}{{}}{{}}}
 \bibcite{mllm_survey_acl2024}{{20}{}{{}}{{}}}
-\bibcite{embodied_mllm2024}{{21}{}{{}}{{}}}
-\bibcite{medical_vlm2024}{{22}{}{{}}{{}}}
-\bibcite{vqav2}{{23}{}{{}}{{}}}
-\bibcite{gqa2019}{{24}{}{{}}{{}}}
-\bibcite{mmmu_benchmark2024}{{25}{}{{}}{{}}}
-\bibcite{kaplan2020scaling}{{26}{}{{}}{{}}}
-\bibcite{chinchilla2022}{{27}{}{{}}{{}}}
-\bibcite{beyond_chinchilla2024}{{28}{}{{}}{{}}}
-\bibcite{gopher2022}{{29}{}{{}}{{}}}
-\bibcite{deepseek2024}{{30}{}{{}}{{}}}
-\bibcite{qwen2024}{{31}{}{{}}{{}}}
-\bibcite{llama2_2023}{{32}{}{{}}{{}}}
-\bibcite{llama3}{{33}{}{{}}{{}}}
-\bibcite{gemma2024}{{34}{}{{}}{{}}}
-\bibcite{mistral2023}{{35}{}{{}}{{}}}
-\bibcite{megatron2021}{{36}{}{{}}{{}}}
-\bibcite{megatron2020}{{37}{}{{}}{{}}}
-\bibcite{long_context_benchmark2024}{{38}{}{{}}{{}}}
-\bibcite{zero2020}{{39}{}{{}}{{}}}
-\bibcite{zero2021}{{40}{}{{}}{{}}}
-\bibcite{pytorch_ddp}{{41}{}{{}}{{}}}
-\bibcite{sergeev2018horovod}{{42}{}{{}}{{}}}
-\bibcite{gpipe}{{43}{}{{}}{{}}}
-\bibcite{pipedream2019}{{44}{}{{}}{{}}}
-\bibcite{gshard}{{45}{}{{}}{{}}}
-\bibcite{zeroplusplus}{{46}{}{{}}{{}}}
-\bibcite{mixed_precision2018}{{47}{}{{}}{{}}}
-\bibcite{colossal_auto}{{48}{}{{}}{{}}}
-\bibcite{flash_attention_2022}{{49}{}{{}}{{}}}
-\bibcite{flashattention3_2024}{{50}{}{{}}{{}}}
-\bibcite{fsdp2022}{{51}{}{{}}{{}}}
-\bibcite{stable_diffusion}{{52}{}{{}}{{}}}
-\bibcite{nextgpt}{{53}{}{{}}{{}}}
-\bibcite{dreamllm}{{54}{}{{}}{{}}}
-\bibcite{whale}{{55}{}{{}}{{}}}
-\bibcite{hetpipe2020}{{56}{}{{}}{{}}}
-\bibcite{nvidia_a100}{{57}{}{{}}{{}}}
-\bibcite{nvidia_h100}{{58}{}{{}}{{}}}
-\bibcite{nvidia_blackwell}{{59}{}{{}}{{}}}
-\bibcite{frenzy_memory2024}{{60}{}{{}}{{}}}
-\bibcite{cloud_llm_training}{{61}{}{{}}{{}}}
-\bibcite{nvidia_training_guide}{{62}{}{{}}{{}}}
-\bibcite{lora2021}{{63}{}{{}}{{}}}
-\bibcite{qlora2023}{{64}{}{{}}{{}}}
-\bibcite{parameter_efficiency_survey2024}{{65}{}{{}}{{}}}
-\bibcite{laion5b2022}{{66}{}{{}}{{}}}
-\bibcite{comprehensive_mllm_survey2024}{{67}{}{{}}{{}}}
-\bibcite{mllm_datacentric2024}{{68}{}{{}}{{}}}
-\bibcite{open_images}{{69}{}{{}}{{}}}
-\bibcite{coco2014}{{70}{}{{}}{{}}}
-\bibcite{pile2020}{{71}{}{{}}{{}}}
-\bibcite{youtube8m}{{72}{}{{}}{{}}}
-\bibcite{webvid2021}{{73}{}{{}}{{}}}
-\bibcite{textvqa2019}{{74}{}{{}}{{}}}
-\bibcite{megatron2023}{{75}{}{{}}{{}}}
-\bibcite{amp2022}{{76}{}{{}}{{}}}
-\bibcite{hethub2024}{{77}{}{{}}{{}}}
-\bibcite{hexiscale2024}{{78}{}{{}}{{}}}
-\bibcite{espresso2025}{{79}{}{{}}{{}}}
-\bibcite{mics2022}{{80}{}{{}}{{}}}
-\bibcite{amsp}{{81}{}{{}}{{}}}
-\bibcite{vision_language_pretrain_survey2024}{{82}{}{{}}{{}}}
-\bibcite{unet}{{83}{}{{}}{{}}}
-\bibcite{llava_next2024}{{84}{}{{}}{{}}}
-\bibcite{gemini2023}{{85}{}{{}}{{}}}
-\bibcite{palm2022}{{86}{}{{}}{{}}}
-\bibcite{parameter_server}{{87}{}{{}}{{}}}
-\bibcite{parallax}{{88}{}{{}}{{}}}
-\bibcite{ulysses2023}{{89}{}{{}}{{}}}
-\bibcite{terapipe_icml2022}{{90}{}{{}}{{}}}
-\bibcite{chimera_pp2023}{{91}{}{{}}{{}}}
-\bibcite{hanayo_pp}{{92}{}{{}}{{}}}
-\bibcite{zerobubble2024}{{93}{}{{}}{{}}}
-\bibcite{dualpipe2025}{{94}{}{{}}{{}}}
-\bibcite{deepseek_moe2024}{{95}{}{{}}{{}}}
-\bibcite{tensor_parallelism_survey}{{96}{}{{}}{{}}}
-\bibcite{zorse2025}{{97}{}{{}}{{}}}
-\bibcite{chen2016checkpoint}{{98}{}{{}}{{}}}
-\bibcite{lynx2024}{{99}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{作者在学期间取得的学术成果}{83}{chapter*.90}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{公开评阅信息}{85}{chapter*.91}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{答辩委员会}{87}{chapter*.93}\protected@file@percent }
-\gdef \LT@i {\LT@entry 
-    {1}{165.3356pt}\LT@entry 
-    {1}{216.55022pt}}
-\@writefile{toc}{\ttl@change@i {\@ne }{chapter}{0pt}{\vspace {0.25\baselineskip } \heiti \xiaosi [1.25]}{附录\,\thecontentslabel \quad }{}{\hspace {.5em}\titlerule *{.}\contentspage }\relax }
-\@writefile{toc}{\ttl@change@v {chapter}{}{}{}\relax }
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}本文中英文对照表}{89}{appendix.A}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces 本文主要术语中英文对照表\relax }}{89}{table.A.1}\protected@file@percent }
-\newlabel{tab:appendix-bilingual}{{A.1}{89}{本文主要术语中英文对照表\relax }{table.A.1}{}}
+\bibcite{medical_vlm2024}{{21}{}{{}}{{}}}
+\bibcite{vqav2}{{22}{}{{}}{{}}}
+\bibcite{gqa2019}{{23}{}{{}}{{}}}
+\bibcite{mmmu_benchmark2024}{{24}{}{{}}{{}}}
+\bibcite{kaplan2020scaling}{{25}{}{{}}{{}}}
+\bibcite{chinchilla2022}{{26}{}{{}}{{}}}
+\bibcite{beyond_chinchilla2024}{{27}{}{{}}{{}}}
+\bibcite{gopher2022}{{28}{}{{}}{{}}}
+\bibcite{deepseek2024}{{29}{}{{}}{{}}}
+\bibcite{qwen2024}{{30}{}{{}}{{}}}
+\bibcite{llama2_2023}{{31}{}{{}}{{}}}
+\bibcite{llama3}{{32}{}{{}}{{}}}
+\bibcite{gemma2024}{{33}{}{{}}{{}}}
+\bibcite{mistral2023}{{34}{}{{}}{{}}}
+\bibcite{megatron2021}{{35}{}{{}}{{}}}
+\bibcite{megatron2020}{{36}{}{{}}{{}}}
+\bibcite{long_context_benchmark2024}{{37}{}{{}}{{}}}
+\bibcite{zero2020}{{38}{}{{}}{{}}}
+\bibcite{zero2021}{{39}{}{{}}{{}}}
+\bibcite{pytorch_ddp}{{40}{}{{}}{{}}}
+\bibcite{gpipe}{{41}{}{{}}{{}}}
+\bibcite{pipedream2019}{{42}{}{{}}{{}}}
+\bibcite{gshard}{{43}{}{{}}{{}}}
+\bibcite{mixed_precision2018}{{44}{}{{}}{{}}}
+\bibcite{colossal_auto}{{45}{}{{}}{{}}}
+\bibcite{flash_attention_2022}{{46}{}{{}}{{}}}
+\bibcite{flashattention3_2024}{{47}{}{{}}{{}}}
+\bibcite{nvidia_a100}{{48}{}{{}}{{}}}
+\bibcite{nvidia_h100}{{49}{}{{}}{{}}}
+\bibcite{nvidia_blackwell}{{50}{}{{}}{{}}}
+\bibcite{whale}{{51}{}{{}}{{}}}
+\bibcite{hetpipe2020}{{52}{}{{}}{{}}}
+\bibcite{frenzy_memory2024}{{53}{}{{}}{{}}}
+\bibcite{nvidia_training_guide}{{54}{}{{}}{{}}}
+\bibcite{arnold2025}{{55}{}{{}}{{}}}
+\bibcite{lora2021}{{56}{}{{}}{{}}}
+\bibcite{qlora2023}{{57}{}{{}}{{}}}
+\bibcite{parameter_efficiency_survey2024}{{58}{}{{}}{{}}}
+\bibcite{laion5b2022}{{59}{}{{}}{{}}}
+\bibcite{comprehensive_mllm_survey2024}{{60}{}{{}}{{}}}
+\bibcite{mllm_datacentric2024}{{61}{}{{}}{{}}}
+\bibcite{open_images}{{62}{}{{}}{{}}}
+\bibcite{coco2014}{{63}{}{{}}{{}}}
+\bibcite{pile2020}{{64}{}{{}}{{}}}
+\bibcite{youtube8m}{{65}{}{{}}{{}}}
+\bibcite{webvid2021}{{66}{}{{}}{{}}}
+\bibcite{textvqa2019}{{67}{}{{}}{{}}}
+\bibcite{aceso2024}{{68}{}{{}}{{}}}
+\bibcite{uniap2025}{{69}{}{{}}{{}}}
+\bibcite{sergeev2018horovod}{{70}{}{{}}{{}}}
+\bibcite{megatron2023}{{71}{}{{}}{{}}}
+\bibcite{zeroplusplus}{{72}{}{{}}{{}}}
+\bibcite{disttrain2025}{{73}{}{{}}{{}}}
+\bibcite{amp2022}{{74}{}{{}}{{}}}
+\bibcite{hethub2024}{{75}{}{{}}{{}}}
+\bibcite{hexiscale2024}{{76}{}{{}}{{}}}
+\bibcite{espresso2025}{{77}{}{{}}{{}}}
+\bibcite{metis2024}{{78}{}{{}}{{}}}
+\bibcite{hap2024}{{79}{}{{}}{{}}}
+\bibcite{distmm2024}{{80}{}{{}}{{}}}
+\bibcite{mics2022}{{81}{}{{}}{{}}}
+\bibcite{amsp}{{82}{}{{}}{{}}}
+\bibcite{docvqa2021}{{83}{}{{}}{{}}}
+\bibcite{chartqa2022}{{84}{}{{}}{{}}}
+\bibcite{vision_language_pretrain_survey2024}{{85}{}{{}}{{}}}
+\bibcite{scienceqa2022}{{86}{}{{}}{{}}}
+\bibcite{stable_diffusion}{{87}{}{{}}{{}}}
+\bibcite{unet}{{88}{}{{}}{{}}}
+\bibcite{nextgpt}{{89}{}{{}}{{}}}
+\bibcite{dreamllm}{{90}{}{{}}{{}}}
+\bibcite{llava_next2024}{{91}{}{{}}{{}}}
+\bibcite{gemini2023}{{92}{}{{}}{{}}}
+\bibcite{palm2022}{{93}{}{{}}{{}}}
+\bibcite{parameter_server}{{94}{}{{}}{{}}}
+\bibcite{fsdp2022}{{95}{}{{}}{{}}}
+\bibcite{parallax}{{96}{}{{}}{{}}}
+\bibcite{edit2025}{{97}{}{{}}{{}}}
+\bibcite{halos2025}{{98}{}{{}}{{}}}
+\bibcite{promisepractice2025}{{99}{}{{}}{{}}}
+\bibcite{ulysses2023}{{100}{}{{}}{{}}}
+\bibcite{terapipe_icml2022}{{101}{}{{}}{{}}}
+\bibcite{chimera_pp2023}{{102}{}{{}}{{}}}
+\bibcite{hanayo_pp}{{103}{}{{}}{{}}}
+\bibcite{zerobubble2024}{{104}{}{{}}{{}}}
+\bibcite{dualpipe2025}{{105}{}{{}}{{}}}
+\bibcite{adapipe2024}{{106}{}{{}}{{}}}
+\bibcite{mepipe2025}{{107}{}{{}}{{}}}
+\bibcite{weipipe2025}{{108}{}{{}}{{}}}
+\bibcite{attnchecker2025}{{109}{}{{}}{{}}}
+\bibcite{deepseek_moe2024}{{110}{}{{}}{{}}}
+\bibcite{tensor_parallelism_survey}{{111}{}{{}}{{}}}
+\bibcite{flowcheck2025}{{112}{}{{}}{{}}}
+\bibcite{hybridflow2025}{{113}{}{{}}{{}}}
+\bibcite{zorse2025}{{114}{}{{}}{{}}}
+\bibcite{helix2025}{{115}{}{{}}{{}}}
+\bibcite{paro2024}{{116}{}{{}}{{}}}
+\bibcite{optireduce2025}{{117}{}{{}}{{}}}
+\bibcite{chen2016checkpoint}{{118}{}{{}}{{}}}
+\bibcite{lynx2024}{{119}{}{{}}{{}}}
+\bibcite{mist2025}{{120}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {chapter}{作者在学期间取得的学术成果}{85}{chapter*.52}\protected@file@percent }
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
 \ttl@finishall
-\gdef \@abspage@last{108}
+\gdef \@abspage@last{106}

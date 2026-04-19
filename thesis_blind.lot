@@ -1,3 +1,10 @@
-\contentsline {table}{\numberline {2.1}{\ignorespaces 多模态大语言模型训练中常用的部分数据集规模示意\relax }}{14}{table.caption.12}%
-\contentsline {table}{\numberline {A.1}{\ignorespaces 本文主要术语中英文对照表\relax }}{28}{table.A.1}%
+\contentsline {table}{\numberline {1}{\ignorespaces 本文主要术语中英文对照表\relax }}{iv}{table.0.1}%
+\contentsline {table}{\numberline {2.1}{\ignorespaces 多模态大语言模型训练中常用的数据集类型与规模\relax }}{15}{table.caption.12}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces 实验用异构 GPU 集群配置\relax }}{42}{table.caption.28}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces 实验用 MLLM 模块配置（模型参数）\relax }}{43}{table.caption.29}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces 不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }}{45}{table.caption.33}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Megatron-LM 重计算相关配置参数\relax }}{52}{table.caption.38}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Megatron-LM 选择重计算下可配置的子模块\relax }}{52}{table.caption.39}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces 本章主要符号说明\relax }}{53}{table.caption.40}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces 单层 Transformer 中间激活量\relax }}{56}{table.caption.43}%
 \contentsfinish 

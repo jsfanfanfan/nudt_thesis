@@ -680,14 +680,6 @@ The Thirteenth International Conference on Learning Representations (ICLR).
 2025.
 \url{https://openreview.net/forum?id=lo3nlFHOft}.
 
-\bibitem{ulysses2023}
-Jacobs~S~A, Tanaka~M, Zhang~C, et~al.
-DeepSpeed Ulysses: System Optimizations for Enabling Training of Extreme Long
-  Sequence Transformer Models~[J].
-arXiv preprint arXiv:2309.14509.
-2023.
-Microsoft DeepSpeed technical report; preprint only as of 2026.
-
 \bibitem{terapipe_icml2022}
 Li~Z, Zhuang~S, Guo~S, et~al.
 TeraPipe: Token-Level Pipeline Parallelism for Training Large-Scale Language
@@ -756,6 +748,14 @@ Proceedings of the 30th ACM SIGPLAN Annual Symposium on Principles and Practice
   of Parallel Programming (PPoPP).
 Las Vegas, NV, USA, 2025.
 
+\bibitem{ulysses2023}
+Jacobs~S~A, Tanaka~M, Zhang~C, et~al.
+DeepSpeed Ulysses: System Optimizations for Enabling Training of Extreme Long
+  Sequence Transformer Models~[J].
+arXiv preprint arXiv:2309.14509.
+2023.
+Microsoft DeepSpeed technical report; preprint only as of 2026.
+
 \bibitem{deepseek_moe2024}
 DeepSeek-AI.
 {DeepSeekMoE}: Towards Ultimate Expert Specialization in Mixture-of-Experts
@@ -771,18 +771,6 @@ DeepSpeed: System Optimizations Enable Training Deep Learning Models with Over
 Proceedings of the 26th ACM SIGKDD International Conference on Knowledge
   Discovery \& Data Mining.
 2020:  241--250.
-
-\bibitem{flowcheck2025}
-Huang~Z, Nie~H, Jia~H, et~al.
-{FlowCheck}: Decoupling Checkpointing and Training of Large-Scale Models~[C].
-Proceedings of the Twentieth European Conference on Computer Systems (EuroSys).
-2025.
-
-\bibitem{hybridflow2025}
-Sheng~G, Zhang~C, Ye~Z, et~al.
-{HybridFlow}: A Flexible and Efficient {RLHF} Framework~[C].
-Proceedings of the Twentieth European Conference on Computer Systems (EuroSys).
-2025.
 
 \bibitem{zorse2025}
 Guo~R~B, Anand~U, Daudjee~K, et~al.

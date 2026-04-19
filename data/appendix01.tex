@@ -1,7 +1,6 @@
 % TeX
-\chapter{本文中英文对照表}
-
-表~\ref{tab:appendix-bilingual} 给出正文常用术语的中英文对照；第二列在必要时附缩写或原文记号。
+\chapter*{本文中英文对照表}
+\addcontentsline{toc}{chapter}{本文中英文对照表}
 
 \begingroup
 \small
@@ -14,35 +13,17 @@
 	\textbf{中文} & \textbf{英文} \\
 	\midrule
 	\endfirsthead
-	\multicolumn{2}{@{}l@{}}{\small 续表~\thetable} \\
 	\toprule
 	\textbf{中文} & \textbf{英文} \\
 	\midrule
 	\endhead
-	\midrule
-	\multicolumn{2}{r@{}}{\small 续下页} \\
-	\endfoot
 	\bottomrule
 	\endlastfoot
-	% --- 第 1 章：基础概念与模型 ---
-	自注意力机制 & Self-Attention \\
-	深度神经网络 & Deep Neural Network (DNN) \\
-	卷积神经网络 & Convolutional Neural Network (CNN) \\
-	循环神经网络 & Recurrent Neural Network (RNN) \\
-	计算机视觉 & Computer Vision (CV) \\
-	自然语言处理 & Natural Language Processing (NLP) \\
-	语音识别 & Speech Recognition (SR) \\
+	% --- 基础概念与模型 ---
 	大语言模型 & Large Language Model (LLM) \\
 	多模态大语言模型 & Multimodal Large Language Model (MLLM) \\
-	通用人工智能 & Artificial General Intelligence (AGI) \\
-	迁移学习 & Transfer Learning \\
-	少样本学习 & Few-Shot Learning \\
-	零样本学习 & Zero-Shot Learning \\
 	扩展定律 & Scaling Laws \\
-	图文对比学习CLIP & Contrastive Language-Image Pre-Training\\
-	
-	最优先进水平 & state-of-the-art (SOTA) \\
-	% --- 第 1--2 章：MLLM 结构 ---
+	% --- MLLM 结构 ---
 	模态编码器 & Modality Encoder \\
 	输入投影层 & Input Projector \\
 	LLM 基座 & LLM Backbone \\
@@ -50,52 +31,33 @@
 	模态生成器 & Modality Generator \\
 	扩散模型 & diffusion model \\
 	模块异构 & module heterogeneity \\
-	% --- 第 2 章：训练阶段与数据 ---
-	模态对齐 & modality alignment \\
-	指令微调 & instruction tuning \\
 	% --- 并行、通信与显存 ---
 	数据并行 & data parallelism (DP) \\
-	分布式数据并行 & Distributed Data Parallel (DDP) \\
 	张量并行 & tensor parallelism (TP) \\
 	流水线并行 & pipeline parallelism (PP) \\
 	序列并行 & sequence parallelism (SP) \\
 	上下文并行 & context parallelism (CP) \\
 	专家并行 & expert parallelism (EP) \\
-	混合专家 & Mixture of Experts (MoE) \\
 	混合并行 & hybrid parallelism\\
 	微批次 & micro-batch \\
-	小批量 & mini-batch \\
 	一前向一反向调度 & One-Forward-One-Backward (1F1B) \\
 	全归约 & AllReduce \\
 	全收集 & All-Gather \\
-	归约分散 & Reduce-Scatter \\
 	全对全通信 & All-to-All \\
 	点对点通信 & Peer-to-Peer (P2P) \\
-	参数服务器 & parameter server \\
 	流水级 & pipeline stage \\
 	流水线气泡 & pipeline bubble \\
-	混合精度训练 & mixed-precision training \\
 	全分片数据并行 & Fully Sharded Data Parallel (FSDP) \\
 	零冗余优化器 & Zero Redundancy Optimizer (ZeRO) \\
-	环形注意力 & Ring Attention \\
 	激活/激活值 & activation \\
-	显存溢出 & Out Of Memory (OOM) \\
+	显存溢出 & Out Of Memory(OOM) \\
 	负载均衡 & load balancing \\
 	剖析/性能剖析 & profiling \\
 	设备拓扑 & device topology \\
-	整数规划 & integer programming \\
-	复合粒度（模型抽象） & multi-granularity model abstraction \\
-	成本模型 & cost model \\
-	服务等级目标 & Service Level Objective (SLO) \\
-	模型算力利用率 & Model FLOPs Utilization (MFU) \\
-	% --- 框架与代表性系统（第 1--2 章） ---
-	虚拟工作节点 & Virtual Worker (VW) \\
-	剖析器 & Profiler\\
-	GPU 分配器 & GPU Allocator \\
-	阶段放置器 & Stage Placer \\
+	整数线性规划 & integer linear programming (ILP) \\
+	% --- 重计算 ---
 	全部重计算 & full recomputation \\
 	选择重计算 & selective recomputation \\
 	细粒度重计算 & fine-grained recomputation \\
-	Top-$k$专家路由 & Top-$k$ (expert routing) \\
 \end{longtable}
 \endgroup

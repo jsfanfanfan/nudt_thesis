@@ -1,116 +1,69 @@
 \contentsline {chapter}{摘\hspace {1em}要}{i}{section*.4}%
 \contentsline {chapter}{\textsf {Abstract}}{ii}{section*.5}%
+\contentsline {chapter}{本文中英文对照表}{iv}{chapter*.6}%
 \contentsline {chapter}{\numberline {1}绪论}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}研究背景}{1}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1}训练多模态大语言模型面临的挑战}{1}{subsection.1.1.1}%
-\contentsline {subsection}{\numberline {1.1.2}异构 GPU 集群下的并行训练挑战}{4}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.1}研究背景与意义}{1}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}多模态大语言模型的训练}{1}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}异构 GPU 集群下的并行训练}{4}{subsection.1.1.2}%
 \contentsline {section}{\numberline {1.2}国内外研究现状}{6}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1}多模态大语言模型并行训练策略研究现状}{7}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2}异构 GPU 集群并行训练策略研究现状}{8}{subsection.1.2.2}%
-\contentsline {section}{\numberline {1.3}研究内容与贡献}{10}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1}MMoH：多模态大语言模型在异构 GPU 集群上的混合并行技术}{10}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.2.1}多模态大语言模型并行训练策略研究现状}{6}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}异构 GPU 集群并行训练策略研究现状}{7}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}研究内容与贡献}{9}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}MMoH：多模态大语言模型在异构 GPU 集群上的混合并行技术}{9}{subsection.1.3.1}%
 \contentsline {subsection}{\numberline {1.3.2}HR-MMoH：多模态大语言模型在异构 GPU 集群上的重计算技术}{10}{subsection.1.3.2}%
-\contentsline {section}{\numberline {1.4}论文组织结构}{11}{section.1.4}%
+\contentsline {section}{\numberline {1.4}论文组织结构}{10}{section.1.4}%
 \contentsline {chapter}{\numberline {2}相关工作}{13}{chapter.2}%
-\contentsline {section}{\numberline {2.1}多模态大语言模型}{13}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}多模态大语言模型的模型架构}{13}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}多模态大语言模型的训练数据}{14}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}多模态大语言模型的训练过程}{16}{subsection.2.1.3}%
-\contentsline {section}{\numberline {2.2}并行与分布式训练技术}{17}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}数据并行与模型并行}{17}{subsection.2.2.1}%
-\contentsline {paragraph}{数据并行（DP）。}{17}{paragraph*.13}%
-\contentsline {paragraph}{张量并行（TP）与序列并行（SP）。}{17}{paragraph*.15}%
-\contentsline {paragraph}{流水线并行（PP）。}{18}{paragraph*.17}%
-\contentsline {paragraph}{上下文并行（CP）与专家并行（EP）。}{19}{paragraph*.19}%
-\contentsline {subsection}{\numberline {2.2.2}零冗余优化器（ZeRO）}{20}{subsection.2.2.2}%
-\contentsline {section}{\numberline {2.3}异构集群上的大模型并行训练}{20}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}异构 GPU 集群下的并行训练策略}{20}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}异构 GPU 集群并行训练的工业实践}{22}{subsection.2.3.2}%
-\contentsline {section}{\numberline {2.4}重计算技术}{23}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}重计算基本原理与分类}{23}{subsection.2.4.1}%
-\contentsline {paragraph}{全部重计算。}{23}{paragraph*.23}%
-\contentsline {paragraph}{选择重计算。}{24}{paragraph*.24}%
-\contentsline {paragraph}{细粒度重计算。}{24}{paragraph*.25}%
-\contentsline {subsection}{\numberline {2.4.2}重计算的主流实现及其局限性}{25}{subsection.2.4.2}%
-\contentsline {section}{\numberline {2.5}本章小结}{25}{section.2.5}%
+\contentsline {section}{\numberline {2.1}多模态大语言模型及并行训练技术}{13}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}多模态大语言模型的模型架构与训练数据}{13}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}多模态大语言模型的训练过程}{15}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}多维混合并行训练方法}{16}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}零冗余优化器（ZeRO）}{19}{subsection.2.1.4}%
+\contentsline {section}{\numberline {2.2}异构 GPU 集群并行训练}{20}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}异构 GPU 集群并行训练策略}{21}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}异构 GPU 集群并行训练的工业实践}{22}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}重计算技术}{23}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}重计算基本原理与分类}{23}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}重计算的主流实现及其局限性}{24}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}本章小结}{24}{section.2.4}%
 \contentsline {chapter}{\numberline {3}MMoH：多模态大语言模型在异构 GPU 集群上的高效混合并行技术}{27}{chapter.3}%
 \contentsline {section}{\numberline {3.1}引言}{27}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}问题与动机}{27}{subsection.3.1.1}%
 \contentsline {subsection}{\numberline {3.1.2}MMoH 框架概览}{30}{subsection.3.1.2}%
-\contentsline {paragraph}{并行策略规划器}{32}{paragraph*.31}%
-\contentsline {paragraph}{提前终止调度器}{32}{paragraph*.32}%
-\contentsline {section}{\numberline {3.2}异构设备映射与复合粒度模型划分}{32}{section.3.2}%
+\contentsline {section}{\numberline {3.2}MMoH 并行策略规划器}{32}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}需求驱动的设备拓扑识别}{33}{subsection.3.2.1}%
-\contentsline {paragraph}{符号与假设}{33}{paragraph*.33}%
-\contentsline {paragraph}{需求趋势与供给趋势}{33}{paragraph*.34}%
-\contentsline {paragraph}{匹配度度量}{34}{paragraph*.35}%
-\contentsline {subsection}{\numberline {3.2.2}复合粒度抽象}{34}{subsection.3.2.2}%
-\contentsline {paragraph}{模态编码器}{35}{paragraph*.37}%
-\contentsline {paragraph}{LLM Backbone}{35}{paragraph*.38}%
-\contentsline {paragraph}{非 Transformer 层}{35}{paragraph*.39}%
+\contentsline {subsection}{\numberline {3.2.2}复合粒度模型抽象}{34}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}冻结感知的模型划分}{36}{subsection.3.2.3}%
-\contentsline {paragraph}{决策变量与目标}{36}{paragraph*.40}%
-\contentsline {paragraph}{约束条件}{37}{paragraph*.41}%
 \contentsline {section}{\numberline {3.3}提前终止流水线调度策略}{37}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}冗余识别与剪枝规则}{38}{subsection.3.3.1}%
 \contentsline {subsection}{\numberline {3.3.2}调度流程与实现细节}{39}{subsection.3.3.2}%
 \contentsline {subsection}{\numberline {3.3.3}对成本模型与划分策略的影响}{40}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}实现要点}{41}{subsection.3.3.4}%
-\contentsline {section}{\numberline {3.4}实验验证}{41}{section.3.4}%
+\contentsline {subsection}{\numberline {3.3.4}实现要点}{42}{subsection.3.3.4}%
+\contentsline {section}{\numberline {3.4}实验验证}{42}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}实验设置}{42}{subsection.3.4.1}%
-\contentsline {paragraph}{实验平台与异构集群配置}{42}{paragraph*.44}%
-\contentsline {paragraph}{模型与数据集}{42}{paragraph*.46}%
-\contentsline {paragraph}{对比方法与评价指标}{43}{paragraph*.48}%
 \contentsline {subsection}{\numberline {3.4.2}实验结果}{43}{subsection.3.4.2}%
-\contentsline {paragraph}{MLLM-3B 在 Cluster-S 上}{44}{paragraph*.50}%
-\contentsline {paragraph}{MLLM-12B 在 Cluster-L 上}{44}{paragraph*.51}%
-\contentsline {subsection}{\numberline {3.4.3}实验分析}{45}{subsection.3.4.3}%
-\contentsline {paragraph}{划分策略对比}{45}{paragraph*.52}%
-\contentsline {paragraph}{负载均衡}{45}{paragraph*.54}%
-\contentsline {paragraph}{提前终止调度器消融}{45}{paragraph*.55}%
-\contentsline {paragraph}{局限与扩展}{47}{paragraph*.58}%
-\contentsline {section}{\numberline {3.5}本章小结}{47}{section.3.5}%
+\contentsline {paragraph}{MLLM-3B 在 Cluster-S 上}{43}{paragraph*.31}%
+\contentsline {paragraph}{MLLM-12B 在 Cluster-L 上}{44}{paragraph*.32}%
+\contentsline {subsection}{\numberline {3.4.3}实验分析}{44}{subsection.3.4.3}%
+\contentsline {section}{\numberline {3.5}本章小结}{45}{section.3.5}%
 \contentsline {chapter}{\numberline {4}HR-MMoH: 多模态大语言模型在异构 GPU 集群上的重计算技术}{49}{chapter.4}%
 \contentsline {section}{\numberline {4.1}引言}{49}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}问题与动机}{49}{subsection.4.1.1}%
 \contentsline {subsection}{\numberline {4.1.2}HR-MMoH 框架概览}{50}{subsection.4.1.2}%
 \contentsline {section}{\numberline {4.2}异构 GPU 重计算}{50}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}现有的重计算策略与定量分析}{50}{subsection.4.2.1}%
-\contentsline {paragraph}{重计算技术的定量分析}{52}{paragraph*.63}%
-\contentsline {paragraph}{注意力子层}{53}{paragraph*.65}%
-\contentsline {paragraph}{MLP 子层}{53}{paragraph*.67}%
 \contentsline {subsection}{\numberline {4.2.2}异构 GPU 重计算策略设计}{56}{subsection.4.2.2}%
-\contentsline {paragraph}{记号说明}{57}{paragraph*.70}%
-\contentsline {paragraph}{显存分解与决策变量}{57}{paragraph*.71}%
-\contentsline {paragraph}{基于剖析的可行配置生成}{57}{paragraph*.72}%
-\contentsline {paragraph}{冻结状态与流水级位置的启发式}{58}{paragraph*.73}%
-\contentsline {paragraph}{多路分支搜索与全序候选集}{58}{paragraph*.74}%
-\contentsline {paragraph}{实现与配置使用}{59}{paragraph*.75}%
-\contentsline {paragraph}{与 MMoH 的协同}{59}{paragraph*.76}%
-\contentsline {section}{\numberline {4.3}实验验证}{61}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}实验设置}{61}{subsection.4.3.1}%
-\contentsline {paragraph}{平台与配置思路验证}{61}{paragraph*.77}%
-\contentsline {paragraph}{对比与指标}{61}{paragraph*.78}%
+\contentsline {section}{\numberline {4.3}实验验证}{60}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}实验设置}{60}{subsection.4.3.1}%
 \contentsline {subsection}{\numberline {4.3.2}实验结果}{61}{subsection.4.3.2}%
-\contentsline {paragraph}{迭代时间对比}{61}{paragraph*.79}%
-\contentsline {paragraph}{消融实验以及配置策略}{64}{paragraph*.82}%
 \contentsline {subsection}{\numberline {4.3.3}实验分析}{65}{subsection.4.3.3}%
-\contentsline {paragraph}{异构重计算的优势}{65}{paragraph*.84}%
-\contentsline {paragraph}{与 MMoH 划分的配合}{65}{paragraph*.85}%
-\contentsline {section}{\numberline {4.4}本章小结}{65}{section.4.4}%
+\contentsline {section}{\numberline {4.4}本章小结}{66}{section.4.4}%
 \contentsline {chapter}{\numberline {5}总结与展望}{67}{chapter.5}%
 \contentsline {section}{\numberline {5.1}全文工作总结}{67}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}主要创新点}{67}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}研究的局限性}{68}{subsection.5.1.2}%
-\contentsline {section}{\numberline {5.2}未来工作展望}{68}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}理论深化}{69}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}应用拓展}{69}{subsection.5.2.2}%
-\contentsline {chapter}{致谢}{71}{chapter*.87}%
-\contentsline {chapter}{参考文献}{73}{section*.88}%
-\contentsline {chapter}{作者在学期间取得的学术成果}{83}{chapter*.90}%
-\contentsline {chapter}{公开评阅信息}{85}{chapter*.91}%
-\contentsline {chapter}{答辩委员会}{87}{chapter*.93}%
-\ttl@change@i {\@ne }{chapter}{0pt}{\vspace {0.25\baselineskip } \heiti \xiaosi [1.25]}{附录\,\thecontentslabel \quad }{}{\hspace {.5em}\titlerule *{.}\contentspage }\relax 
-\ttl@change@v {chapter}{}{}{}\relax 
-\contentsline {chapter}{\numberline {A}本文中英文对照表}{89}{appendix.A}%
+\contentsline {section}{\numberline {5.2}局限性及未来工作展望}{68}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}研究局限性}{68}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}未来研究工作}{68}{subsection.5.2.2}%
+\contentsline {chapter}{致谢}{71}{chapter*.49}%
+\contentsline {chapter}{参考文献}{73}{section*.50}%
+\contentsline {chapter}{作者在学期间取得的学术成果}{85}{chapter*.52}%
 \contentsfinish 

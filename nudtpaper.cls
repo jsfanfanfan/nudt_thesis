@@ -354,7 +354,7 @@ pdfborder=0 1 1]{hyperref}
     \rule{\linewidth}{1.5pt}}%
   \fi}
 \renewpagestyle{plain}{
-\sethead{}{\raisebox{.65\baselineskip}{\songti \wuhao \ifisanon{~}\else{国防科技大学研究生院\@optionpaperclass{}学位论文}\fi}}{}%
+\sethead{}{\raisebox{.65\baselineskip}{\songti \wuhao \ifisanon{~}\else{国防科技大学\@optionpaperclass{}学位论文}\fi}}{}%
 \setfoot{}{{\songti \wuhao 第~\thepage~页}}{}%
 \headrule%
 \footrule%
@@ -614,6 +614,7 @@ pdfborder=0 1 1]{hyperref}
 \def\zhdate#1{\def\@zhdate{#1}} % 中文日期
 \def\subject#1{\def\@subject{#1}} % 中文学科
 \def\researchfield#1{\def\@researchfield{#1}} % 中文研究方向
+\def\concretefield#1{\def\@concretefield{#1}} % 中文具体研究方向（封面单独一行）
 \def\supervisor#1{\def\@supervisor{#1}} % 导师
 \def\cosupervisor#1{\def\@cosupervisor{#1}} % 协助指导教师
 \def\papertype#1{\def\@papertype{#1}} % 工学，理学，同等学历申请工(理)学
@@ -640,6 +641,7 @@ pdfborder=0 1 1]{hyperref}
 {
   \ifthenelse{\isundefined{\@cosupervisor}}{\cosupervisor{}}{}
   \ifthenelse{\isundefined{\@encosupervisor}}{\encosupervisor{}}{}
+  \ifthenelse{\isundefined{\@concretefield}}{\concretefield{}}{}
 }
 \def\maketitle{%
   \def\entry##1##2##3{%
@@ -668,7 +670,7 @@ pdfborder=0 1 1]{hyperref}
   }
   \par
   \vspace*{2.5cm} %插入空白
-  {\heiti\sanhao \ifisprof{专业学位}\else\fi\@optionpaperclass{}学位论文}\\
+  {\heiti\sanhao \@optionpaperclass{}学位论文}\\
   \vspace*{0.3cm} %插入空白
   {\heiti\sanhao（专业学位）}\\
   \vspace{10bp}
@@ -696,6 +698,9 @@ pdfborder=0 1 1]{hyperref}
         \raisebox{-3.7ex}[0pt]{\makebox[3cm][s]{研\hfill{}究\hfill{}方\hfill{}向}} &
         \fi
         {\fs \hfil\raisebox{-3.7ex}[0pt]{\@researchfield}\hfil{}} & \\[3.2ex]
+        \cline{2-2}
+        \raisebox{-3.7ex}[0pt]{\makebox[3cm][s]{研\hfill{}究\hfill{}方\hfill{}向}} &
+        {\fs \hfil\raisebox{-3.7ex}[0pt]{\@concretefield}\hfil{}} & \\[3.2ex]
         \cline{2-2}
         \raisebox{-3.7ex}[0pt]{\makebox[3cm][s]{指\hfill{}导\hfill{}教\hfill{}师}} &
         {\fs \hfil\raisebox{-3.7ex}[0pt]{\@supervisor}\hfil{}} & \\[3.2ex]
@@ -733,7 +738,7 @@ pdfborder=0 1 1]{hyperref}
   \end{tabular}}
   \vfill\vfill\vfill\vfill
   {\sanhao[1.5]
-A \ifisprof{thesis}\else{dissertation} \fi \\
+A \ifisprof{dissertation}\else{thesis} \fi \\
 Submitted in partial fulfillment of the requirements\\
 for the \ifisprof{professional }\else{}\fi degree of \textsf{\@optionpaperclassen{} of \@enpapertype}\\
 in \textsf{\@ensubject}\\

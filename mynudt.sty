@@ -120,4 +120,15 @@ colorlinks=false
 }
 
 % %
+% ttf 模式下类文件将 CJK 粗体设为 SimHei；若希望 \textbf 仍为宋体加粗（伪粗）而非黑体，启用下列设置
+\makeatletter
+\ifisttf
+  \ifx\nudtfontpath\@empty
+    % xeCJK 的 \setCJKmainfont 仅支持 [选项]{字体名}，粗体等须全部写在方括号内
+    \setCJKmainfont[BoldFont=SimSun,BoldFeatures={FakeBold=2.5}]{SimSun}%
+  \else
+    \setCJKmainfont[Path=\nudtfontpath,BoldFont=SimSun,BoldFeatures={FakeBold=2.5}]{SimSun}%
+  \fi
+\fi
+\makeatother
 \endinput
