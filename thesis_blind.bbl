@@ -740,14 +740,6 @@ Proceedings of the 30th ACM SIGPLAN Annual Symposium on Principles and Practice
   of Parallel Programming (PPoPP).
 Las Vegas, NV, USA, 2025.
 
-\bibitem{attnchecker2025}
-Liang~Y, Li~X, Ren~J, et~al.
-{ATTNChecker}: Highly-Optimized Fault Tolerant Attention for Large Language
-  Model Training~[C].
-Proceedings of the 30th ACM SIGPLAN Annual Symposium on Principles and Practice
-  of Parallel Programming (PPoPP).
-Las Vegas, NV, USA, 2025.
-
 \bibitem{ulysses2023}
 Jacobs~S~A, Tanaka~M, Zhang~C, et~al.
 DeepSpeed Ulysses: System Optimizations for Enabling Training of Extreme Long
@@ -824,5 +816,12 @@ Mist: Efficient Distributed Training of Large Language Models via
   Memory-Parallelism Co-Optimization~[C].
 Proceedings of the Twentieth European Conference on Computer Systems (EuroSys).
 2025:  1--17.
+
+\bibitem{benoit2008mapping}
+Benoit~A, Robert~Y, Thierry~E.
+On the Complexity of Mapping Linear Chain Applications onto Heterogeneous
+  Platforms~[J].
+Parallel Processing Letters.
+2009, 19~(3):  383--397.
 
 \end{thebibliography}

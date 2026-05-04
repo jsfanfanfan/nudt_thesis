@@ -1,9 +1,10 @@
 \chapter{HR-MMoH: 多模态大语言模型在异构 GPU 集群上的重计算技术}
 
-
-异构 GPU 设备的显存容量存在显著差异，仅依赖模型划分与调度策略，仍难以在各流水级同时满足长序列与大批次带来的激活值显存需求，因此显存仍是制约端到端可训练配置的关键因素。重计算技术缓解了这个问题，但是为同构集群设计的重计算策略在异构 GPU 集群上适应性差。
-针对上述问题，本章提出 HR-MMoH（heterogeneous recomputation for training multimodal large language models on heterogeneous GPU clusters）。该方法在 MMoH 框架基础上引入流水级差异化的异构重计算配置，与第三章共同构成 “划分—调度—重计算” 的优化链路。
-本章首先阐述异构重计算的研究背景与问题动机，随后介绍 HR-MMoH 框架的总体结构及具体实现，最后介绍实验结果。
+异构 GPU 设备的显存容量存在显著差异，仅依赖模型划分与流水线调度策略，仍难以在各流水级同时满足大批次与长序列带来的激活值显存需求，因此显存仍是制约端到端可训练配置的关键因素。
+重计算技术缓解了这个问题，但是为同构集群设计的重计算策略往往难以充分适配异构 GPU 集群中非均匀的算力与显存约束。
+针对上述问题，本章提出 HR-MMoH（heterogeneous recomputation for training multimodal large language models on heterogeneous GPU clusters）。
+该方法在 MMoH 的基础上引入流水级差异化的异构重计算配置，与第三章共同构成 “划分—调度—重计算多级优化” 链路。
+本章首先阐述异构重计算的研究背景与问题动机，随后介绍 HR-MMoH 框架的总体结构及具体实现，最后介绍实验结果并进行实验分析。
 
 \section{引言}
 \label{sec:HR-MMoH-intro}
@@ -11,59 +12,72 @@
 \subsection{问题与动机}
 \label{sec:chap4-motivation}
 
-异构 GPU 集群内设备显存大小并不相同，在显存较小的节点上，仅依赖模型划分仍难以支持更大批次大小和更长序列长度，显存仍是训练的主要瓶颈。
-重计算技术通过在前向传播时丢弃部分中间激活、在反向传播时按需重算，以计算开销换显存空间，缓解了这个问题。
-然而当前常用的重计算策略通常建立在集群同构的前提下，即在一次训练中令所有设备共用同一套重计算配置。
-虽然 AdaPipe\cite{adapipe2024} 和 Mist\cite{mist2025} 已尝试将重计算配置与流水线并行联合优化，但其方案仍主要面向同构集群设计，尚未充分利用异构设备间的显存与算力差异。
-上述同构配置在异构集群中的适用性显著下降，具体表现为：对显存不足的流水级而言，若仍采用较少的重计算，则中间激活仍会占据大量显存空间，显存溢出（OOM）风险上升；对于显存压力小的流水级，若被强制使用同一重计算配置，则会在显存足够的情形下仍引入冗余重计算，进而延长迭代时间并造成计算资源浪费。
+异构 GPU 集群内设备显存大小并不相同，显存较小的 GPU 设备仍难以支持更大批次大小和更长序列长度的模型训练，显存仍是异构 GPU 集群训练的主要瓶颈。
+重计算技术通过在前向传播时丢弃部分中间激活、在反向传播时按需重算，以计算开销换取显存空间，缓解了这个问题。
 
-针对上述问题，本章在 MMoH 已给出的模型划分与流水线调度方案之上提出 HR-MMoH，为各流水级分别配置重计算策略：显存压力大的流水级采用更激进的重计算策略以减少驻留的激活值，显存压力较小的流水级则尽量减少不必要的重计算，从而在显存溢出风险与额外计算开销之间取得更细粒度的折中。
+然而现有的重计算策略通常建立在同构集群的前提下，即在一次训练中令所有 GPU 设备共用同一套重计算配置。
+虽然 AdaPipe\cite{adapipe2024} 和 Mist\cite{mist2025} 已尝试将重计算配置与流水线并行联合优化，但其方案仍主要面向同构集群设计，尚未充分利用异构 GPU 设备间的显存与算力差异。
+这种为同构 GPU 集群设计的重计算配置在异构 GPU 集群中的适用性显著下降。
+对显存不足的流水级而言，若不采用重计算或者采用较少的重计算，则中间激活仍会占据大量显存空间，导致显存溢出（OOM）的风险上升；
+对于显存压力小的流水级，若被强制使用统一的重计算配置，则会在显存充足的情形下仍引入冗余重计算，进而造成计算资源浪费，导致迭代时间延长。
+
+针对上述问题，本章在 MMoH 已给出的模型划分与流水线调度方案之上提出 HR-MMoH，为各流水级分别配置重计算策略。
+显存压力大的流水级采用更激进的重计算策略以减少驻留的激活值，显存压力较小的流水级则尽量减少不必要的重计算，从而在显存溢出风险与额外计算开销之间实现更细粒度的权衡。
 
 \subsection{HR-MMoH 框架概览}
 \label{sec:chap4-hr-mmoh-overview}
 
-HR-MMoH 以第三章 MMoH 的并行策略规划器与提前终止调度器的输出为前置条件：在确定的设备拓扑、流水级映射与冻结感知调度规则下，
-进一步为每个流水级求解一组重计算配置，使各流水级在本地显存预算内尽可能少做冗余重计算。
-图~\ref{fig:chap4-hr-mmoh-overview} 给出了 HR-MMoH 与 MMoH 的层次关系及数据流：上游为 MLLMs 配置与异构集群规格，经 MMoH 得到模型划分与调度策略；HR-MMoH 在训练脚本与引擎侧注入按流水级区分的重计算策略。与 Megatron-LM 默认的全局统一重计算策略相比，HR-MMoH 显式利用各流水级显存余量与算力差异，避免部分设备显存受限而部分设备重计算冗余的矛盾，与仅在单卡或同构假设下手工调参相比，该框架将流水级维度的配置与 MMoH 的规划结果对齐，便于在异构集群上实现与扩展。
+HR-MMoH 以第三章 MMoH 的并行策略规划器与提前终止调度器的输出为前置条件：在确定的设备拓扑、流水级映射与冻结感知调度规则下，进一步为每个流水级求解一组重计算配置，使各流水级在自身显存约束下尽可能减少冗余重计算。
+
+图~\ref{fig:chap4-hr-mmoh-overview} 从系统层次上刻画了 HR-MMoH 与 MMoH 的衔接关系与端到端数据流：输入侧由 MLLM 结构及训练阶段配置与异构集群资源描述共同构成。
+MMoH 据此求解并输出设备拓扑、模型划分以及冻结感知的流水线调度等并行执行方案。
+在上述执行骨架已确定的前提下，HR-MMoH 进一步在训练框架的运行时路径中，按流水级注入差异化的重计算配置，使重计算强度与各级显存余量及算力供给相匹配。
+与 Megatron-LM 默认的全局统一重计算策略相比，HR-MMoH 显式利用各流水级显存余量与算力差异，避免部分设备显存受限而部分设备重计算冗余的矛盾。
+与同构假设下的重计算配置相比，该框架将流水级维度的重计算配置与 MMoH 的规划结果对齐，便于在异构 GPU 集群上实现与扩展。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.75\linewidth]{HR-MMoH}
-  \caption{HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与冻结感知调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构显存与算力。}
+  \caption{HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构 GPU 设备的显存与算力。}
   \label{fig:chap4-hr-mmoh-overview}
 \end{figure}
 本章其余章节展开如下：
-第~\ref{sec:HR-MMoH-method}节给出重计算策略的形式化描述、定量分析与实现要点，
-第~\ref{sec:HR-MMoH-exp}节报告实验设置、结果与讨论，第~\ref{sec:HR-MMoH-summary}节对本章工作进行总结。
+第~\ref{sec:HR-MMoH-method}节给出重计算策略的形式化描述、定量分析与本文实现要点，
+第~\ref{sec:HR-MMoH-exp}节报告实验设置、实验结果与实验分析，第~\ref{sec:HR-MMoH-summary}节对本章工作进行总结。
 
-\section{异构 GPU 重计算}
+\section{异构 GPU 重计算技术}
 \label{sec:HR-MMoH-method}
 
 \subsection{现有的重计算策略与定量分析}
 \label{sec:megatron-recompute}
 
-Megatron-LM\cite{megatron2020,megatron2021,megatron2023} 是大模型分布式训练广泛使用的框架之一，其对重计算进行了全面的支持，用户可以在训练脚本中通过 recompute-granularity、recompute-method、\allowbreak recompute-num-layers、recompute-modules 等参数进行重计算配置。
-表~\ref{tab:chap4-megatron-params} 归纳了与重计算配置直接相关的主要字段及含义。
+Megatron-LM\cite{megatron2020,megatron2021,megatron2023} 是大模型分布式训练广泛使用的框架之一，其对重计算技术进行了全面的支持，用户可以在训练脚本中通过 recompute-granularity、recompute-method、\allowbreak recompute-num-layers、recompute-modules 等参数进行重计算配置。
+表~\ref{tab:chap4-megatron-params} 归纳了与重计算配置直接相关的主要可配置参数及其含义。
 
 
 \begin{table}[htbp]
 	\centering
 	\caption{Megatron-LM 重计算相关配置参数}
 	\label{tab:chap4-megatron-params}
-	\begin{tabular}{@{}p{3.5cm}p{2.8cm}p{\dimexpr\textwidth-3.5cm-2.8cm-4\tabcolsep\relax}@{}}
+	\renewcommand{\arraystretch}{1.45}
+	\begin{tabular}{@{}>{\raggedright\arraybackslash}m{3.5cm}>{\raggedright\arraybackslash}m{2.8cm}>{\raggedright\arraybackslash}m{\dimexpr\textwidth-3.5cm-2.8cm-4\tabcolsep\relax}@{}}
 		\toprule
-		参数 & 类型/取值 & 说明 \\
+		\textbf{参数} & \textbf{类型/取值} & \textbf{说明} \\
 		\midrule
-		\texttt{recompute\_}\\\texttt{granularity} & \texttt{None} $\mid$ \texttt{full} $\mid$ \texttt{selective} & 重计算粒度。\texttt{None} 表示不重计算；\texttt{full} 对整层做重计算；\texttt{selective} 仅对 \texttt{recompute\_modules} 中列出的子模块重计算。 \\
-		\texttt{recompute\_method} & \texttt{None} $\mid$ \texttt{uniform} $\mid$ \texttt{block} & 仅用于 \textbf{full} 粒度：如何划分“哪些层”做 checkpoint。\texttt{uniform} 为均匀分块，\texttt{block} 为仅对每流水级前若干层做 checkpoint。\textbf{selective 时必须为 None}。 \\
-		\texttt{recompute\_num\_}\\\texttt{layers} & \texttt{None} $\mid$ 正整数 & 仅用于 \textbf{full} 粒度。\texttt{uniform} 时表示每个 chunk 的层数；\texttt{block} 时表示每个 stage 内做重计算的层数。\textbf{selective 时必须为 None}。 \\
-		\texttt{distribute\_saved\_}\\\texttt{activations} & 布尔 & 为 \texttt{True} 时，将 checkpoint 保存的激活在张量并行组内分片存储；仅 \textbf{full} 粒度且非序列并行时有效。 \\
-		\texttt{recompute\_modules} & 字符串列表 & 仅用于 \textbf{selective}。要重计算的子模块名列表（见下文）。默认 \texttt{["core\_attn"]}。 \\
+		\makecell[l]{\texttt{recompute\_}\\\texttt{granularity}} & \texttt{none} $\mid$ \texttt{full} $\mid$ \texttt{selective} & 重计算粒度。\texttt{none} 表示不重计算；\texttt{full} 对整层做重计算；\texttt{selective} 仅对 \texttt{recompute\_modules} 中列出的子模块重计算。 \\
+		\hdashline
+		\texttt{recompute\_method} & \texttt{None} $\mid$ \texttt{uniform} $\mid$ \texttt{block} & 仅在 full 粒度时有效：如何划分“哪些层”做重计算。\texttt{uniform} 为均匀分块，\texttt{block} 为仅对每流水级前若干层做重计算。selective 粒度时必须为 \texttt{None}。 \\
+		\hdashline
+		\makecell[l]{\texttt{recompute\_num\_}\\\texttt{layers}} & \texttt{None} $\mid$ 正整数 & 仅在 full 粒度时有效。\texttt{uniform} 时表示每个 chunk 的层数；\texttt{block} 时表示每个 stage 内做重计算的层数。selective 粒度时必须为 \texttt{None}。 \\
+		\hdashline
+		\makecell[l]{\texttt{distribute\_saved\_}\\\texttt{activations}} & 布尔 & 为 \texttt{True} 时，将重计算保存的中间激活在张量并行组内分片存储，仅在 full 粒度且非序列并行时有效。 \\
+		\hdashline
+		\texttt{recompute\_modules} & 字符串列表 & 仅用于 selective 粒度。要重计算的子模块名列表（见下文）。默认 \texttt{["core\_attn"]}。 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-\textbf{整层重计算（full）}以层为重计算单元，前向在每个模型层边界只保留输入，反向计算时需要重新进行一遍完整的前向计算。
+\textbf{整层重计算（full）}以 Transformer 模型层为重计算单元，前向传播后只在每个模型层边界保留输入，反向传播时需要重新进行一遍完整的前向计算来恢复中间激活值。
 整层重计算下由 recompute\_method 与 recompute\_num\_layers 共同规定“隔多少层留一个激活”。
 recompute\_method 有两种可配置项：
 \begin{itemize}
@@ -73,28 +87,33 @@ recompute\_method 有两种可配置项：
 	\item \textbf{block}：在当前流水级内，仅对前 recompute\_num\_layers 层逐层重计算；其后各层不重计算，中间激活照常保留。
 \end{itemize}
 
-\textbf{选择重计算（selective）}在层内以子模块为粒度执行重计算：仅对指定的子模块在反向阶段进行重计算，其余模块仍按常规方式保留激活，具体需要重计算的子模块由 recompute\_modules 指定。
-采用选择重计算时，recompute\_method 与 recompute\_num\_layers 均应设为 None。
+\textbf{选择重计算（selective）}在 Transformer 模型层内以子模块为粒度执行重计算，即仅对指定的子模块在反向阶段进行重计算，其余模块仍按常规方式保留激活，具体需要重计算的子模块由 recompute\_modules 指定。
+采用选择重计算时，recompute\_method 与 recompute\_num\_layers 均应设为 \texttt{None}（Python 空值，表示该参数不适用）。
 值得注意的是，选择重计算的配置将统一作用于所有流水级中的各层，即所有流水级中的各层都使用相同的子模块列表与重计算策略。
 
-子模块可选项由 recompute\_modules 给出，
-未显式配置时默认使用 [core\_attn]。稠密模型里常见的 “节约显存” 的组合是 [core\_attn, mlp, layernorm]。
+子模块可选项由训练脚本中的 recompute\_modules 参数给出，为 Python 中的列表格式，未显式配置时默认使用 [core\_attn]。
+稠密模型里常见的 “节约显存” 的组合是 [core\_attn, mlp, layernorm]。
 表~\ref{tab:chap4-megatron-modules} 列出选择重计算中常用模块名以及代表的具体含义。
 
 \begin{table}[htbp]
 	\centering
 	\caption{Megatron-LM 选择重计算下可配置的子模块}
 	\label{tab:chap4-megatron-modules}
-	\renewcommand{\arraystretch}{1.2}
+	\renewcommand{\arraystretch}{1.4}
 	\begin{tabular}{ll}
 		\toprule
-		模块名 & 含义 \\
+		\textbf{模块名} & \textbf{含义} \\
 		\midrule
 		\texttt{core\_attn} & 核心注意力（QKV$\to$Attention$\to$输出） \\
+		\hdashline
 		\texttt{mlp} & 稠密 MLP（非 MoE） \\
+		\hdashline
 		\texttt{layernorm} & 输入 LayerNorm 与 MLP 前 LayerNorm \\
-		\texttt{moe} & 整块 MoE 层（router + experts + combine） \\
+		\hdashline
+		\texttt{moe} & MoE 模型层的整块 MoE 层（router + experts + combine） \\
+		\hdashline
 		\texttt{shared\_experts} & MoE 的共享专家 \\
+		\hdashline
 		\texttt{moe\_act} & MoE 专家内部激活（如 SiLU）与专家权重 \\
 		\bottomrule
 	\end{tabular}
@@ -102,39 +121,39 @@ recompute\_method 有两种可配置项：
 \end{table}
 
 
-现有策略在同一任务中对各流水级采用统一的重计算粒度、方法、层数与模块，实质上默认各级硬件同构。
-在异构 GPU 场景下，这一假设会带来两类问题：显存受限流水级仍可能 OOM，而显存充裕流水级则承担不必要的重计算开销。
-同时，各级重计算增幅近似一致，计算能力较弱的 GPU 更易成为关键路径上的性能瓶颈，进而限制整体吞吐。
+现有策略在同一训练任务中对各流水级采用统一的重计算粒度、方法、层数与模块，实质上默认了使用同构 GPU 设备。
+在异构 GPU 场景下，这一假设会带来两个问题。
+首先，显存受限的流水级仍可能 OOM，而显存充裕的流水级则承担不必要的重计算开销，导致计算资源浪费。
+其次，各流水级的计算开销增幅近似一致，计算能力较弱的 GPU 更易成为关键路径上的性能瓶颈，进而限制整体的训练吞吐量。
 
-为比较各重计算策略下激活值占用的显存空间大小，本文在固定输入形状与 BF16 数据类型的前提下，对单层稠密 Transformer 层反向计算所需中间激活的显存开销作逐项定量分析。
-设层输入张量 X 形状为 $[B, S, H]$（$B$ 为批次大小，$S$ 为序列长度，$H$ 为隐藏维大小），激活值使用 BF16 格式，每元素 2 字节，
-模型结构使用经典的 Pre-LayerNorm 的 decoder-only 单层。
-输入张量 X 经 LayerNorm 后进入注意力子层，残差连接后再经过 LayerNorm 进入 MLP子层（线性层 $\to$ GELU激活函数 $\to$ 线性层 + Dropout 层），再残差连接得到层输出。
+为比较各种重计算策略下激活值占用的显存空间大小，本文在固定输入形状与 BF16 数据类型的前提下，对单层稠密 Transformer 层反向计算所需中间激活的显存开销作逐项定量分析。
+设 Transformer 模型层的输入张量 X 形状为 $[B, S, H]$（$B$ 为批次大小，$S$ 为序列长度，$H$ 为隐藏维大小），激活值使用 BF16 格式，每元素占用 2 字节，层归一化方式使用最常用的 Pre-LayerNorm。
+输入张量 X 经 LayerNorm 后进入注意力子层，残差连接后再经过 LayerNorm 进入 MLP 子层（线性层 $\to$ GELU激活函数 $\to$ 线性层 $\to$ Dropout 层），再残差连接得到层输出。
 其中，注意力头数记为 $A$，MLP 中间维度大小取普遍使用的 $4H$。
 
 第三章中流水线并行度（流水级数）记为 $P$，本章中流水级数亦记为 $P$，与第三章保持一致。
-表~\ref{tab:chap4-symbols} 汇总本章使用其余的主要符号。
+表~\ref{tab:chap4-symbols} 汇总本章其余主要符号。
 
 \begin{table}[htbp]
   \centering
   \caption{本章主要符号说明}
   \label{tab:chap4-symbols}
   \small
-  \renewcommand{\arraystretch}{1.15}
+  \renewcommand{\arraystretch}{1.3}
   \begin{tabular}{@{}p{2.6cm}p{10cm}@{}}
     \toprule
-    符号 & 含义 \\
+    \textbf{符号} & \textbf{含义} \\
     \midrule
     $B$ & 批次大小 batchsize \\
-    $S$ & 输入序列长度 \\
-    $H$ & 模型隐藏维度 \\
-    $A$ & 注意力头数。 \\
+    $S$ & 输入序列长度 sequence length \\
+    $H$ & 模型隐藏维度 hidden size\\
+    $A$ & 注意力头数。 head num\\
     $X$ & 输入张量，形状为 $[B,S,H]$。 \\
     $\mathbf{h}_1$ & 注意力子层与残差连接后的中间张量，形状为 $[B,S,H]$。 \\
     $N_{\mathrm{attn}}$ & 单个注意力子层为反向传播保留的中间激活总量。 \\
     $N_{\mathrm{mlp}}$ & 单个 MLP 子层为反向传播保留的中间激活总量。 \\
     $N_{\mathrm{ln}}$ & 单个 LayerNorm 子层为反向传播保留的中间激活总量。 \\
-    $N_{\mathrm{None}}$ & 不采用重计算时，单层 Transformer 需保留的中间激活总量。 \\
+    $N_{\mathrm{none}}$ & 不采用重计算（\texttt{none}）时，单层 Transformer 需保留的中间激活总量。 \\
     $N_{\mathrm{selective}}^{\mathrm{core\_attn}}$ & 仅对 \texttt{core\_attn} 使用 selective 重计算时，单层需保留的中间激活总量。 \\
     $N_{\mathrm{selective}}^{\mathrm{core\_attn+mlp}}$ & 对 \texttt{core\_attn} 与 \texttt{mlp} 使用 selective 重计算时，单层需保留的中间激活总量。 \\
     $N_{\mathrm{selective}}^{\mathrm{core\_attn+mlp+ln}}$ & 对 \texttt{core\_attn}、\texttt{mlp} 与 \texttt{layernorm} 使用 selective 重计算时，单层需保留的中间激活总量。 \\
@@ -144,31 +163,30 @@ recompute\_method 有两种可配置项：
   \renewcommand{\arraystretch}{1.0}
 \end{table}
 
-\textbf{（1）不重计算（\texttt{None}）。} 所有的中间激活值都需要被保留。
+\textbf{（1）不重计算（none）}，即所有的中间激活值都需要被保留。
 
-在注意力子层中，Q/K/V 共享输入为 $2 B S H$，计算得到的 Q/K/V 大小均为 $2 B S H$，共计 $6 B S H$，计算 $QK^{T}$ 后进行 softmax 的中间结果为 $2B A S^2$，Dropout 的 mask 为 $B A S^2$，
-Dropout 的输出为 $2 B A S^2$，最后与 V 相乘的中间结果为 $2 B S H$，
-最后的 Dropout 的 mask 矩阵为 $B S H$，
-合计
+在注意力子层中，Q / K / V 共享输入为 $2 B S H$，计算得到的 Q / K / V 大小均为 $2 B S H$，共计 $6 B S H$。
+计算 $QK^{T}$ 后进行 softmax 的中间结果为 $2B A S^2$，Dropout 层的 mask 矩阵形状为 $B A S^2$，Dropout 层的输出为 $2 B A S^2$。
+最后与 V 相乘的中间结果为 $2 B S H$，最后的 Dropout 的 mask 矩阵为 $B S H$，合计显存开销为
 \begin{equation}
   N_{\mathrm{attn}} = 11 B S H + 5 B A S^2.
 \end{equation}
 其中 $5 B A S^2$ 来自 $QK^{\top}$、softmax 与 dropout 等，随 $S$ 增大而关于序列长度二次增长，长序列下往往占主导。
-图~\ref{fig:chap4-recomp-attn} 示意 \texttt{None} 时注意力子层需要存储的中间激活值以及需要的显存大小。
+图~\ref{fig:chap4-recomp-attn} 示意重计算策略为 none 时注意力子层需要存储的中间激活值以及每个激活值占据的显存空间大小。
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.85\linewidth]{recomputation_attention.pdf}
-  \caption{注意力子层中间激活示意}
+  \caption{注意力子层中间激活示意图}
   \label{fig:chap4-recomp-attn}
 \end{figure}
 
-在 MLP 子层中，中间维度 $4H$，第一个线性层的输入为 $2 B S H$，需要保存的输出为 $8 B S H $，经过中间激活后第二个线性层的输入为 $8 B S H$，
-最后的 Dropout 层的 mask 矩阵为 $B S H$，合计
+在 MLP 子层中，中间维度 $4H$，第一个线性层的输入为 $2 B S H$，需要保存的输出为 $8 B S H$，经过激活函数 GELU 后第二个线性层的输入为 $8 B S H$，
+最后的 Dropout 层的 mask 矩阵为 $B S H$，合计显存开销为
 \begin{equation}
   N_{\mathrm{mlp}} = 19 B S H.
 \end{equation}
-图~\ref{fig:chap4-recomp-mlp} 对应给出 MLP 子层在 \texttt{None} 下的激活分解。
+图~\ref{fig:chap4-recomp-mlp} 对应给出 MLP 子层在重计算策略为 none 时的激活值分解图。
 
 \begin{figure}[htbp]
   \centering
@@ -177,19 +195,19 @@ Dropout 的输出为 $2 B A S^2$，最后与 V 相乘的中间结果为 $2 B S H
   \label{fig:chap4-recomp-mlp}
 \end{figure}
 
-\emph{两个 LayerNorm}（注意力前、MLP 前）各保存输入 $2 B S H$，合计
+\emph{两个 LayerNorm 层}（注意力子层前、MLP 前各一个）各保存输入 $2 B S H$，合计显存开销为
 \begin{equation}
   N_{\mathrm{ln}} = 4 B S H.
 \end{equation}
 
-于是，不采用重计算时单层需保存的中间激活总量为
+综上所述，重计算策略为 none 时单个 Transformer 层需保存的中间激活总量为
 \begin{equation}
-  N_{\mathrm{None}} = N_{\mathrm{attn}} + N_{\mathrm{mlp}} + N_{\mathrm{ln}} = 34 B S H + 5 B A S^2.
+  N_{\mathrm{none}} = N_{\mathrm{attn}} + N_{\mathrm{mlp}} + N_{\mathrm{ln}} = 34 B S H + 5 B A S^2.
 \end{equation}
-其中 $5 B A S^2$ 在长序列下是主要显存开销来源。
+当 $S$ 较大时，$5 B A S^2$ 这一项通常显著超过与 $B S H$ 线性相关的部分，从而主导单层需常驻的中间激活显存规模。
 
-\textbf{（2）选择重计算（\texttt{selective}）。} 在该模式下，可对所选子模块只保留其输入激活值：反向传播时先在子模块内重新进行前向计算，再进行反向传播计算梯度。
-未列入 recompute\_modules 的子模块，其行为与 None 一致，仍全量保存中间激活。
+\textbf{（2）选择重计算（\texttt{selective}）。} 在该模式下，可对所选子模块只保留其输入激活值，反向传播时先在子模块内重新进行前向计算，再进行反向传播计算梯度。
+未列入 recompute\_modules 的子模块，其行为与 none 一致，仍全量保存中间激活。
 
 考虑仅对 core\_attn 启用重计算，$QK^{\top}$、softmax 与 mask 等注意力内部激活不再常驻显存，但仍需保留子模块边界输入。此时单层常驻激活由 $34 B S H + 5 B A S^2$ 降至约 $23 B S H$。
 若仅对 MLP 启用重计算，MLP 内部约 $19 B S H$ 的中间激活推迟到反向阶段重算，则
@@ -199,7 +217,7 @@ Dropout 的输出为 $2 B A S^2$，最后与 V 相乘的中间结果为 $2 B S H
 若继续同时对 MLP 启用重计算，则常驻激活降至 $6 B S H$；再将 LayerNorm 纳入后，
 显存开销进一步降至 $4 B S H$。
 
-相对于 None 情形，记
+相对于 none 情形，记
 \begin{align}
   N_{\mathrm{selective}}^{\mathrm{mlp}} &= 15 B S H + 5 B A S^2, \\
   N_{\mathrm{selective}}^{\mathrm{mlp+ln}} &= 11 B S H + 5 B A S^2, \\
@@ -208,15 +226,15 @@ Dropout 的输出为 $2 B A S^2$，最后与 V 相乘的中间结果为 $2 B S H
   N_{\mathrm{selective}}^{\mathrm{core\_attn+mlp}} &= 6 B S H, \\
   N_{\mathrm{selective}}^{\mathrm{core\_attn+mlp+ln}} &= 4 B S H.
 \end{align}
-表示不同模块组合下常驻激活规模。
-相对 None，selective 可以选择性丢弃指定模块的中间激活，只保留子模块边界输入，可以对显存占用进行更精细的控制。
+表示使用选择重计算策略时不同模块组合下常驻激活规模。
+相对无重计算策略 none，selective 可以选择性丢弃指定模块的中间激活，只保留子模块边界输入，可以对显存占用进行更精细的控制。
 
-\textbf{（3）整层重计算（\texttt{full}）。} 以整层为单元：前向只保留层输入 X，反向整层重新前向计算后再反向传播。
+\textbf{（3）整层重计算（\texttt{full}）。} 以整层为单元，前向只保留模型层的输入 X，反向传播时先整层重新前向计算后再反向传播。
 于是
 \begin{equation}
-  N_{\mathrm{full}} =2 B S H.
+  N_{\mathrm{full}} = 2 B S H.
 \end{equation}
-常驻显存最少，但是反向传播时会进行完整的前向计算，计算开销最大。
+常驻显存最少，但是反向传播时会进行完整的前向计算，引入的重计算开销最大。
 
 表~\ref{tab:chap4-activation} 汇总了不采用重计算、选择重计算不同子模块与整层重计算时单层 Transformer 需保存的中间激活总量。
 
@@ -229,9 +247,9 @@ Dropout 的输出为 $2 B A S^2$，最后与 V 相乘的中间结果为 $2 B S H
   \setlength{\tabcolsep}{4pt}
   \begin{tabular}{@{}p{2.5cm}p{4.2cm}p{5.8cm}@{}}
     \toprule
-    策略 & 需保存的激活（元素个数） & 说明 \\
+    \textbf{策略} & \textbf{需保存的激活（元素个数）} & \textbf{说明} \\
     \midrule
-    \texttt{None} & $34 B S H + 5 B A S^2$ & 整层所有中间激活均保留 \\
+    \texttt{none} & $34 B S H + 5 B A S^2$ & 整层所有中间激活均保留 \\
     \hdashline
     \texttt{selective} [\texttt{core\_attn}] & $23 B S H$ & 仅注意力内部重计算，MLP 与 LN 仍保留 \\
     \hdashline
@@ -255,21 +273,23 @@ Dropout 的输出为 $2 B A S^2$，最后与 V 相乘的中间结果为 $2 B S H
 \subsection{异构 GPU 重计算策略设计}
 \label{sec:HR-MMoH-design}
 
-HR-MMoH 将 Megatron-LM 的重计算配置抽象为\emph{可按流水级独立取值}的离散决策：在保持各流水级前向反向数学性质不变的前提下，通过调节重计算粒度与子模块集合，在算力与显存之间进行折中。
-本节依次给出显存分解与优化形式、基于剖析的可行配置生成方法、结合冻结状态与流水级位置的启发式、多路分支搜索伪代码，以及与 MMoH 框架的结合方式。
+HR-MMoH 将 Megatron-LM 的重计算配置抽象为\emph{可按流水级独立配置}的离散决策，在保持各流水级前向反向数学性质不变的前提下，通过调节重计算粒度与子模块集合，在算力与显存之间进行权衡。
+本节依次给出显存分解与优化形式、基于剖析的可行配置生成方法、结合冻结状态与流水级位置的启发式配置选择方法、多路分支搜索伪代码，以及与 MMoH 框架的结合方式。
 
-本节与算法~\ref{alg:hr-mmoh-recomp-search} 中，$P$ 表示流水线并行度（流水级个数，与第三章一致），$p$ 表示流水级编号；各流水级可用显存上界记为 $Q_p$；候选重计算策略个数记为 $G$（本文实现取 $G{=}7$）；非冻结流水级集合记为 $\mathcal{U}$；对 $\mathcal{U}$ 排序后得到的遍历序列记为 $W_{\mathrm{front}}$、$W_{\mathrm{back}}$。流水级 $p$ 上满足式~\eqref{eq:hr-mmoh-recomp-opt} 中显存约束的可行重计算策略集合记为 $\mathcal{X}_p$。
+本节与算法~\ref{alg:hr-mmoh-recomp-search} 中，$P$ 表示流水线并行度（即流水级个数，与第三章一致），$p$ 表示流水级的编号。
+各流水级可用的显存上界记为 $Q_p$，候选重计算策略个数记为 $G$（本文实现中取 $G{=}7$，实际组合方式不限于本文使用的 7 种）。
+% 流水级 $p$ 上满足式~\eqref{eq:hr-mmoh-recomp-opt} 中显存约束的可行重计算策略集合记为 $\mathcal{X}_p$。
 
 在 MMoH 规划器已完成模型划分与设备映射的前提下，流水级 $p$ 映射至设备 $d_p$，并由若干模型块组成。
-单次训练迭代处于稳定调度阶段时，设备 $d_p$ 上的峰值显存可写为四项之和：（1）\emph{模型参数}；（2）\emph{梯度}；（3）\emph{优化器状态}（如 Adam 的一阶与二阶矩）；（4）\emph{中间激活}（含流水线并行在 1F1B 等调度下需暂存的激活，其峰值与 micro-batch 配置、流水级在流水线中的位置及重计算策略均相关）。
+单次训练迭代处于稳定调度阶段时，设备 $d_p$ 上的峰值显存可写为四项之和：（1）\emph{模型参数}；（2）\emph{梯度}；（3）\emph{优化器状态}（如 Adam 优化器需要 FP32 格式的动量与方差）；（4）\emph{中间激活}（含流水线并行在 1F1B 等调度下需暂存的激活，其峰值与 micro-batch 配置、流水级在流水线中的位置及重计算策略均相关）。
 在给定划分、优化器类型、数据类型及是否启用张量并行等训练配置后，（1）--（3）不随重计算配置 $\theta_p$ 改变，冻结参数不用存储梯度与优化器状态，显存开销进一步降低。
-决策变量 $\theta_p$ 在 Megatron-LM 配置空间中取值：$\text{recompute\_granularity} \in \{\text{None}, \text{full}, \text{selective}\}$；若为 $\text{selective}$，则由 $\text{recompute\_modules}$ 指定子模块列表。
-记流水级 $p$ 在 $\theta_p$ 下的四项显存分别为 $\mathrm{Mem}_p^{\mathrm{param}}$、$\mathrm{Mem}_p^{\mathrm{grad}}$、$\mathrm{Mem}_p^{\mathrm{opt}}$ 与 $\mathrm{Mem}_p^{\mathrm{act}}(\theta_p)$；$Q_p$ 为 $d_p$ 上可用于训练的显存上界，并已在实践中扣除 CUDA 驱动、缓存与显存碎片等余量（在本文的实验中为 2GB）。
-则可行配置需满足：对任意流水级 $p$，四项显存占用之和不超过 $Q_p$。
+决策变量 $\theta_p$ 在 Megatron-LM 配置空间中取值：$\text{recompute\_granularity} \in \{\text{none}, \text{full}, \text{selective}\}$；若为 $\text{selective}$，则由 $\text{recompute\_modules}$ 指定子模块列表。
+记流水级 $p$ 在 $\theta_p$ 下的四项显存分别为 $\mathrm{Mem}_p^{\mathrm{param}}$、$\mathrm{Mem}_p^{\mathrm{grad}}$、$\mathrm{Mem}_p^{\mathrm{opt}}$ 与 $\mathrm{Mem}_p^{\mathrm{act}}(\theta_p)$；$Q_p$ 为 $d_p$ 上可用于训练的显存上界，并已在实践中扣除 CUDA 驱动、缓存与显存碎片等余量（在本文的实验中设置为 1.5 GB）。
+则可行配置需满足对任意流水级 $p$，四项显存占用之和不超过其可用的显存上界 $Q_p$。
 
 迭代时间方面，流水级 $p$ 的无重计算时前向与反向本地耗时分别记为 $F_p$、$B_p$。
-在划分、映射及 micro-batch 等确定配置下，$F_p$、$B_p$ 均与 $\theta_p$ 无关，由激活检查点机制引入的、仅为恢复中间激活而增加的本地前向计算开销，其耗时记为 $R_p(\theta_p)$。
-则
+在模型划分、设备映射及 micro-batch 等确定配置下，$F_p$、$B_p$ 均与 $\theta_p$ 无关，由重计算引入的、仅为恢复中间激活而增加的本地前向计算开销，其耗时记为 $R_p(\theta_p)$。
+则问题可定义为在显存约束下，最小化每个流水级由重计算引入的本地前向计算开销 $R_p(\theta_p)$，即
 \begin{equation}
   \label{eq:hr-mmoh-recomp-opt}
   \begin{aligned}
@@ -277,44 +297,54 @@ HR-MMoH 将 Megatron-LM 的重计算配置抽象为\emph{可按流水级独立�
     \text{s.t.} \quad & \mathrm{Mem}_p^{\mathrm{param}} + \mathrm{Mem}_p^{\mathrm{grad}} + \mathrm{Mem}_p^{\mathrm{opt}} + \mathrm{Mem}_p^{\mathrm{act}}(\theta_p) \le Q_p.
   \end{aligned}
 \end{equation}
-式~\eqref{eq:hr-mmoh-recomp-opt} 对\emph{每个}流水级 $p$ 各给出一个相互独立的离散优化问题：$\theta_p$ 仅影响 $R_p(\theta_p)$ 与 $\mathrm{Mem}_p^{\mathrm{act}}(\theta_p)$，不因联立各级而组合爆炸。
-$R_p$ 及显存峰值还受算子融合等实现因素影响，下文以实测剖析为主。
+式~\eqref{eq:hr-mmoh-recomp-opt} 对\emph{每个}流水级 $p$ 各给出一个相互独立的离散优化问题。
+$\theta_p$ 仅影响 $R_p(\theta_p)$ 与 $\mathrm{Mem}_p^{\mathrm{act}}(\theta_p)$，不因联立各级而组合爆炸。
+$R_p$ 及显存峰值受算子融合等实现因素影响，本文实践中以实测剖析结果为主。
 
-重计算引入的计算代价 $R_p(\theta)$ 由重计算额外引入的 \text{flops} 占该流水级前向计算 \text{flops} 的百分比估计：先按子模块或层粒度统计该占比，再结合与第三章一致的块级 flops 剖析，将该比例折算为相对前向的时间侧开销。
-根据模型配置参数和\ref{sec:megatron-recompute}节的理论分析，计算不同重计算策略下的 $\mathrm{Mem}_p^{\mathrm{act}}(\theta)$， 与固定大小的 $\mathrm{Mem}_p^{\mathrm{param}}$、$\mathrm{Mem}_p^{\mathrm{grad}}$、$\mathrm{Mem}_p^{\mathrm{opt}}$ 相加得 $\mathrm{TotalMem}(p,\theta)$，凡满足式~\eqref{eq:hr-mmoh-recomp-opt} 中显存约束的 $\theta$ 归入可行集 $\mathcal{X}_p$，各流水级可行集构造彼此独立。
+重计算引入的计算开销 $R_p(\theta)$ 由重计算额外引入的 \text{FLOPs} 占该流水级前向计算 \text{FLOPs} 的百分比估计。
+先统计该占比，再结合与第三章的剖析结果，将该比例折算为相对前向的时间侧开销。
+根据模型配置参数和第\ref{sec:megatron-recompute}节的理论分析，计算不同重计算策略下的 $\mathrm{Mem}_p^{\mathrm{act}}(\theta)$，与固定大小的 $\mathrm{Mem}_p^{\mathrm{param}}$、$\mathrm{Mem}_p^{\mathrm{grad}}$、$\mathrm{Mem}_p^{\mathrm{opt}}$ 相加得 $\mathrm{TotalMem}(p,\theta)$。
+% 凡满足式~\eqref{eq:hr-mmoh-recomp-opt} 中显存约束的 $\theta$ 归入可行集 $\mathcal{X}_p$，各流水级可行集构造彼此独立。
 
 在具体配置上，本文不联合优化 $\{\theta_p\}_{p=1}^{P}$ 的全局时间指标，而是对显存压力较大的流水级优先采用更节省显存的重计算策略以降低 $\mathrm{Mem}_p^{\mathrm{act}}$，对余量较大的流水级在满足约束的前提下尽量选取较轻的 $\theta$ 以抑制 $R_p$，具体由下一小节的多路分支搜索实现。
-据此可将典型情形粗分为两类：（1）\emph{显存相对不足}：宜采用 full 或子模块覆盖较全的 selective（如 [core\_attn, mlp, layernorm]），以降低 $\mathrm{Mem}_p^{\mathrm{act}}$；（2）\emph{显存相对充足}：宜优先 None、仅对 [core\_attn] 启用 selective 以控制 $R_p(\theta_p)$ 不必要增大。
+据此可将典型情形粗分为两类：（1）\emph{显存相对不足}：宜采用 full 或子模块覆盖较全的 selective（如 [core\_attn, mlp, layernorm]），以降低 $\mathrm{Mem}_p^{\mathrm{act}}$；（2）\emph{显存相对充足}：宜优先使用 none、仅对 [core\_attn] 启用 selective 以控制 $R_p(\theta_p)$ 不必要增大。
 
-结合第三章冻结训练与提前终止调度，可在为各级独立求解式~\eqref{eq:hr-mmoh-recomp-opt} 时引入启发式先验，以压缩搜索空间并增强配置结果的可解释性。
+结合第三章冻结训练与提前终止调度，可在为各流水级独立求解式~\eqref{eq:hr-mmoh-recomp-opt} 时引入启发式先验，以压缩搜索空间并增强配置结果的可解释性。
 
 （1）冻结流水级。
-冻结流水级通常不执行完整反向传播与优化器更新，梯度与优化器状态所占显存比例下降，峰值显存主要由模型参数与流水线并行下暂存的中间激活决定。
-此时若采用激进的重计算策略，额外开销主要体现在\emph{重复前向计算}：在最坏情形下近似于在该流水级增加完整的前向传播；相对于冻结流水级单次前向为主的计算特征，该比例可能显著偏高。因此默认优先选取 None 或仅覆盖少量子模块的 selective，除非剖析结果表明 $\mathrm{Mem}_p^{\mathrm{act}}$ 仍接近 $Q_p$。
+冻结流水级通常不执行完整反向传播与优化器更新，梯度与优化器状态所占显存空间显著下降，峰值显存主要由模型参数与流水线并行下暂存的中间激活决定。
+此时若采用激进的重计算策略，额外开销主要体现在重复前向计算，在最坏情形下近似等于在该流水级增加完整的前向传播。
+相对于冻结流水级单次前向为主的计算特征，该比例可能显著偏高。
+因此默认优先选取 none 策略或仅覆盖少量子模块的 selective，除非剖析结果表明 $\mathrm{Mem}_p^{\mathrm{act}}$ 仍接近 $Q_p$。
 
 （2）非冻结流水级。
 非冻结流水级需执行完整反向传播并维护优化器状态，$\mathrm{Mem}_p^{\mathrm{grad}}$ 与 $\mathrm{Mem}_p^{\mathrm{opt}}$ 占据较大的显存空间。
-在反向传播计算开销约为前向传播开销的 2 倍的粗略假设下，整层重计算可近似视为额外引入与前向相当的计算，其相对于原前向与反向总工作量的占比约为三分之一。非冻结流水级通常较冻结流水级更能承受此类计算增量，故在可行集非空时更易选取 full 或 recompute\_modules 覆盖更全的 selective。
+在反向传播计算开销约为前向传播开销的 2 倍的粗略假设下\cite{zerobubble2024}，整层重计算可近似视为额外引入与前向相当的计算，其相对于原前向与反向总工作量的占比约为三分之一。
+非冻结流水级通常较冻结流水级更能承受此类计算增量，故在可行集非空时更易选取 full 或 recompute\_modules 覆盖更全的 selective。
 
 （3）流水级在流水线中的位置。
 在 1F1B 等调度下，靠近输入端的流水级在稳定阶段往往需要同时保存更多 micro-batch 的中间激活值，其峰值显存通常高于靠近输出端的流水级（也取决于流水线深度、micro-batch 数目及是否采用交错调度等）。
-基于此观察，搜索时可令\emph{前半段}流水级从较保守的配置 $\theta$ 出发，在显存约束下沿候选重计算方案逐步提高重计算强度；\emph{后半段}流水级在显存允许时从较激进的 $\theta$ 出发，再沿候选重计算方案回退以降低不必要的重计算。该位置启发与（1）（2）相互独立，并与冻结配置一并体现在算法~\ref{alg:hr-mmoh-recomp-search} 中。
+基于此观察，搜索时可令\emph{前半段}流水级从较保守的配置 $\theta$ 出发，在显存约束下沿候选重计算方案逐步提高重计算强度，\emph{后半段}流水级在显存允许时从较激进的 $\theta$ 出发，再沿候选重计算方案回退以降低不必要的重计算。
+该位置启发与（1）（2）相互独立，并与冻结配置一并体现在算法~\ref{alg:hr-mmoh-recomp-search} 中。
 
 据此构造长度有限的候选策略集 $\Theta=(\theta^{1},\ldots,\theta^{7})$：在 Megatron-LM 语义下自\emph{保守}端（激活常驻规模较大、重计算较少）至\emph{激进}端（激活常驻规模较小、重计算较多）排列。
 下文（1）--（7）的编号仅用于说明本文在工程实现中对各候选配置的含义，实际的重计算配置根据模型结构会有更多候选，\emph{工程实现中应依据实际模型参数得到的 $\mathrm{Mem}_p^{\mathrm{act}}(\theta)$ 对 $\Theta$ 重新排序}，使其满足 $\mathrm{Mem}_p^{\mathrm{act}}(\theta^{i})\ge \mathrm{Mem}_p^{\mathrm{act}}(\theta^{i+1})$。
 本文配置的 $\Theta$ 各候选项含义如下：
-（1）\texttt{None}：不启用重计算；
+（1）\texttt{none}：不启用重计算；
 （2）\texttt{Selective-LayerNorm}：仅对 LayerNorm 子模块启用重计算；
 （3）\texttt{Selective-MLP}：仅对 MLP 子模块启用重计算；
 （4）\texttt{Selective-Attn}：采用默认 selective 粒度，即仅对注意力子模块（\texttt{core\_attn}）启用重计算；
 （5）\texttt{Selective-Attn+MLP}：对注意力与 MLP 子模块启用重计算；
 （6）\texttt{Selective-LayerNorm+Attn+MLP}：对注意力、LayerNorm 与 MLP 子模块启用重计算；
-（7）\texttt{Full}：采用 full 粒度，对整层进行重计算。
+（7）\texttt{full}：采用 full 粒度，对整层进行重计算。
 
-对非冻结流水级，以 $p=\lfloor P/2\rfloor$ 为界划分为靠近输入的\emph{前半段}与靠近输出的\emph{后半段}：前半段按 $p$ 升序遍历，自 $\Theta$ 的较小下标（较保守配置）起搜索可行解；后半段按 $p$ 降序遍历，自较大下标（较激进配置）起搜索，并在显存约束允许时沿下标递减方向回调，以降低冗余重计算。
-冻结流水级固定为 $\theta^{1}$（\texttt{None}）。运行过程中若仍发生 OOM，则将该流水级在 $\Theta$ 中的下标向增大方向推进，直至满足式~\eqref{eq:hr-mmoh-recomp-opt} 中的显存约束或候选耗尽。
-算法~\ref{alg:hr-mmoh-recomp-search} 给出离线搜索主流程；其中 $\mathrm{TotalMem}$ 与式~\eqref{eq:hr-mmoh-recomp-opt} 约束左端一致，冻结流水级的梯度与优化器状态按第三章语义置零或依据剖析表取值。
-运行时 OOM 处理策略与上文一致：对发生显存溢出的流水级沿 $\Theta$ 增大下标直至获得可行配置或判定失败。
+记非冻结流水级集合为 $\mathcal{U}$，并令 $\mathrm{mid}=\lfloor P/2\rfloor$ 作为前后半段分界。
+定义 $\mathcal{U}_{\mathrm{front}}=\{\,p\in\mathcal{U}\mid p\le \mathrm{mid}\,\}$、$\mathcal{U}_{\mathrm{back}}=\mathcal{U}\setminus\mathcal{U}_{\mathrm{front}}$，分别对应靠近输入侧与靠近输出侧的非冻结流水级；
+再将 $\mathcal{U}_{\mathrm{front}}$ 中编号按升序排成序列 $W_{\mathrm{front}}$，将 $\mathcal{U}_{\mathrm{back}}$ 中编号按降序排成序列 $W_{\mathrm{back}}$，二者即算法~\ref{alg:hr-mmoh-recomp-search} 赋值 $\theta_p$ 时的访问顺序。
+冻结流水级事先固定为 $\theta^{1}$（none）。
+对 $W_{\mathrm{front}}$ 中各 $p$，自 $\Theta$ 的较小下标（较保守配置）起逐个尝试，直至满足式~\eqref{eq:hr-mmoh-recomp-opt}；对 $W_{\mathrm{back}}$ 中各 $p$，则自较大下标（较激进配置）选取可行 $\theta_p$，并在显存仍有余量时沿下标递减方向回调，以降低冗余重计算。
+若某流水级在离线搜索或在线运行时仍发生 OOM，则将其在 $\Theta$ 中的下标向增大方向推进并重试，直至满足显存约束或触发 MMoH 重新规划（见算法~\ref{alg:hr-mmoh-recomp-search} 分支）。
+算法~\ref{alg:hr-mmoh-recomp-search} 汇总上述流程；其中 $\mathrm{TotalMem}$ 与式~\eqref{eq:hr-mmoh-recomp-opt} 约束左端一致，冻结流水级的梯度与优化器状态按第三章置零或依据剖析表取值。
 
 \begin{algorithm}[t]
   \caption{HR-MMoH 多路分支重计算配置搜索}
@@ -322,7 +352,7 @@ $R_p$ 及显存峰值还受算子融合等实现因素影响，下文以实测�
   \footnotesize
   \begin{algorithmic}[1]
     \REQUIRE 流水线并行度 $P$；冻结标记 $\texttt{frozen}[p]$；可用显存上界 $\{Q_p\}$
-    \REQUIRE 全序候选 $\Theta=(\theta^{1},\ldots,\theta^{G})$（$G{=}6$，$\mathrm{Mem}^{\mathrm{act}}_p(\theta^{i})$ 随 $i$ 增大非增）；剖析表 $\mathrm{Mem}^{\mathrm{param}}_p,\mathrm{Mem}^{\mathrm{grad}}_p,\mathrm{Mem}^{\mathrm{opt}}_p,\mathrm{Mem}^{\mathrm{act}}_p(\theta^{i})$
+    \REQUIRE 全序候选 $\Theta=(\theta^{1},\ldots,\theta^{G})$（本文 $G{=}7$，$\mathrm{Mem}^{\mathrm{act}}_p(\theta^{i})$ 随 $i$ 增大非增）；剖析表 $\mathrm{Mem}^{\mathrm{param}}_p,\mathrm{Mem}^{\mathrm{grad}}_p,\mathrm{Mem}^{\mathrm{opt}}_p,\mathrm{Mem}^{\mathrm{act}}_p(\theta^{i})$
     \ENSURE 各流水级 $\theta_p$
     \STATE $\mathrm{TotalMem}(p,\theta^{i}) \gets \mathrm{Mem}^{\mathrm{param}}_p + \mathrm{Mem}^{\mathrm{grad}}_p + \mathrm{Mem}^{\mathrm{opt}}_p + \mathrm{Mem}^{\mathrm{act}}_p(\theta^{i})$
     \STATE $\mathrm{mid} \gets \lfloor P/2 \rfloor$；$\forall p$，若 $\texttt{frozen}[p]$ 则 $\theta_p \gets \theta^{1}$
@@ -355,15 +385,19 @@ $R_p$ 及显存峰值还受算子融合等实现因素影响，下文以实测�
 
 
 MMoH 给出模型划分和设备映射后，HR-MMoH 的重计算规划器为每个流水级生成一个重计算配置，所有流水级的重计算配置组织为一个 JSON 文件，由流水线并行组中各 rank 在进程初始化时读入。
-同一流水级内多卡（如张量并行）须共享同一 $\theta_p$，以保证检查点边界与张量并行通信组一致；不同流水级之间则可取不同 $\theta_p$，从而实现流水级维度的异构重计算。
+同一流水级内多卡（如张量并行）须共享同一 $\theta_p$，以保证重计算边界与张量并行通信组一致。
+不同流水级之间则可取不同 $\theta_p$，从而实现流水级维度的异构重计算。
 除重计算范围按 $\theta_p$ 区分外，单卡计算图与梯度语义与标准 Megatron-LM 一致，从而在更大批量或更长序列下仍满足式~\eqref{eq:hr-mmoh-recomp-opt} 中的显存约束。
 
 
-HR-MMoH 与 MMoH 在模型划分、设备映射及提前终止调度上的关系可概括为：\emph{先由 MMoH 确定划分与映射并在既定调度下运行；再在此基础上配置各流水级重计算参数 $\theta_p$；当显存仍不可行时将约束违反信息反馈至 MMoH 以调整划分或映射，并迭代上述过程}。
-其中，划分与映射决定参数与计算负载分布，调度策略决定各流水级前向—反向执行路径及相关通信；HR-MMoH 在不改变单卡数学语义的前提下调节 $\theta_p$，以提高式~\eqref{eq:hr-mmoh-recomp-opt} 中显存约束的可行性。
+HR-MMoH 与 MMoH 在模型划分、设备映射及提前终止调度上的关系可概括为：先由 MMoH 确定模型划分与设备映射，再在此基础上配置各流水级重计算参数 $\theta_p$。
+当显存仍溢出时将信息反馈至 MMoH 以调整模型划分或设备映射策略，并迭代上述过程。
+最后在调度时使用提前终止调度器进行调度优化。
+其中，模型划分与设备映射决定模型参数与计算负载分布，调度策略决定各流水级前向—反向执行路径及相关通信。
+HR-MMoH 在不改变单卡数学语义的前提下调节 $\theta_p$，以减少异构 GPU 集群训练时的冗余重计算。
 若已采用最激进候选 $\theta^{G}$ 仍发生 OOM，表明在当前划分与映射下仅依靠重计算仍无法满足训练条件，应将显存溢出信息反馈至 MMoH 规划器（例如调整该流水级在优化目标中的显存相关项、减少该流水级所含模型块数量等），并在新映射上重新剖析后执行算法~\ref{alg:hr-mmoh-recomp-search}。
 映射更新后，亦可相应将部分 $\theta_p$ 回调至较保守配置，以避免长期承担过量的重计算开销。
-提前终止调度在冻结流水级上省略部分反向计算与阶段间通信，与按流水级独立选取的 $\theta_p$ 相容：冻结流水级通常维持较轻的 $\theta_p$，非冻结流水级仍依据式~\eqref{eq:hr-mmoh-recomp-opt} 与多路分支搜索中的位置启发式独立配置。
+提前终止调度在冻结流水级上省略部分反向计算与阶段间通信，与按流水级独立选取的 $\theta_p$ 相容。冻结流水级通常使用较轻量的重计算策略，非冻结流水级仍依据式~\eqref{eq:hr-mmoh-recomp-opt} 与多路分支搜索中的位置启发式独立配置。
 
 \section{实验验证}
 \label{sec:HR-MMoH-exp}
@@ -371,21 +405,30 @@ HR-MMoH 与 MMoH 在模型划分、设备映射及提前终止调度上的关系
 \subsection{实验设置}
 
 HR-MMoH 的实验环境与第三章 MMoH 实验一致，采用更具有代表性的异构集群（Cluster-L）及两个模型中更大的 MLLM（MLLM-12B）。
-为了让实验结果尽可能贴近常见大规模训练配置，本文使用更大的批次大小，编码器和 LLM 的序列长度也进行扩大，都变成了第三章中实验配置的 2 倍。具体来说，本文把批次大小从 1 增加为 2，编码器的序列长度从 576 变为 1152，LLM 的序列长度从 1024 变为 2048，从而在实验室集群环境下尽量符合工业界训练时常用的配置。
-本章未在 Cluster-S（16 卡）与 MLLM-3B 上重复 HR-MMoH 实验，原因在于：Cluster-S 总显存仅约 216\,GB，在上述更大批次与更长序列的配置下，16 张消费级 GPU 的总显存难以容纳 MLLM-12B 级别模型的完整训练流程，而若仍沿用第三章中较小的批次与序列设定，则显存压力本身不足以触发差异化重计算的需求，难以有效体现 HR-MMoH 的设计动机。此外，在工业实践中，小规模集群上以短序列、小批次训练大模型的场景本身较少出现，重计算的研究价值主要体现在显存紧张的大规模训练配置下。因此，本章聚焦于更具代表性的 Cluster-L + MLLM-12B + 大批次长序列组合，以验证 HR-MMoH 在实际显存瓶颈场景下的有效性。
-为了验证 “按流水级差异化配置” 的合理性，对 MLLM-12B 的不同模型层按照\ref{sec:megatron-recompute}进行中间激活的显存定量剖析，在每流水级对应的设备上，分别计算 recompute\_granularity=None、selective 且 recompute\_modules=[core\_attn]、[core\_attn, mlp]、[core\_attn, mlp, layernorm] 以及 full + uniform 且不同 recompute\_num\_layers 下的激活峰值与单流水级前向+反向时间（含重计算）。据此可得到各流水级在满足显存约束下的可选配置集合及对应的 $t_p(\theta)$（或等价地 $R_p(\theta)$），用于验证显存紧张流水级与充裕流水级在“最省显存”与“最少重计算”配置上的差异是否显著，以及按流水级赋配置后各流水级的 $t_p(\theta)$ 是否更加均衡。
+为了让实验结果尽可能贴近常见大规模训练的配置，本文使用更大的批次大小，编码器和 LLM 的序列长度也相应扩大，都变成了第三章中实验配置的 2 倍。
+具体来说，本文在实验设置中把批次大小变为原来的 2 倍，编码器的序列长度从 576 变为 1152，LLM 的序列长度从 1024 变为 2048，从而尽量符合目前工业界训练时常用的参数配置。
+本章未在 Cluster-S（16 卡）与 MLLM-3B 上重复 HR-MMoH 实验，原因在于 Cluster-S 总显存仅约 216\,GB，在上述更大批次与更长序列的配置下，16 张消费级 GPU 的实验意义有限，而若仍沿用第三章中较小的批次与序列设定，则显存压力本身不足以触发差异化重计算的需求，难以有效体现 HR-MMoH 的设计动机。
+此外，在工业实践中，小规模集群上以短序列、小批次训练大模型的场景本身较少出现，重计算的研究价值主要体现在显存紧张的大规模训练配置下。
+因此，本章聚焦于更具代表性的 Cluster-L + MLLM-12B + 大批次长序列组合，以验证 HR-MMoH 在实际显存瓶颈场景下的有效性。
 
-异构重计算的对比基线为全局统一配置：所有流水级不采用重计算，记为 None；所有流水级采用相同的 full recomputation，即在前向传播中丢弃所有的中间激活值，记为 full；
+为验证按流水级差异化配置的有效性，在 MMoH 已确定的划分与映射下，本文对 MLLM-12B 的每个流水级 $p$ 在其映射设备 $d_p$ 上，按第~\ref{sec:HR-MMoH-design}节构造的离散候选集 $\Theta=(\theta^{1},\ldots,\theta^{7})$ 逐项开展剖析。
+对每个候选 $\theta^{i}$，测定峰值激活显存 $\mathrm{Mem}_p^{\mathrm{act}}(\theta^{i})$，并结合 $\mathrm{Mem}_p^{\mathrm{param}}$、$\mathrm{Mem}_p^{\mathrm{grad}}$、$\mathrm{Mem}_p^{\mathrm{opt}}$ 得到 $\mathrm{TotalMem}(p,\theta^{i})$（与式~\eqref{eq:hr-mmoh-recomp-opt} 及算法~\ref{alg:hr-mmoh-recomp-search} 使用的符号表述一致）。
+上述剖析表用于在给定显存上界 $Q_p$ 下判定各级可行候选，并支撑 HR-MMoH 搜索 $\theta_p$。
+
+异构重计算的对比基线为全局统一重计算配置：所有流水级不采用重计算，记为 none；所有流水级采用相同的 full recomputation，即在前向传播中丢弃所有的中间激活值，记为 full；
 所有流水级采用相同的默认 selective，即只重计算 attention 模块。
-模型训练的冻结情况与第三章一致，使用全部的4 种冻结情况：no-freeze，freeze-encoder，freeze-llm，freeze-both。分别使用 Megatron-LM，Whale，Espresso，MMoH 作为模型划分策略，对于所有策略使用之前提到的全局统一配置。对于 MMoH，我们还使用异构的重计算配置 HR-MMoH。
-对比指标包括：完整训练的迭代时间 seconds/iteration。
+模型训练的冻结情况与第三章一致，使用全部的 4 种冻结情况：no-freeze，freeze-encoder，freeze-llm，freeze-both。
+分别使用 Megatron-LM、Whale、Espresso 和 MMoH 作为模型划分策略，对于所有策略使用之前提到的 3 种全局统一重计算配置。
+对于 MMoH，本文还使用异构的重计算配置 HR-MMoH。
+端到端对比指标为\emph{迭代时间}（seconds/iteration）。
+每种配置均执行 10 次迭代预热，随后在 50 次稳定计时迭代上统计平均时间并作为报告值。
 
 \subsection{实验结果}
 
-本小节首先对比 Megatron、Whale、Espresso、MMoH 在不同冻结策略和不同常规重计算配置下的速度，如图\ref{fig:hr-mmoh-throughput-freeze}所示。
+本小节首先对比 Megatron-LM、Whale、Espresso 和 MMoH 在不同冻结策略和不同统一重计算配置下的训练速度，如图~\ref{fig:hr-mmoh-throughput-freeze} 所示。
 
 \begin{figure}[htbp]
-  \centering
+  \centering 
   % 略宽于 minipage 并居中，等比例抬高子图可视高度（向栏间空白借宽）
   \begin{minipage}[t]{0.48\linewidth}
     \centering
@@ -410,41 +453,48 @@ HR-MMoH 的实验环境与第三章 MMoH 实验一致，采用更具有代表性
     \makebox[\linewidth][c]{\includegraphics[width=1.08\linewidth]{e2e_freeze-both}}
     \\[2pt] {\small (d)~freeze-both}
   \end{minipage}
-  \caption{不同冻结策略下各框架迭代时间对比（自左至右、自上至下依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。}
+  \caption{不同冻结策略下各框架迭代时间对比（自上至下、自左至右依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。}
   \label{fig:hr-mmoh-throughput-freeze}
 \end{figure}
 
-图中按冻结策略拆分为四个子图，自左至右、自上而下依次为 (a)~no-freeze、(b)~freeze-encoder、(c)~freeze-llm 与 (d)~freeze-both：
-每个子图在同一冻结条件下对比各框架在全局统一的 None、full 与默认 selective 等重计算配置下的迭代时间。
+图中按冻结策略拆分为四个子图，自左至右、自上而下依次为 (a)~no-freeze、(b)~freeze-encoder、(c)~freeze-llm 与 (d)~freeze-both。
+每个子图在同一冻结条件下对比各框架在全局统一的 none、full 与默认 selective 三种重计算配置下的迭代时间。
 由于数据的批次大小更大，encoder 和 llm 的序列长度更长，模型训练时需要的显存开销剧增。
-Megatron 在所有冻结策略下都出现了 OOM，即使使用了全部重计算并且使用最大的 TP size，仍然无法训练，因为其同构假设导致负载不均；
-Whale 和 Espresso 通过异构感知的拓扑与划分避免了部分情况下的 OOM，所以两者表现优于 Megatron，可以适应更多的冻结情况，但是 Espresso 的负载均衡总体上还是优于 Whale，在 no-freeze 的情况下，Espresso 在开启全部重计算后就可以正常训练，但是 Whale 在 no-freeze 的情况下无法正常训练，即使使用最大的 TP size 和最激进的全部重计算。总体上 Espresso 在更多场景下表现更好。
-MMoH 的负载均衡显著优于其它方法，在不开启任何重计算且冻结 llm 的情况下，MMoH 可以正常训练，而其余三者要么彻底无法训练，要么需要使用重计算策略。在所有的冻结策略以及默认的重计算方式下，MMoH 的迭代时间都低于其余三者，这印证了本文在第三章中提出的方法的有效性。
+Megatron-LM 在所有冻结策略下都出现了 OOM，即使使用了全部重计算并且使用最大的 TP size，仍然无法进行训练，因为其同构假设导致负载不均。
+Whale 和 Espresso 通过异构感知的拓扑与划分避免了部分情况下的 OOM，所以两者表现优于 Megatron-LM，可以适应更多的冻结情况。
+在 no-freeze 的情况下，Espresso 在开启全部重计算后就可以正常训练，但是 Whale 在 no-freeze 的情况下无法正常训练，即使使用最大的 TP size 和最激进的全部重计算。总体上 Espresso 在更多场景下表现更好。
+MMoH 的负载均衡显著优于其它方法，在不开启任何重计算且冻结 LLM 的情况下，MMoH 是唯一可以正常训练的方法，而其余方法要么彻底无法训练，要么需要使用重计算策略。
+在所有的冻结策略以及默认的重计算方式下，MMoH 的迭代时间都低于其余三者，这印证了本文在第三章中提出的方法的有效性。
 
-Whale 与 Espresso 在可运行配置内随重计算配置变化呈现明显的迭代时间波动——None（全局不重计算）往往受显存约束更敏感，full 与 selective 则以额外重计算换取可行性与迭代时间下降。
-随着子图由 (a) 过渡到 (d)，冻结范围扩大使得反传与跨阶段通信规模下降，各框架的整体 iteration time 水平与档位间差距随之重塑，但异构划分质量不同仍会造成 Whale 与 Espresso 在部分子图、部分档位上互有领先。
-MMoH 在四个子图的各重计算档位上均保持领先或接近最优，说明在更大批次大小与序列长度导致显存紧张的设定下，复合粒度划分与冻结感知调度仍能稳定提供更低的 iteration time。
+就 Whale 与 Espresso 而言，在各自可运行的参数组合内，全局重计算策略在 none、full 与默认 selective 之间切换时，单次迭代时间往往出现显著差异。
+none 不在反向阶段为恢复激活而追加完整前向重算，在显存可行时通常对应较小的每步计算开销；full 与 selective 则通过缩小需常驻的激活规模、并以反向阶段的额外前向计算为代价换取峰值显存下降，因而在可比且均可训练的条件下，单次迭代时间通常高于 none，但在显存逼近设备上限时可用于获得可行配置。
+沿子图 (a)--(d) 观察，冻结范围逐步扩大使得参与更新的参数规模下降，相应的反向计算与流水级间梯度通信负荷随之减弱，各方法的迭代时间整体下移，不同重计算配置之间的相对优劣次序亦随之改变。
+由于划分粒度与设备拓扑构造不同，Whale 与 Espresso 在不同冻结场景及不同重计算配置下各有优劣。
+相较之下，MMoH 在上述四个冻结场景与三种统一重计算配置的组合中均保持最短或接近最短的迭代时间，表明在大批量与长序列所带来的显存受限设定下，复合粒度划分与冻结感知调度仍能提供可观的端到端性能收益。
 
-在前一小节对全局统一重计算配置的基础上，本节进一步在各框架内部对 None、full、默认 selective 以及 HR-MMoH 的按流水级异构重计算配置分别搜索可行解，并在每种冻结策略下取各框架所能达到的最短迭代时间（seconds/iteration）进行并列对比，如图\ref{fig:hr-mmoh-e2e-hr}所示。
-这样设置的意义在于：统一配置对比揭示了全局统一重计算配置在异构流水线中的局限性，而 “每框架各自最优” 对比则更客观地评估划分与重计算协同优化后仍能否进一步缩短迭代时间。
-对 HR-MMoH 而言，最优配置由 4.2 节所述剖析驱动的候选枚举与约束判定给出，在 MMoH 已提供的模型划分与设备映射上为各流水级独立选择 recompute\_granularity、recompute\_modules 等参数，使显存压力大的流水级必要时更激进地释放激活、显存压力小的流水级尽量少做多余重计算，从而在满足各卡显存上限的前提下降低瓶颈流水级耗时。
+在前一小节对全局统一重计算配置的基础上，本节进一步在各框架内部对 none、full、默认 selective 以及 HR-MMoH 的按流水级异构重计算配置分别搜索可行解，并在每种冻结策略下取各框架所能达到的最短迭代时间（seconds/iteration）进行并列对比，如图~\ref{fig:hr-mmoh-e2e-hr} 所示。
+这样设置的意义在于：统一配置对比揭示了全局统一重计算配置在异构流水线中的局限性，而“每框架各自最优”对比则更客观地评估重计算优化后仍能否进一步加快训练速度。
+对 HR-MMoH 而言，最优配置由~\ref{sec:HR-MMoH-design} 节所述剖析驱动的候选枚举与约束判定给出，在 MMoH 已提供的模型划分与设备映射上为各流水级独立选择 recompute\_granularity、recompute\_modules 等参数，使显存压力大的流水级必要时更激进地释放激活、显存压力小的流水级尽量少做多余重计算，从而在满足各卡显存上限的前提下降低瓶颈流水级耗时。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.86\linewidth]{e2e_HR.pdf}
-  \caption{不同冻结策略下各框架在 \texttt{none}、\texttt{full}、\texttt{selective} 及 HR-MMoH 配置族上的最短迭代时间对比。}
+  \includegraphics[width=0.75\linewidth]{e2e_HR.pdf}
+  \caption{不同冻结策略下各框架在 none、full、selective 及 HR-MMoH 下的最短迭代时间对比。}
   \label{fig:hr-mmoh-e2e-hr}
 \end{figure}
 
-图\ref{fig:hr-mmoh-e2e-hr}结果显示：在四种冻结条件下，启用异构重计算的 HR-MMoH 均取得最短 iteration time，说明在放大 batch 与序列、显存余量收紧的设置下，\emph{按流水级差异化}的重计算仍能系统性优于各框架在全局 None/full/selective 下所能达到的最优效果。
+图~\ref{fig:hr-mmoh-e2e-hr} 的实验结果显示，在四种冻结条件下，启用异构重计算的 HR-MMoH 均取得最短迭代时间，说明在更大的批次大小与序列长度的训练设置下，\emph{按流水级差异化}的重计算仍能系统性优于各框架在全局 none / full / selective 下所能达到的最优效果。
 
 具体到数值，HR-MMoH 在 no-freeze、freeze-encoder、freeze-llm、freeze-both 下的迭代时间分别为 27.7714、16.5245、23.7048 与 12.9649~seconds/iteration。
 Espresso 同样覆盖上述四种冻结，其各自最短迭代时间为 29.4536、18.3514、27.2301 与 15.9547~seconds/iteration；与之相比，HR-MMoH 的迭代时间分别缩短 6.1\%、11.0\%、14.9\% 与 23.1\%。
-可见相对这一强异构划分基准，HR-MMoH 的优势随冻结范围扩大而更加显著：freeze-both 场景下流水级间算力与显存需求的差异巨大，统一重计算配置更容易在非瓶颈级产生 “过度重计算”，而 HR-MMoH 通过配置不同的检查点策略，更有效利用了冻结后释放的计算资源。
+可见相对这一强异构划分基准，HR-MMoH 的优势随冻结范围扩大而更加显著。
+freeze-both 场景下流水级间算力与显存需求的差异巨大，统一重计算配置更容易在非瓶颈级产生 “过度重计算”，而 HR-MMoH 通过配置不同的重计算策略，更有效利用了冻结后释放的计算资源。
 
-Whale 在本设定下仅能在 freeze-encoder、freeze-llm 与 freeze-both 三种冻结策略上完成训练（no-freeze 仍不可行），其对应最短迭代时间为 23.2292、26.2986 与 16.6158~seconds/iteration；HR-MMoH 相对 Whale 分别缩短 40.6\%、11.0\% 与 28.2\%。
-其中 freeze-encoder 一列差距最大，与 Whale 在该场景下仍需依赖较重全局重计算、流水级负载与显存峰值更难同时平衡有关。HR-MMoH 则在剖析结果指导下将重计算开销主要分配给显存真正紧张的流水级，从而更明显降低端到端迭代时间。
-Megatron 因同构并行假设下的负载与显存分配失衡，在本实验的四种冻结策略与所试重计算、TP 配置下均触发 OOM，无法给出有效迭代时间，故不参与上图中的迭代时间对比。
+Whale 在本设定下仅能在 freeze-encoder、freeze-llm 与 freeze-both 三种冻结策略上完成训练（no-freeze 仍不可行），其对应最短迭代时间为 23.2292、26.2986 与 16.6158~seconds/iteration。
+HR-MMoH 相对 Whale 分别缩短 40.6\%、11.0\% 与 28.2\%。
+其中 freeze-encoder 一列差距最大，与 Whale 在该场景下仍需依赖较重全局重计算、流水级负载与显存峰值更难同时平衡有关。
+HR-MMoH 则在剖析结果指导下将重计算开销主要分配给显存真正紧张的流水级，从而更明显降低端到端迭代时间。
+Megatron-LM 因同构假设下的负载分配失衡，在本实验的四种冻结策略与所试重计算、TP 配置下均触发 OOM，无法给出有效迭代时间，故不参与上图中的迭代时间对比。
 
 综合而言，在每种冻结策略下将 HR-MMoH 与当前可运行的异构划分方法中较优者（Espresso 和 Whale）相比，端到端加速比落在约 $1.06\times$--$1.41\times$ 区间：相对 Espresso 的提升相对较小（$1.06\times$--$1.23\times$），相对 Whale 在可训练子集上则出现更大幅度的迭代时间下降（$1.11\times$--$1.41\times$）。
 这表明 HR-MMoH 并非单一“更重的全局重计算”，而是在 MMoH 划分之上对计算显存占用进行进一步优化，可与第三章的划分与调度形成互补。
@@ -454,33 +504,35 @@ Megatron 因同构并行假设下的负载与显存分配失衡，在本实验�
 % 本节对比 Megatron，Whale，Espresso，HR-MMoH 在不同冻结策略下的显存分析，具体数据如图所示。更大的 batchsize，更长的 encoder 和 llm 的 sequence length，模型训练时需要的显存开销剧增。我们在此章节对比了不同冻结策略下，Megatron，Whale,，Espresso，HR-MMoH 的显存使用情况，来分析 HR-MMoH 的显存优化能力，看看其是否能避免 OOM 并且保持较高的 GPU 利用率。
 
 
-本节对比 MMoH 与 HR-MMoH 在不同冻结策略下的 iteration time 及重计算配置差异，以验证在同一划分与调度之上引入按流水级异构重计算能否进一步带来端到端收益；结果如图\ref{fig:hr-mmoh-ablation}所示。
+为了验证在同一划分与调度之上引入按流水级异构重计算能否进一步带来端到端收益，本节还对比了 MMoH 与 HR-MMoH 在不同冻结策略下最优训练速度，结果如图~\ref{fig:hr-mmoh-ablation} 所示。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.86\linewidth]{HR_ablation.pdf}
+  \includegraphics[width=0.75\linewidth]{HR_ablation.pdf}
   \caption{不同冻结策略下 MMoH 与 HR-MMoH 的迭代时间对比}
   \label{fig:hr-mmoh-ablation}
 \end{figure}
 
-实验显示，在 no-freeze、freeze-encoder、freeze-both 三种冻结配置下，启用异构重计算的 HR-MMoH 均获得可观的性能提升，说明在更大的批次大小和更长的序列长度设定下，按流水级差异化重计算仍能系统性优于 MMoH 的全局 none/full/selective 配置。
+实验显示，在 no-freeze、freeze-encoder、freeze-both 三种冻结配置下，启用异构重计算的 HR-MMoH 均获得不错的性能提升，说明在更大的批次大小和更长的序列长度设定下，按流水级差异化重计算仍能系统性优于 MMoH 的全局 none/full/selective 配置。
 具体来说，HR-MMoH 在 no-freeze、freeze-encoder、freeze-both 下的迭代时间加速比分别为 $1.06\times$、$1.04\times$、$1.12\times$。
-值得注意的是，在 freeze-llm 的场景下，HR-MMoH 的最优配置和 MMoH 的配置相同，即都不使用任何重计算策略，因此两者迭代时间差异不显著，这是因为在 freeze-llm 的场景下，两者使用了相同的重计算策略，即都不使用任何重计算。
-但是在 freeze-both 的场景下，HR-MMoH 的迭代时间加速比达到了 $1.12\times$，这表明在某些显存开销较小的场景下，按设备差异化重计算仍能发挥有效性。
-具体来看，MMoH 在使用默认的全局 selective 重计算策略时，迭代时间为最短，相比全局 none 重计算策略，TP 可以从 4 减少为2，大幅减少了通信开销，而 HR-MMoH 在使用了异构重计算策略后，有了进一步的加速。
+值得注意的是，在 freeze-llm 的场景下，HR-MMoH 的最优配置和 MMoH 的配置相同，因此两者迭代时间差异不显著。
+这是因为在 freeze-llm 的场景下，两者使用了相同的重计算策略，即均为 none。
+但是在 freeze-both 的场景下，HR-MMoH 的迭代时间加速比达到了 $1.12\times$，按设备差异化重计算带来了可观的性能提升。
+具体来看，MMoH 在使用默认的全局 selective 重计算策略时，迭代时间为最短，相比全局 none 重计算策略，TP 可以从 4 减少为 2，大幅减少了通信开销，而 HR-MMoH 在使用了异构重计算策略后，有了进一步的加速。
 
-前述实验以训练吞吐与迭代时间为主要指标，本段进一步验证 MMoH 的提前终止调度与 HR-MMoH 的异构重计算是否影响模型训练质量。
-从原理上看，提前终止调度仅省略冻结前缀流水级中对可训练参数梯度无贡献的反向计算与通信，不改变任何可训练参数的梯度值；异构重计算则是在反向阶段重新执行前向以恢复中间激活，并不改变梯度计算的数学语义。
+前述实验以迭代时间为主要指标，本段进一步验证 MMoH 的调度方式与 HR-MMoH 的重计算策略是否影响模型训练质量。
+从原理上看，MMoH 提前终止调度仅省略冻结前缀流水级中对可训练参数梯度无贡献的反向计算与通信，不改变任何可训练参数的梯度值；HR-MMoH 异构重计算则是在反向阶段重新执行前向以恢复中间激活，并不改变梯度计算的数学语义。
 因此，在相同随机种子、相同超参数与相同数据顺序下，上述优化不应引入训练精度偏差。
 
-为实证上述分析，本文在 MLLM-12B + Cluster-L 上选取 freeze-both 这一冻结范围最大、流水级间算存差异最显著的场景，设计如下三组对照实验，均采用相同的超参数与数据顺序：（a）Espresso 划分 + 全局 selective 重计算（基线）；（b）MMoH 划分 + 提前终止调度 + 全局 selective 重计算；（c）完整的 HR-MMoH，即 MMoH 划分 + 提前终止调度 + 按流水级异构重计算。
+为实证上述分析，本文在 MLLM-12B + Cluster-L 上选取 freeze-both 这一冻结范围最大的场景，设计如下三组对照实验，均采用相同的超参数：（a）Espresso 划分 + 全局 selective 重计算（基线）；（b）MMoH 划分 + 提前终止调度 + 全局 selective 重计算；（c）完整的 HR-MMoH，即 MMoH 划分 + 提前终止调度 + 按流水级异构重计算。
 选择 Espresso 而非 Megatron-LM 作为基线，是因为后者在当前大批次长序列设定下会发生显存溢出（参见图~\ref{fig:hr-mmoh-throughput-freeze}），而 Espresso 是可正常运行的异构划分方法中性能较优者。
 三组配置分别进行 200 步训练并记录每步的训练损失。
-如图~\ref{fig:chap4-loss-curve} 所示，三条损失曲线在训练过程中有微小差异，但整体下降趋势与收敛速率一致，在训练后期趋于相同水平。配置 (b) 与基线 (a) 的损失轨迹高度接近，表明 MMoH 的提前终止调度不影响模型收敛质量；配置 (c) 与 (b) 同样未出现发散或系统性偏移，说明按流水级差异化的异构重计算同样不改变训练收敛行为。上述结果从实验层面证实了理论分析的正确性。
+
+实验结果如图~\ref{fig:chap4-loss-curve} 所示，三条损失曲线在训练过程中有微小差异，但整体下降趋势与收敛速率一致，在训练后期趋于相同水平。配置 (b) 与基线 (a) 的损失轨迹高度接近，表明 MMoH 的提前终止调度不影响模型收敛质量；配置 (c) 与 (b) 同样未出现发散或系统性偏移，说明按流水级差异化的异构重计算同样不改变训练收敛行为。上述结果从实验层面证实了理论分析的正确性。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.68\linewidth]{loss_curve_convergence}
+  \includegraphics[width=0.80\linewidth]{loss_curve_convergence}
   \caption{训练收敛性验证：三种配置下 MLLM-12B 在 Cluster-L freeze-both 场景的训练损失对比。(a) Espresso + selective（基线），(b) MMoH + 提前终止 + selective，(c) HR-MMoH（提前终止 + 异构重计算）。}
   \label{fig:chap4-loss-curve}
 \end{figure}
@@ -488,17 +540,18 @@ Megatron 因同构并行假设下的负载与显存分配失衡，在本实验�
 
 \subsection{实验分析}
 
-异构集群上各流水级显存与算力分布不均，统一配置可能为了防止显存不足而导致重计算过多，要么过度重计算导致瓶颈流水级存在过重的计算负担。按流水级差异化配置后，可在满足各流水级显存约束的前提下，将“重计算预算”更多分配给显存紧张、算力相对充裕的流水级，从而在系统层面降低迭代时间。
+异构 GPU 集群上各流水级显存与算力分布不均，为防止 OOM 而采用统一且偏激进的重计算时，往往使重计算过多，瓶颈流水级计算负担进一步加大。
+按流水级差异化配置后，可在满足各流水级显存约束的前提下，根据各流水级使用的硬件配置使用不同的重计算策略，从而在系统层面降低训练迭代时间。
 
-MMoH 的复合粒度与冻结感知划分已使各流水级负载趋于均衡；HR-MMoH 在此基础上对显存维度做细粒度调节，二者结合可形成“划分—调度—重计算优化”的闭环。未来工作可将 HR-MMoH 的配置搜索与 MMoH 的整数规划联合建模，在进行模型划分和设备映射的时候就考虑重计算给迭代时间和显存开销带来的影响。
+MMoH 的复合粒度与冻结感知划分已使各流水级负载趋于均衡，HR-MMoH 在此基础上做细粒度调节，二者结合可形成“划分—调度—重计算多级优化”的闭环。
+未来工作可将 HR-MMoH 的配置搜索与 MMoH 的整数规划联合建模，在进行模型划分和设备映射时即考虑重计算给迭代时间和显存开销带来的影响。
 
 \section{本章小结}
 \label{sec:HR-MMoH-summary}
 
-本章在 MMoH 的异构流水线划分与提前终止调度基础上，针对显存受限流水级仍可能显存溢出、而现有重计算策略多采用全局统一配置难以兼顾显存与效率的问题，
-介绍了 HR-MMoH 的异构重计算技术。
-首先系统梳理了现有的重计算配置粒度，并指出其在同构假设下的局限；随后给出了 HR-MMoH 的设计要点：以各设备显存、算力为约束，为各流水级独立配置重计算粒度与子模块集合，通过基于剖析的配置策略在满足显存不溢出的前提下最小化迭代时间并平衡各流水级负载，并与 MMoH 划分及提前终止调度器协同。
+本章在 MMoH 的异构流水线划分与提前终止调度的基础上，针对显存受限流水级仍可能 OOM、而现有重计算策略多采用全局统一配置难以兼顾显存与效率的问题，提出了 HR-MMoH 的异构重计算技术。
+首先本章系统梳理了现有的重计算配置的粒度，并指出其在同构假设下的局限，随后给出了 HR-MMoH 的设计要点，即以各设备显存、算力为约束，为各流水级独立配置重计算粒度与子模块集合，通过基于剖析的配置策略在满足显存不溢出的前提下抑制冗余重计算，并与 MMoH 划分及提前终止调度器协同。
 实验结果表明，在不同冻结场景下 HR-MMoH 取得了显著加速，相比现有方法最高达到约 $1.41\times$ 的加速比。
-HR-MMoH 与第三章的 MMoH 共同构成“划分—调度—重计算优化”的联合优化框架，为异构 GPU 集群上 MLLMs 的高效训练提供了有效补充。
+HR-MMoH 与第三章的 MMoH 共同构成“划分—调度—重计算多级优化”框架，为异构 GPU 集群上 MLLMs 的高效训练提供了有效的技术补充。
 
 

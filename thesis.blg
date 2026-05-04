@@ -1,6 +1,6 @@
 This is BibTeX, Version 0.99d (TeX Live 2022)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
-The top-level auxiliary file: thesis_blind.aux
+The top-level auxiliary file: thesis.aux
 The style file: bstutf8.bst
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
@@ -200,7 +200,7 @@ Warning--empty editor in mist2025
 Done.
 You've used 118 entries,
             4554 wiz_defined-function locations,
-            1566 strings with 30808 characters,
+            1566 strings with 30796 characters,
 and the built_in function-call counts, 75846 in all, are:
 = -- 8434
 > -- 1420
