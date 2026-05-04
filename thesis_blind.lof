@@ -4,9 +4,9 @@
 \contentsline {figure}{\numberline {2.1}{\ignorespaces MLLM 多阶段训练中典型模块冻结\relax }}{16}{figure.caption.13}%
 \contentsline {figure}{\numberline {2.2}{\ignorespaces 数据并行示意\relax }}{17}{figure.caption.14}%
 \contentsline {figure}{\numberline {2.3}{\ignorespaces 张量并行示意（左、右分别示意两类典型矩阵切分与通信模式；二者在注意力子层与前馈子层中均需组合使用）\relax }}{18}{figure.caption.15}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces 流水线并行示意\relax }}{19}{figure.caption.16}%
-\contentsline {figure}{\numberline {2.5}{\ignorespaces 专家并行中的门控路由与专家分布示意\relax }}{20}{figure.caption.17}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces 零冗余优化器 ZeRO 示意\relax }}{21}{figure.caption.18}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces 流水线并行示意\relax }}{18}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces 专家并行中的门控路由与专家分布示意\relax }}{19}{figure.caption.17}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces 零冗余优化器 ZeRO 示意\relax }}{20}{figure.caption.18}%
 \contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算示意图\relax }}{24}{figure.caption.19}%
 \contentsline {figure}{\numberline {3.1}{\ignorespaces 主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。\relax }}{28}{figure.caption.21}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。\relax }}{29}{figure.caption.22}%
@@ -16,13 +16,13 @@
 \contentsline {figure}{\numberline {3.6}{\ignorespaces 提前终止调度器效果示意。\relax }}{41}{figure.caption.26}%
 \contentsline {figure}{\numberline {3.7}{\ignorespaces 提前终止在其它流水线调度机制上的适用性。上：Chimera（双向流水线）；下：Hanayo（波式流水线）。\relax }}{42}{figure.caption.27}%
 \contentsline {figure}{\numberline {3.8}{\ignorespaces 四种冻结场景下 MMoH 与基线方法在两种异构集群上的训练吞吐对比（samples/seconds）。柱越长表示吞吐量越高，OOM 表示显存溢出。\relax }}{45}{figure.caption.30}%
-\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，柱高越低表示迭代时间越短。\relax }}{47}{figure.caption.32}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，高度越低表示迭代时间越短。\relax }}{47}{figure.caption.32}%
 \contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。\relax }}{48}{figure.caption.33}%
 \contentsline {figure}{\numberline {4.1}{\ignorespaces HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构 GPU 设备的显存与算力。\relax }}{53}{figure.caption.35}%
 \contentsline {figure}{\numberline {4.2}{\ignorespaces 注意力子层中间激活示意图\relax }}{55}{figure.caption.39}%
 \contentsline {figure}{\numberline {4.3}{\ignorespaces MLP 子层中间激活示意\relax }}{57}{figure.caption.40}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces 不同冻结策略下各框架迭代时间对比（自左至右、自上至下依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。\relax }}{64}{figure.caption.42}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces 不同冻结策略下各框架在 \texttt {none}、\texttt {full}、\texttt {selective} 及 HR-MMoH 配置族上的最短迭代时间对比。\relax }}{65}{figure.caption.43}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces 不同冻结策略下各框架迭代时间对比（自上至下、自左至右依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。\relax }}{64}{figure.caption.42}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces 不同冻结策略下各框架在 none、full、selective 及 HR-MMoH 下的最短迭代时间对比。\relax }}{66}{figure.caption.43}%
 \contentsline {figure}{\numberline {4.6}{\ignorespaces 不同冻结策略下 MMoH 与 HR-MMoH 的迭代时间对比\relax }}{67}{figure.caption.44}%
 \contentsline {figure}{\numberline {4.7}{\ignorespaces 训练收敛性验证：三种配置下 MLLM-12B 在 Cluster-L freeze-both 场景的训练损失对比。(a) Espresso + selective（基线），(b) MMoH + 提前终止 + selective，(c) HR-MMoH（提前终止 + 异构重计算）。\relax }}{68}{figure.caption.45}%
 \contentsfinish 

@@ -726,6 +726,8 @@ pdfborder=0 1 1]{hyperref}
   \null
   \newpage
   \cleardoublepage%
+  % 英文封面页须单独清空页眉页脚；否则延续 alph 页码时此处多为第 3 页，会显示字母 ``c''
+  \thispagestyle{empty}%
 
   \begin{center}\leavevmode
   \vfill\bfseries

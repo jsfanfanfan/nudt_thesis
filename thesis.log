@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  4 MAY 2026 21:22
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  4 MAY 2026 21:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1394,8 +1394,6 @@ LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <16.06> not available
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <16.06> not available
 (Font)              size <17.28> substituted on input line 83.
 
-LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/sl' in size <12.045> not available
-(Font)              Font shape `TU/TimesNewRoman(0)/m/it' tried instead on input line 83.
 [3
 
 ] [4
@@ -1517,8 +1515,8 @@ Overfull \hbox (3.3483pt too wide) in paragraph at lines 32--35
  []
 
 
-Overfull \hbox (0.33919pt too wide) in paragraph at lines 36--39
-\TU/TimesNewRoman(0)/m/n/12.045 larger batch sizes and longer sequences, HR-MMoH delivers the highest throughput across
+Overfull \hbox (0.54524pt too wide) in paragraph at lines 36--39
+\TU/TimesNewRoman(0)/m/n/12.045 batch sizes and longer sequences, HR-MMoH delivers the highest throughput across freez-
  []
 
 )
@@ -1848,10 +1846,10 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 482911EDEE84CF4C774DEFB7F13DFC00;10561.
  ) 
 Here is how much of TeX's memory you used:
- 42970 strings out of 476179
- 879139 string characters out of 5813072
- 1210490 words of memory out of 5000000
- 62879 multiletter control sequences out of 15000+600000
+ 42968 strings out of 476179
+ 879085 string characters out of 5813072
+ 1210498 words of memory out of 5000000
+ 62878 multiletter control sequences out of 15000+600000
  504506 words of font info for 248 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  125i,20n,120p,1082b,1019s stack positions out of 10000i,1000n,20000p,200000b,200000s
