@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  4 MAY 2026 21:39
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  5 MAY 2026 09:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1500,12 +1500,31 @@ Overfull \hbox (0.54524pt too wide) in paragraph at lines 36--39
 \TU/TimesNewRoman(0)/m/n/12.045 batch sizes and longer sequences, HR-MMoH delivers the highest throughput across freez-
  []
 
-)
-Overfull \hbox (0.6318pt too wide) in paragraph at lines 40--96
-[]\TU/Arial(0)/m/n/12.045 Key Words\TU/SimHei(0)/m/n/12.045 ：| \TU/Arial(0)/b/n/12.045 Multimodal large language model\TU/Arial(0)/m/n/12.045 ; \TU/Arial(0)/b/n/12.045 Heterogeneous GPU clus-
- []
 
-[3
+Package fontspec Info: Font family 'Arial(1)' created for font 'Arial' with
+(fontspec)             options [Mapping=tex-text].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.:
+(fontspec)             <->"Arial/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'small caps'  (m/sc) with NFSS spec.:
+(fontspec)             <->"Arial/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
+(fontspec)             - 'bold' (b/n) with NFSS spec.:
+(fontspec)             <->"Arial/B/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.:
+(fontspec)             <->"Arial/B/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
+(fontspec)             - 'italic' (m/it) with NFSS spec.:
+(fontspec)             <->"Arial/I/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'italic small caps'  (m/scit) with NFSS spec.:
+(fontspec)             <->"Arial/I/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
+(fontspec)             - 'bold italic' (b/it) with NFSS spec.:
+(fontspec)             <->"Arial/BI/OT:script=latn;language=dflt;mapping=tex-text;"
+(fontspec)             - 'bold italic small caps'  (b/scit) with NFSS spec.:
+(fontspec)             <->"Arial/BI/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
+
+) [3
 
 
 
@@ -1827,11 +1846,11 @@ Package rerunfilecheck Info: File `thesis_blind.out' has not changed.
 (rerunfilecheck)             Checksum: 482911EDEE84CF4C774DEFB7F13DFC00;10561.
  ) 
 Here is how much of TeX's memory you used:
- 42957 strings out of 476179
- 879082 string characters out of 5813072
- 1210550 words of memory out of 5000000
- 62869 multiletter control sequences out of 15000+600000
- 504506 words of font info for 248 fonts, out of 8000000 for 9000
+ 42990 strings out of 476179
+ 879928 string characters out of 5813072
+ 1210583 words of memory out of 5000000
+ 62892 multiletter control sequences out of 15000+600000
+ 504586 words of font info for 258 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  125i,20n,120p,1088b,1016s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

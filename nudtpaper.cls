@@ -448,7 +448,9 @@ pdfborder=0 1 1]{hyperref}
 \newcommand\ckeywordsname{关键词}
 \newcommand\ckeywords[1]{{\hei\xiaosi \ckeywordsname：#1}}
 \newcommand\ekeywordsname{Key Words}
-\newcommand\ekeywords[1]{\textsf{\xiaosi \ekeywordsname：#1}}
+\newcommand\ekeywords[1]{{%
+  \fontspec{Arial}\selectfont\xiaosi
+  \ekeywordsname：#1}}
 \newenvironment{cabstract}{%
     \chapter{\cabstractname}
     \xiaosi
@@ -672,7 +674,7 @@ pdfborder=0 1 1]{hyperref}
   \vspace*{2.5cm} %插入空白
   {\heiti\sanhao \@optionpaperclass{}学位论文}\\
   \vspace*{0.3cm} %插入空白
-  {\heiti\sanhao（专业学位）}\\
+  {\fangsong\sanhao（专业学位）}\\
   \vspace{10bp}
   {\cusong\erhao[1.25] \@title \par}%
   \vspace{45bp} %从WORD中得来
