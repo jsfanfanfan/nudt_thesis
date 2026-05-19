@@ -1,4 +1,4 @@
-\chapter{HR-MMoH: 多模态大语言模型在异构 GPU 集群上的重计算技术}
+\chapter{多模态大语言模型在异构 GPU 集群上的重计算技术}
 
 异构 GPU 设备的显存容量存在显著差异，仅依赖模型划分与流水线调度策略，仍难以在各流水级同时满足大批次与长序列带来的激活值显存需求，因此显存仍是制约端到端可训练配置的关键因素。
 重计算技术缓解了这个问题，但是为同构集群设计的重计算策略往往难以充分适配异构 GPU 集群中非均匀的算力与显存约束。
@@ -88,7 +88,7 @@ recompute\_method 有两种可配置项：
 \end{itemize}
 
 \textbf{选择重计算（selective）}在 Transformer 模型层内以子模块为粒度执行重计算，即仅对指定的子模块在反向阶段进行重计算，其余模块仍按常规方式保留激活，具体需要重计算的子模块由 recompute\_modules 指定。
-采用选择重计算时，recompute\_method 与 recompute\_num\_layers 均应设为 \texttt{None}（Python 空值，表示该参数不适用）。
+采用选择重计算时，recompute\_method 与 recompute\_num\_layers 均应设为 None（Python 空值，表示该参数不适用）。
 值得注意的是，选择重计算的配置将统一作用于所有流水级中的各层，即所有流水级中的各层都使用相同的子模块列表与重计算策略。
 
 子模块可选项由训练脚本中的 recompute\_modules 参数给出，为 Python 中的列表格式，未显式配置时默认使用 [core\_attn]。
@@ -195,7 +195,7 @@ recompute\_method 有两种可配置项：
   \label{fig:chap4-recomp-mlp}
 \end{figure}
 
-\emph{两个 LayerNorm 层}（注意力子层前、MLP 前各一个）各保存输入 $2 B S H$，合计显存开销为
+两个 LayerNorm 层（注意力子层前、MLP 前各一个）各保存输入 $2 B S H$，合计显存开销为
 \begin{equation}
   N_{\mathrm{ln}} = 4 B S H.
 \end{equation}
@@ -330,13 +330,13 @@ $R_p$ 及显存峰值受算子融合等实现因素影响，本文实践中以�
 据此构造长度有限的候选策略集 $\Theta=(\theta^{1},\ldots,\theta^{7})$：在 Megatron-LM 语义下自\emph{保守}端（激活常驻规模较大、重计算较少）至\emph{激进}端（激活常驻规模较小、重计算较多）排列。
 下文（1）--（7）的编号仅用于说明本文在工程实现中对各候选配置的含义，实际的重计算配置根据模型结构会有更多候选，\emph{工程实现中应依据实际模型参数得到的 $\mathrm{Mem}_p^{\mathrm{act}}(\theta)$ 对 $\Theta$ 重新排序}，使其满足 $\mathrm{Mem}_p^{\mathrm{act}}(\theta^{i})\ge \mathrm{Mem}_p^{\mathrm{act}}(\theta^{i+1})$。
 本文配置的 $\Theta$ 各候选项含义如下：
-（1）\texttt{none}：不启用重计算；
-（2）\texttt{Selective-LayerNorm}：仅对 LayerNorm 子模块启用重计算；
-（3）\texttt{Selective-MLP}：仅对 MLP 子模块启用重计算；
-（4）\texttt{Selective-Attn}：采用默认 selective 粒度，即仅对注意力子模块（\texttt{core\_attn}）启用重计算；
-（5）\texttt{Selective-Attn+MLP}：对注意力与 MLP 子模块启用重计算；
-（6）\texttt{Selective-LayerNorm+Attn+MLP}：对注意力、LayerNorm 与 MLP 子模块启用重计算；
-（7）\texttt{full}：采用 full 粒度，对整层进行重计算。
+（1）none：不启用重计算；
+（2）Selective-LayerNorm：仅对 LayerNorm 子模块启用重计算；
+（3）Selective-MLP：仅对 MLP 子模块启用重计算；
+（4）Selective-Attn：采用默认 selective 粒度，即仅对注意力子模块（core\_attn）启用重计算；
+（5）Selective-Attn+MLP：对注意力与 MLP 子模块启用重计算；
+（6）Selective-LayerNorm+Attn+MLP：对注意力、LayerNorm 与 MLP 子模块启用重计算；
+（7）full：采用 full 粒度，对整层进行重计算。
 
 记非冻结流水级集合为 $\mathcal{U}$，并令 $\mathrm{mid}=\lfloor P/2\rfloor$ 作为前后半段分界。
 定义 $\mathcal{U}_{\mathrm{front}}=\{\,p\in\mathcal{U}\mid p\le \mathrm{mid}\,\}$、$\mathcal{U}_{\mathrm{back}}=\mathcal{U}\setminus\mathcal{U}_{\mathrm{front}}$，分别对应靠近输入侧与靠近输出侧的非冻结流水级；
@@ -526,7 +526,7 @@ Megatron-LM 因同构假设下的负载分配失衡，在本实验的四种冻�
 
 为实证上述分析，本文在 MLLM-12B + Cluster-L 上选取 freeze-both 这一冻结范围最大的场景，设计如下三组对照实验，均采用相同的超参数：（a）Espresso 划分 + 全局 selective 重计算（基线）；（b）MMoH 划分 + 提前终止调度 + 全局 selective 重计算；（c）完整的 HR-MMoH，即 MMoH 划分 + 提前终止调度 + 按流水级异构重计算。
 选择 Espresso 而非 Megatron-LM 作为基线，是因为后者在当前大批次长序列设定下会发生显存溢出（参见图~\ref{fig:hr-mmoh-throughput-freeze}），而 Espresso 是可正常运行的异构划分方法中性能较优者。
-三组配置分别进行 200 步训练并记录每步的训练损失。
+三组配置分别进行 400 步训练并记录每步的训练损失。
 
 实验结果如图~\ref{fig:chap4-loss-curve} 所示，三条损失曲线在训练过程中有微小差异，但整体下降趋势与收敛速率一致，在训练后期趋于相同水平。配置 (b) 与基线 (a) 的损失轨迹高度接近，表明 MMoH 的提前终止调度不影响模型收敛质量；配置 (c) 与 (b) 同样未出现发散或系统性偏移，说明按流水级差异化的异构重计算同样不改变训练收敛行为。上述结果从实验层面证实了理论分析的正确性。
 

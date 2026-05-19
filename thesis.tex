@@ -71,8 +71,6 @@
 \papertype{工学}
 \enpapertype{Engineering}
 % 加入makenomenclature命令可用nomencl制作符号列表。
-\AtBeginDocument{\makeatletter\let\origcleardoublepage\cleardoublepage\makeatother}
-
 \begin{document}
 	\graphicspath{{figures/}}
 	% 制作封面，生成目录，插入摘要，插入符号列表 \\
@@ -82,6 +80,9 @@
 	% printnomenclature% \\
 \maketitle
 \frontmatter
+\makeatletter
+\renewcommand{\cleardoublepage}{\cleardoublepagewithhead}
+\makeatother
 \cleardoublepage
 \tableofcontents
 \cleardoublepage

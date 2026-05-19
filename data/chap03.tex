@@ -1,4 +1,4 @@
-\chapter{MMoH：多模态大语言模型在异构 GPU 集群上的高效混合并行技术}
+\chapter{多模态大语言模型在异构 GPU 集群上的高效混合并行技术}
 
 多模态大语言模型（MLLMs）在结构上由编码器、投影层与 LLM Backbone 等异构模块组成，
 训练时又广泛采用分阶段冻结的训练策略，致使不同模型层的计算量与显存需求随模块类型与参数训练状态而呈现显著差异。
@@ -619,5 +619,5 @@ Espresso+ 相对 Espresso 约提升 11.3\%，说明调度器单独接入异构�
 
 
 \makeatletter
-\ifodd\c@page\else\null\thispagestyle{empty}\clearpage\fi
+\ifodd\c@page\else\null\clearpage\fi
 \makeatother
