@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  31 MAY 2026 17:10
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  31 MAY 2026 23:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1453,14 +1453,16 @@ Package fontspec Info: Font family 'SimSun(2)' created for font 'SimSun' with
 
 ] [6
 
-] (./thesis.lof [7
-
-
-])
+] (./thesis.lof)
 \tf@lof=\write8
 \openout8 = `thesis.lof'.
 
- [8] (./data/abstract.tex [1
+ [7
+
+
+] [8
+
+] (./data/abstract.tex [1
 
 
 
@@ -1611,7 +1613,7 @@ File: figures//MMoH-figs/hybrid-granularity-split.pdf Graphic file (type pdf)
  [35]
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 225.
+(Font)              size <8> substituted on input line 227.
 
 [36] [37] [38] [39]
 File: figures//MMoH-figs/freeze-optimization.pdf Graphic file (type pdf)
@@ -1624,22 +1626,21 @@ File: figures//hanayo.pdf Graphic file (type pdf)
  [42]
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/it' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 403.
+(Font)              size <10.95> substituted on input line 406.
 
 [43]
 File: figures//MMoH-figs/e2e_3B.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/e2e_3B.pdf>
 File: figures//MMoH-figs/e2e_12B.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/e2e_12B.pdf>
- [44] [45]
+ [44] [45] [46]
 File: figures//MMoH-figs/load_balance.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/load_balance.pdf>
- [46] [47]
 File: figures//MMoH-figs/early_termination.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/early_termination.pdf>
 File: figures//MMoH-figs/ET-time.pdf Graphic file (type pdf)
 <use figures//MMoH-figs/ET-time.pdf>
- [48]) (./data/chap04.tex [49] [50
+ [47] [48]) (./data/chap04.tex [49] [50
 
 ] [51
 
@@ -1648,22 +1649,22 @@ File: figures//MMoH-figs/ET-time.pdf Graphic file (type pdf)
 File: figures//HR-MMoH.pdf Graphic file (type pdf)
 <use figures//HR-MMoH.pdf>
 
-Overfull \hbox (1.60976pt too wide) in paragraph at lines 69--69
+Overfull \hbox (1.60976pt too wide) in paragraph at lines 70--70
 []|\TU/CourierNew(0)/m/n/10.53937 recompute_method|  
  []
 
 
-Overfull \hbox (7.93443pt too wide) in paragraph at lines 73--73
+Overfull \hbox (7.93443pt too wide) in paragraph at lines 74--74
 |[][] 
  []
 
 
-Overfull \hbox (7.9344pt too wide) in paragraph at lines 75--75
+Overfull \hbox (7.9344pt too wide) in paragraph at lines 76--76
 []|\TU/CourierNew(0)/m/n/10.53937 recompute_modules|  
  []
 
 [52] [53] [54]
-Overfull \hbox (1.28691pt too wide) in paragraph at lines 159--159
+Overfull \hbox (1.28691pt too wide) in paragraph at lines 160--160
 []|$\OML/cmm/m/it/10.95 N[]$| 
  []
 
@@ -1673,74 +1674,69 @@ File: figures//recomputation_attention.pdf Graphic file (type pdf)
 File: figures//recomputation_mlp.pdf Graphic file (type pdf)
 <use figures//recomputation_mlp.pdf>
  [56] [57]
-Underfull \hbox (badness 10000) in paragraph at lines 254--254
+Underfull \hbox (badness 10000) in paragraph at lines 255--255
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 256--256
+Underfull \hbox (badness 10000) in paragraph at lines 257--257
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--258
+Underfull \hbox (badness 10000) in paragraph at lines 259--259
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--258
+Underfull \hbox (badness 10000) in paragraph at lines 259--259
 \TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 mlp\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 260--260
+Underfull \hbox (badness 10000) in paragraph at lines 261--261
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 260--260
+Underfull \hbox (badness 10000) in paragraph at lines 261--261
 \TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--262
+Underfull \hbox (badness 10000) in paragraph at lines 263--263
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--262
+Underfull \hbox (badness 10000) in paragraph at lines 263--263
 \TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--264
+Underfull \hbox (badness 10000) in paragraph at lines 265--265
 []|\TU/CourierNew(0)/m/n/10.53937 selective
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--264
+Underfull \hbox (badness 10000) in paragraph at lines 265--265
 \TU/TimesNewRoman(0)/m/n/10.53937 [\TU/CourierNew(0)/m/n/10.53937 core_attn\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--264
+Underfull \hbox (badness 10000) in paragraph at lines 265--265
 \TU/CourierNew(0)/m/n/10.53937 mlp\TU/TimesNewRoman(0)/m/n/10.53937 ,
  []
 
 [58] [59] [60]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 350.
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 345.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 8.99994pt on input line 354.
+(Font)              scaled to size 8.99994pt on input line 352.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 6.29996pt on input line 354.
+(Font)              scaled to size 6.29996pt on input line 352.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 4.49997pt on input line 354.
-
-Underfull \hbox (badness 1112) in paragraph at lines 355--356
-[] []\TU/SimSun(1)/m/n/10 全 序 候 选 $\OT1/cmr/m/n/10 ^^B = (\OML/cmm/m/it/10 ^^R[]; [] ; ^^R[]\OT1/cmr/m/n/10 )$ |\TU/SimSun(1)/m/n/10 （本 文 $\OML/cmm/m/it/10 G[]\OT1/cmr/m/n/10 7$\TU/SimSun(1)/m/n/10 ，| $[][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R[]\OT1/cmr/m/n/10 )$ \TU/SimSun(1)/m/n/10 随 $\OML/cmm/m/it/10 i$ \TU/SimSun(1)/m/n/10 增 大 非 增） ；|  剖 析 表
- []
-
-[61] [62]
+(Font)              scaled to size 4.49997pt on input line 352.
+ [61] [62] [63]
 File: figures//e2e_no-freeze.pdf Graphic file (type pdf)
 <use figures//e2e_no-freeze.pdf>
 File: figures//e2e_freeze-enc.pdf Graphic file (type pdf)
@@ -1749,7 +1745,7 @@ File: figures//e2e_freeze-lm.pdf Graphic file (type pdf)
 <use figures//e2e_freeze-lm.pdf>
 File: figures//e2e_freeze-both.pdf Graphic file (type pdf)
 <use figures//e2e_freeze-both.pdf>
- [63] [64]
+ [64]
 File: figures//e2e_HR.pdf Graphic file (type pdf)
 <use figures//e2e_HR.pdf>
  [65]
@@ -1865,12 +1861,12 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: BB23C6486250DBF0D6C77C49A71936C0;10579.
  ) 
 Here is how much of TeX's memory you used:
- 43026 strings out of 476179
- 881662 string characters out of 5813072
- 1210479 words of memory out of 5000000
- 62924 multiletter control sequences out of 15000+600000
- 504586 words of font info for 258 fonts, out of 8000000 for 9000
+ 42914 strings out of 476179
+ 873976 string characters out of 5813072
+ 1205938 words of memory out of 5000000
+ 62808 multiletter control sequences out of 15000+600000
+ 504618 words of font info for 262 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 125i,20n,120p,1082b,989s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 125i,20n,120p,1082b,1050s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on thesis.pdf (110 pages).

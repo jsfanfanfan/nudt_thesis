@@ -291,22 +291,22 @@
 \@writefile{toc}{\contentsline {section}{\numberline {3.1}引言}{27}{section.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}问题与动机}{27}{subsection.3.1.1}\protected@file@percent }
 \citation{blip2}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces 主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。\relax }}{28}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:chap3_moti_a}{{3.1}{28}{主流 MLLMs 的编码器—投影层—LLM 结构及冻结方式。\relax }{figure.caption.21}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。\relax }}{29}{figure.caption.22}\protected@file@percent }
-\newlabel{fig:chap3_moti_b}{{3.2}{29}{LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势（NF 为不冻结，FB 为 freeze-both）。\relax }{figure.caption.22}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces 不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间，MMoH1/MMoH2 为 MMoH 规划器针对各场景得到的策略。\relax }}{29}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:chap3_moti_c}{{3.3}{29}{不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间，MMoH1/MMoH2 为 MMoH 规划器针对各场景得到的策略。\relax }{figure.caption.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces 主流 MLLMs 的编码器—投影层—LLM 结构\relax }}{28}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:chap3_moti_a}{{3.1}{28}{主流 MLLMs 的编码器—投影层—LLM 结构\relax }{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势\relax }}{29}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:chap3_moti_b}{{3.2}{29}{LLM 与 MLLM-3B 各层计算开销与显存占用的变化趋势\relax }{figure.caption.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces 不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间\relax }}{29}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:chap3_moti_c}{{3.3}{29}{不同并行策略在两种冻结场景下训练 MLLM-3B 的迭代时间\relax }{figure.caption.23}{}}
 \citation{whale}
 \citation{espresso2025}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}MMoH 框架概览}{30}{subsection.3.1.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces MMoH 框架总览。\relax }}{32}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:chap3_overview}{{3.4}{32}{MMoH 框架总览。\relax }{figure.caption.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces MMoH 框架总览\relax }}{32}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:chap3_overview}{{3.4}{32}{MMoH 框架总览\relax }{figure.caption.24}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}MMoH 并行策略规划器}{32}{section.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}需求驱动的设备拓扑识别}{33}{subsection.3.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}复合粒度模型抽象}{35}{subsection.3.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces 复合粒度抽象示意。（a）编码器：将连续多层合并为编码器层块；（b）LLM Backbone：将单层拆分为注意力块与 FFN 块，不增加流水级间通信量。\relax }}{35}{figure.caption.25}\protected@file@percent }
-\newlabel{fig:chap3_hybrid}{{3.5}{35}{复合粒度抽象示意。（a）编码器：将连续多层合并为编码器层块；（b）LLM Backbone：将单层拆分为注意力块与 FFN 块，不增加流水级间通信量。\relax }{figure.caption.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces 复合粒度抽象示意\relax }}{35}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:chap3_hybrid}{{3.5}{35}{复合粒度抽象示意\relax }{figure.caption.25}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}冻结感知的模型划分}{36}{subsection.3.2.3}\protected@file@percent }
 \newlabel{eq:chap3-tstar}{{3.4}{37}{冻结感知的模型划分}{equation.3.2.4}{}}
 \newlabel{eq:chap3-partition-opt}{{3.6}{37}{冻结感知的模型划分}{equation.3.2.6}{}}
@@ -315,13 +315,13 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}冗余识别与剪枝规则}{39}{subsection.3.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}调度流程与实现细节}{40}{subsection.3.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}对成本模型与划分策略的影响}{40}{subsection.3.3.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces 提前终止调度器效果示意。\relax }}{41}{figure.caption.26}\protected@file@percent }
-\newlabel{fig:chap3_et}{{3.6}{41}{提前终止调度器效果示意。\relax }{figure.caption.26}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces 提前终止调度器效果示意\relax }}{41}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:chap3_et}{{3.6}{41}{提前终止调度器效果示意\relax }{figure.caption.26}{}}
 \citation{chimera_pp2023}
 \citation{hanayo_pp}
 \citation{megatron2020}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces 提前终止在其它流水线调度机制上的适用性。上：Chimera（双向流水线）；下：Hanayo（波式流水线）。\relax }}{42}{figure.caption.27}\protected@file@percent }
-\newlabel{fig:chap3_chimera_hanayo}{{3.7}{42}{提前终止在其它流水线调度机制上的适用性。上：Chimera（双向流水线）；下：Hanayo（波式流水线）。\relax }{figure.caption.27}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces 提前终止在其它流水线调度机制上的适用性\relax }}{42}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:chap3_chimera_hanayo}{{3.7}{42}{提前终止在其它流水线调度机制上的适用性\relax }{figure.caption.27}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}实现要点}{42}{subsection.3.3.4}\protected@file@percent }
 \citation{llava2023}
 \@writefile{toc}{\contentsline {section}{\numberline {3.4}实验验证}{43}{section.3.4}\protected@file@percent }
@@ -334,15 +334,15 @@
 \@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces 实验用 MLLM 模块配置（模型参数）\relax }}{44}{table.caption.29}\protected@file@percent }
 \newlabel{tab:chap3-module}{{3.2}{44}{实验用 MLLM 模块配置（模型参数）\relax }{table.caption.29}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}实验结果}{44}{subsection.3.4.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces 四种冻结场景下 MMoH 与基线方法在两种异构集群上的训练吞吐对比（samples/seconds）。柱越长表示吞吐量越高，OOM 表示显存溢出。\relax }}{45}{figure.caption.30}\protected@file@percent }
-\newlabel{fig:chap3_e2e}{{3.8}{45}{四种冻结场景下 MMoH 与基线方法在两种异构集群上的训练吞吐对比（samples/seconds）。柱越长表示吞吐量越高，OOM 表示显存溢出。\relax }{figure.caption.30}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces 四种冻结场景下 MMoH 与基线方法的训练吞吐对比\relax }}{45}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:chap3_e2e}{{3.8}{45}{四种冻结场景下 MMoH 与基线方法的训练吞吐对比\relax }{figure.caption.30}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}实验分析}{46}{subsection.3.4.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces 不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }}{47}{table.caption.31}\protected@file@percent }
-\newlabel{tab:chap3_partition}{{3.3}{47}{不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }{table.caption.31}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，高度越低表示迭代时间越短。\relax }}{47}{figure.caption.32}\protected@file@percent }
-\newlabel{fig:chap3_load}{{3.9}{47}{MMoH 与 Whale、Espresso 在 MLLM-12B 上、两种冻结设置下的负载均衡对比。分布越集中表示划分越均衡，高度越低表示迭代时间越短。\relax }{figure.caption.32}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。\relax }}{48}{figure.caption.33}\protected@file@percent }
-\newlabel{fig:chap3_early}{{3.10}{48}{提前终止调度器消融。Espresso+ 为接入该调度器的 Espresso，MMoH- 为去掉该调度器的 MMoH。\relax }{figure.caption.33}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces 不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }}{46}{table.caption.31}\protected@file@percent }
+\newlabel{tab:chap3_partition}{{3.3}{46}{不同冻结场景下的模型划分对比（加速比 Baseline 为 Whale）\relax }{table.caption.31}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces MMoH 与 Whale、Espresso 在 MLLM-12B 上的负载均衡对比\relax }}{47}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:chap3_load}{{3.9}{47}{MMoH 与 Whale、Espresso 在 MLLM-12B 上的负载均衡对比\relax }{figure.caption.32}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces 提前终止调度器消融\relax }}{48}{figure.caption.33}\protected@file@percent }
+\newlabel{fig:chap3_early}{{3.10}{48}{提前终止调度器消融\relax }{figure.caption.33}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.5}本章小结}{48}{section.3.5}\protected@file@percent }
 \citation{adapipe2024}
 \citation{mist2025}
@@ -358,8 +358,8 @@
 \newlabel{sec:HR-MMoH-method}{{4.2}{52}{异构 GPU 重计算技术}{section.4.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}现有的重计算策略与定量分析}{52}{subsection.4.2.1}\protected@file@percent }
 \newlabel{sec:megatron-recompute}{{4.2.1}{52}{现有的重计算策略与定量分析}{subsection.4.2.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构 GPU 设备的显存与算力。\relax }}{53}{figure.caption.35}\protected@file@percent }
-\newlabel{fig:chap4-hr-mmoh-overview}{{4.1}{53}{HR-MMoH 框架总览及其与 MMoH 的衔接关系。MMoH 负责划分与调度；HR-MMoH 在各流水级上配置差异化的重计算策略，以进一步适配异构 GPU 设备的显存与算力。\relax }{figure.caption.35}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces HR-MMoH 框架总览及其与 MMoH 的衔接关系\relax }}{53}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:chap4-hr-mmoh-overview}{{4.1}{53}{HR-MMoH 框架总览及其与 MMoH 的衔接关系\relax }{figure.caption.35}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Megatron-LM 重计算相关配置参数\relax }}{54}{table.caption.36}\protected@file@percent }
 \newlabel{tab:chap4-megatron-params}{{4.1}{54}{Megatron-LM 重计算相关配置参数\relax }{table.caption.36}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Megatron-LM 选择重计算下可配置的子模块\relax }}{54}{table.caption.37}\protected@file@percent }
@@ -382,14 +382,14 @@
 \newlabel{sec:HR-MMoH-exp}{{4.3}{63}{实验验证}{section.4.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}实验设置}{63}{subsection.4.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}实验结果}{64}{subsection.4.3.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces 不同冻结策略下各框架迭代时间对比（自上至下、自左至右依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。\relax }}{64}{figure.caption.42}\protected@file@percent }
-\newlabel{fig:hr-mmoh-throughput-freeze}{{4.4}{64}{不同冻结策略下各框架迭代时间对比（自上至下、自左至右依次为 no-freeze、freeze-encoder、freeze-llm、freeze-both）。\relax }{figure.caption.42}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces 不同冻结策略下各框架迭代时间对比\relax }}{64}{figure.caption.42}\protected@file@percent }
+\newlabel{fig:hr-mmoh-throughput-freeze}{{4.4}{64}{不同冻结策略下各框架迭代时间对比\relax }{figure.caption.42}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces 不同冻结策略下各框架在 none、full、selective 及 HR-MMoH 下的最短迭代时间对比。\relax }}{66}{figure.caption.43}\protected@file@percent }
 \newlabel{fig:hr-mmoh-e2e-hr}{{4.5}{66}{不同冻结策略下各框架在 none、full、selective 及 HR-MMoH 下的最短迭代时间对比。\relax }{figure.caption.43}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces 不同冻结策略下 MMoH 与 HR-MMoH 的迭代时间对比\relax }}{67}{figure.caption.44}\protected@file@percent }
 \newlabel{fig:hr-mmoh-ablation}{{4.6}{67}{不同冻结策略下 MMoH 与 HR-MMoH 的迭代时间对比\relax }{figure.caption.44}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces 训练收敛性验证：三种配置下 MLLM-12B 在 Cluster-L freeze-both 场景的训练损失对比。(a) Espresso + selective（基线），(b) MMoH + 提前终止 + selective，(c) HR-MMoH（提前终止 + 异构重计算）。\relax }}{68}{figure.caption.45}\protected@file@percent }
-\newlabel{fig:chap4-loss-curve}{{4.7}{68}{训练收敛性验证：三种配置下 MLLM-12B 在 Cluster-L freeze-both 场景的训练损失对比。(a) Espresso + selective（基线），(b) MMoH + 提前终止 + selective，(c) HR-MMoH（提前终止 + 异构重计算）。\relax }{figure.caption.45}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces freeze-both 场景下三种配置的训练损失对比\relax }}{68}{figure.caption.45}\protected@file@percent }
+\newlabel{fig:chap4-loss-curve}{{4.7}{68}{freeze-both 场景下三种配置的训练损失对比\relax }{figure.caption.45}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}实验分析}{68}{subsection.4.3.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.4}本章小结}{68}{section.4.4}\protected@file@percent }
 \newlabel{sec:HR-MMoH-summary}{{4.4}{68}{本章小结}{section.4.4}{}}
@@ -398,8 +398,6 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}主要创新点}{71}{subsection.5.1.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {5.2}局限性及未来工作展望}{72}{section.5.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}研究局限性}{72}{subsection.5.2.1}\protected@file@percent }
-\citation{zerobubble2024}
-\citation{dualpipe2025}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}未来研究工作}{73}{subsection.5.2.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{致谢}{75}{chapter*.47}\protected@file@percent }
 \bibstyle{bstutf8}
