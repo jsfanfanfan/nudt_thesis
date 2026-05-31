@@ -174,19 +174,6 @@ Scaling Laws for Neural Language Models~[J].
 arXiv preprint arXiv:2001.08361.
 2020:  1--22.
 
-\bibitem{chinchilla2022}
-Hoffmann~J, Borgeaud~S, Mensch~A, et~al.
-Training Compute-Optimal Large Language Models~[C].
-Advances in Neural Information Processing Systems (NeurIPS).
-2022:  30016--30030.
-
-\bibitem{beyond_chinchilla2024}
-Sardana~N, Frankle~J.
-Beyond Chinchilla-Optimal: Accounting for Inference in Language Model Scaling
-  Laws~[C].
-Proceedings of the International Conference on Machine Learning (ICML).
-2024:  29891--29922.
-
 \bibitem{gopher2022}
 Rae~J~W, Borgeaud~S, Cai~T, et~al.
 Scaling Language Models: Methods, Analysis and Insights from Training
@@ -301,13 +288,6 @@ Mixed Precision Training~[C].
 Proceedings of the 35th International Conference on Machine Learning.
 2018:  403--411.
 
-\bibitem{colossal_auto}
-Liu~Y, Li~S, Fang~J, et~al.
-Colossal-Auto: Unified Automation of Parallelization and Activation Checkpoint
-  for Large-scale Models~[J].
-arXiv preprint.
-2023.
-
 \bibitem{flash_attention_2022}
 Dao~T, Fu~D~Y, Ermon~S, et~al.
 FlashAttention: Fast and Memory-Efficient Exact Attention with
@@ -321,6 +301,18 @@ FlashAttention-3: Fast and Accurate Attention with Asynchrony and
   Low-precision~[C].
 Advances in Neural Information Processing Systems (NeurIPS).
 2024:  1--16.
+
+\bibitem{chen2016checkpoint}
+Chen~T, Xu~B, Zhang~C, et~al.
+Training Deep Nets with Sublinear Memory Cost~[C].
+Proceedings of the 33rd International Conference on Machine Learning (ICML).
+2016:  284--293.
+
+\bibitem{megatron2023}
+Korthikanti~V~A, Casper~J, Lym~S, et~al.
+Reducing Activation Recomputation in Large Transformer Models~[C].
+Proceedings of Machine Learning and Systems (MLSys).
+2023:  1--20.
 
 \bibitem{nvidia_a100}
 {NVIDIA Corporation}.
@@ -373,26 +365,18 @@ Advances in Neural Information Processing Systems (NeurIPS).
 2025.
 \url{https://openreview.net/forum?id=xWYL9Ki32T}.
 
-\bibitem{lora2021}
-Hu~E~J, Shen~Y, Wallis~P, et~al.
-LoRA: Low-Rank Adaptation of Large Language Models~[C].
-International Conference on Learning Representations (ICLR).
-2022:  1--35.
-arXiv:2106.09685, 2021.
+\bibitem{chinchilla2022}
+Hoffmann~J, Borgeaud~S, Mensch~A, et~al.
+Training Compute-Optimal Large Language Models~[C].
+Advances in Neural Information Processing Systems (NeurIPS).
+2022:  30016--30030.
 
-\bibitem{qlora2023}
-Dettmers~T, Pagnoni~A, Holtzman~A, et~al.
-QLoRA: Efficient Finetuning of Quantized LLMs~[C].
-Advances in Neural Information Processing Systems 36: Annual Conference on
-  Neural Information Processing Systems 2023, {NeurIPS} 2023, New Orleans,
-  {LA}, {USA}, December 10--16, 2023.
-2023:  10088--10115.
-
-\bibitem{parameter_efficiency_survey2024}
-Lialin~V, Deshpande~V, Yao~X, et~al.
-Scaling Down to Scale Up: A Guide to Parameter-Efficient Fine-Tuning~[J].
-arXiv preprint arXiv:2303.15647.
-2024.
+\bibitem{beyond_chinchilla2024}
+Sardana~N, Frankle~J.
+Beyond Chinchilla-Optimal: Accounting for Inference in Language Model Scaling
+  Laws~[C].
+Proceedings of the International Conference on Machine Learning (ICML).
+2024:  29891--29922.
 
 \bibitem{laion5b2022}
 Schuhmann~C, Beaumont~R, Vencu~R, et~al.
@@ -455,33 +439,11 @@ Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
   Recognition (CVPR).
 2019:  8317--8326.
 
-\bibitem{aceso2024}
-Liu~G, Miao~Y, Lin~Z, et~al.
-Aceso: Efficient Parallel {DNN} Training through Iterative Bottleneck
-  Alleviation~[C].
-Proceedings of the Nineteenth European Conference on Computer Systems
-  (EuroSys).
-2024:  1--17.
-
-\bibitem{uniap2025}
-Lin~H, Wu~K, Li~J, et~al.
-{UniAP}: Unifying Inter- and Intra-Layer Automatic Parallelism by Mixed Integer
-  Quadratic Programming~[C].
-Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
-  Recognition (CVPR).
-2025:  20947--20957.
-
 \bibitem{sergeev2018horovod}
 Sergeev~A, Balso~M~D.
 Horovod: fast and easy distributed deep learning in {TensorFlow}~[J].
 arXiv preprint arXiv:1802.05799.
 2018.
-
-\bibitem{megatron2023}
-Korthikanti~V~A, Casper~J, Lym~S, et~al.
-Reducing Activation Recomputation in Large Transformer Models~[C].
-Proceedings of Machine Learning and Systems (MLSys).
-2023:  1--20.
 
 \bibitem{zeroplusplus}
 Wang~G, Qin~H, Jacobs~S~A, et~al.
@@ -497,6 +459,35 @@ Zhang~Z, Zhang~Z, Jiang~Y, et~al.
   Training for Multimodal Large Language Models~[C].
 Proceedings of the ACM SIGCOMM 2025 Conference.
 Coimbra, Portugal, 2025:  1--15.
+
+\bibitem{distmm2024}
+Huang~J, Zhang~Z, Zheng~S, et~al.
+{DISTMM}: Accelerating Distributed Multimodal Model Training~[C].
+Proceedings of the 21st USENIX Symposium on Networked Systems Design and
+  Implementation (NSDI).
+Santa Clara, CA, USA, 2024:  1--16.
+
+\bibitem{colossal_auto}
+Liu~Y, Li~S, Fang~J, et~al.
+Colossal-Auto: Unified Automation of Parallelization and Activation Checkpoint
+  for Large-scale Models~[J].
+arXiv preprint.
+2023.
+
+\bibitem{mist2025}
+Lin~Z, Liu~G, Wang~S, et~al.
+Mist: Efficient Distributed Training of Large Language Models via
+  Memory-Parallelism Co-Optimization~[C].
+Proceedings of the Twentieth European Conference on Computer Systems (EuroSys).
+2025:  1--17.
+
+\bibitem{adapipe2024}
+Sun~Z, Cao~H, Wang~Y, et~al.
+{AdaPipe}: Optimizing Pipeline Parallelism with Adaptive Recomputation and
+  Partitioning~[C].
+Proceedings of the 29th ACM International Conference on Architectural Support
+  for Programming Languages and Operating Systems (ASPLOS).
+2024:  1--16.
 
 \bibitem{amp2022}
 Li~D, Wang~H, Xing~E, et~al.
@@ -540,13 +531,6 @@ Zhang~S, Diao~L, Wu~C, et~al.
 Proceedings of the 29th ACM SIGPLAN Annual Symposium on Principles and Practice
   of Parallel Programming (PPoPP).
 2024:  524--541.
-
-\bibitem{distmm2024}
-Huang~J, Zhang~Z, Zheng~S, et~al.
-{DISTMM}: Accelerating Distributed Multimodal Model Training~[C].
-Proceedings of the 21st USENIX Symposium on Networked Systems Design and
-  Implementation (NSDI).
-Santa Clara, CA, USA, 2024:  1--16.
 
 \bibitem{mics2022}
 Zhang~Z, Zheng~S, Wang~Y, et~al.
@@ -615,6 +599,12 @@ DreamLLM: Synergistic Multimodal Comprehension and Creation~[C].
 The Twelfth International Conference on Learning Representations, {ICLR} 2024,
   Vienna, Austria, May 7--11, 2024.
 2024.
+
+\bibitem{commoncrawl2022}
+{Common Crawl Foundation}.
+Common Crawl.
+\url{https://commoncrawl.org/}.
+2022.
 
 \bibitem{llava_next2024}
 Liu~H, Li~C, Wu~Q, et~al.
@@ -717,14 +707,6 @@ DualPipe: Bidirectional Pipeline Parallelism for Large-Scale Training.
 \url{https://github.com/deepseek-ai/DualPipe}.
 2025.
 
-\bibitem{adapipe2024}
-Sun~Z, Cao~H, Wang~Y, et~al.
-{AdaPipe}: Optimizing Pipeline Parallelism with Adaptive Recomputation and
-  Partitioning~[C].
-Proceedings of the 29th ACM International Conference on Architectural Support
-  for Programming Languages and Operating Systems (ASPLOS).
-2024:  1--16.
-
 \bibitem{mepipe2025}
 Sun~Z, Chen~S, Wang~Y, et~al.
 {MEPipe}: Democratizing {LLM} Training with Memory-Efficient Slice-Level
@@ -796,12 +778,6 @@ Warraich~E, Shabtai~O, Manaa~K, et~al.
 Philadelphia, PA, USA, 2025:  685--703.
 \url{https://www.usenix.org/conference/nsdi25/presentation/warraich}.
 
-\bibitem{chen2016checkpoint}
-Chen~T, Xu~B, Zhang~C, et~al.
-Training Deep Nets with Sublinear Memory Cost~[C].
-Proceedings of the 33rd International Conference on Machine Learning (ICML).
-2016:  284--293.
-
 \bibitem{lynx2024}
 Li~Z, Lin~Z, Wang~C, et~al.
 Lynx: Efficient Memory Management for Large Model Training with Overlapped
@@ -809,13 +785,6 @@ Lynx: Efficient Memory Management for Large Model Training with Overlapped
 arXiv preprint arXiv:2406.08756.
 2024.
 Preprint; no conference proceedings version located as of 2026.
-
-\bibitem{mist2025}
-Lin~Z, Liu~G, Wang~S, et~al.
-Mist: Efficient Distributed Training of Large Language Models via
-  Memory-Parallelism Co-Optimization~[C].
-Proceedings of the Twentieth European Conference on Computer Systems (EuroSys).
-2025:  1--17.
 
 \bibitem{benoit2008mapping}
 Benoit~A, Robert~Y, Thierry~E.

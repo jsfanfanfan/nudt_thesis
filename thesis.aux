@@ -75,10 +75,10 @@
 \citation{nvidia_a100}
 \citation{nvidia_h100}
 \citation{nvidia_blackwell}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}异构 GPU 集群下的并行训练}{4}{subsection.1.1.2}\protected@file@percent }
 \citation{whale,hetpipe2020}
 \citation{megatron2021,zero2020}
 \citation{whale,hetpipe2020}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}异构 GPU 集群下的并行训练}{4}{subsection.1.1.2}\protected@file@percent }
 \citation{frenzy_memory2024,nvidia_training_guide,arnold2025}
 \@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces NVIDIA GPU 架构与代表性产品演进\relax }}{5}{figure.caption.9}\protected@file@percent }
 \newlabel{fig:nvidia_gpu_evolution}{{1.2}{5}{NVIDIA GPU 架构与代表性产品演进\relax }{figure.caption.9}{}}
@@ -140,8 +140,8 @@
 \citation{espresso2025}
 \citation{metis2024}
 \citation{hap2024}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces 使用 Megatron-LM 框架在同构集群上训练多模态大语言模型的典型并行配置\relax }}{8}{figure.caption.10}\protected@file@percent }
-\newlabel{fig:megatron_mllm}{{1.3}{8}{使用 Megatron-LM 框架在同构集群上训练多模态大语言模型的典型并行配置\relax }{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces Megatron-LM 训练多模态大语言模型的典型并行配置\relax }}{8}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:megatron_mllm}{{1.3}{8}{Megatron-LM 训练多模态大语言模型的典型并行配置\relax }{figure.caption.10}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}异构 GPU 集群并行训练策略研究现状}{8}{subsection.1.2.2}\protected@file@percent }
 \citation{zero2020,zero2021}
 \citation{mics2022}
@@ -177,17 +177,18 @@
 \citation{nextgpt}
 \citation{dreamllm}
 \citation{blip2}
-\citation{kaplan2020scaling,chinchilla2022,beyond_chinchilla2024}
+\citation{kaplan2020scaling}
+\citation{chinchilla2022,beyond_chinchilla2024}
 \citation{pile2020}
 \citation{mmmu_benchmark2024}
 \citation{mllm_datacentric2024}
 \citation{open_images}
 \citation{laion5b2022}
 \citation{youtube8m}
-\citation{pile2020}
+\citation{commoncrawl2022}
 \citation{long_context_benchmark2024}
 \citation{llava_next2024}
-\citation{open_images}
+\citation{laion5b2022}
 \citation{youtube8m}
 \citation{blip2,llava2023}
 \@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces 多模态大语言模型训练中常用的数据集类型与规模\relax }}{15}{table.caption.12}\protected@file@percent }
@@ -198,7 +199,6 @@
 \citation{qwenvl2023}
 \citation{llava_next2024}
 \citation{gemini2023}
-\citation{palm2022}
 \citation{parameter_server,sergeev2018horovod,pytorch_ddp}
 \citation{pytorch_ddp}
 \citation{sergeev2018horovod}
@@ -207,8 +207,8 @@
 \citation{edit2025}
 \citation{halos2025}
 \citation{promisepractice2025}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces MLLM 多阶段训练中典型模块冻结\relax }}{16}{figure.caption.13}\protected@file@percent }
-\newlabel{fig:mllm_training_stages}{{2.1}{16}{MLLM 多阶段训练中典型模块冻结\relax }{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces MLLM 多阶段训练中典型的模块冻结策略\relax }}{16}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:mllm_training_stages}{{2.1}{16}{MLLM 多阶段训练中典型的模块冻结策略\relax }{figure.caption.13}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}多维混合并行训练方法}{16}{subsection.2.1.3}\protected@file@percent }
 \citation{megatron2020,megatron2021}
 \citation{gpipe}
@@ -227,11 +227,11 @@
 \citation{megatron2023,ulysses2023}
 \citation{ulysses2023}
 \citation{megatron2023}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces 张量并行示意（左、右分别示意两类典型矩阵切分与通信模式；二者在注意力子层与前馈子层中均需组合使用）\relax }}{18}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:tensor_parallel}{{2.3}{18}{张量并行示意（左、右分别示意两类典型矩阵切分与通信模式；二者在注意力子层与前馈子层中均需组合使用）\relax }{figure.caption.15}{}}
+\citation{megatron2023}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces 张量并行示意（左、右分别示意两类典型矩阵切分与通信模式）\relax }}{18}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:tensor_parallel}{{2.3}{18}{张量并行示意（左、右分别示意两类典型矩阵切分与通信模式）\relax }{figure.caption.15}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces 流水线并行示意\relax }}{18}{figure.caption.16}\protected@file@percent }
 \newlabel{fig:pipeline_parallel}{{2.4}{18}{流水线并行示意\relax }{figure.caption.16}{}}
-\citation{megatron2023}
 \citation{gshard}
 \citation{gshard}
 \citation{deepseek_moe2024}
@@ -259,9 +259,6 @@
 \citation{hethub2024}
 \citation{hexiscale2024}
 \citation{zorse2025}
-\citation{helix2025}
-\citation{distmm2024}
-\citation{disttrain2025}
 \citation{zero2020,zero2021}
 \citation{mics2022}
 \citation{zeroplusplus}
@@ -275,16 +272,16 @@
 \@writefile{toc}{\contentsline {section}{\numberline {2.3}重计算技术}{23}{section.2.3}\protected@file@percent }
 \newlabel{sec:chap2-recomputation}{{2.3}{23}{重计算技术}{section.2.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}重计算基本原理与分类}{23}{subsection.2.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算示意图\relax }}{23}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:recomputation}{{2.7}{23}{重计算示意图\relax }{figure.caption.19}{}}
 \citation{megatron2023}
 \citation{lynx2024}
 \citation{megatron2023}
 \citation{mist2025}
 \citation{adapipe2024}
 \citation{colossal_auto}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces 重计算示意图\relax }}{24}{figure.caption.19}\protected@file@percent }
-\newlabel{fig:recomputation}{{2.7}{24}{重计算示意图\relax }{figure.caption.19}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}重计算的主流实现及其局限性}{24}{subsection.2.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}本章小结}{25}{section.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}本章小结}{24}{section.2.4}\protected@file@percent }
 \citation{whale}
 \citation{espresso2025}
 \citation{metis2024}
@@ -433,101 +430,97 @@
 \bibcite{gqa2019}{{23}{}{{}}{{}}}
 \bibcite{mmmu_benchmark2024}{{24}{}{{}}{{}}}
 \bibcite{kaplan2020scaling}{{25}{}{{}}{{}}}
-\bibcite{chinchilla2022}{{26}{}{{}}{{}}}
-\bibcite{beyond_chinchilla2024}{{27}{}{{}}{{}}}
-\bibcite{gopher2022}{{28}{}{{}}{{}}}
-\bibcite{deepseek2024}{{29}{}{{}}{{}}}
-\bibcite{qwen2024}{{30}{}{{}}{{}}}
-\bibcite{llama2_2023}{{31}{}{{}}{{}}}
-\bibcite{llama3}{{32}{}{{}}{{}}}
-\bibcite{gemma2024}{{33}{}{{}}{{}}}
-\bibcite{mistral2023}{{34}{}{{}}{{}}}
-\bibcite{megatron2021}{{35}{}{{}}{{}}}
-\bibcite{megatron2020}{{36}{}{{}}{{}}}
-\bibcite{long_context_benchmark2024}{{37}{}{{}}{{}}}
-\bibcite{zero2020}{{38}{}{{}}{{}}}
-\bibcite{zero2021}{{39}{}{{}}{{}}}
-\bibcite{pytorch_ddp}{{40}{}{{}}{{}}}
-\bibcite{gpipe}{{41}{}{{}}{{}}}
-\bibcite{pipedream2019}{{42}{}{{}}{{}}}
-\bibcite{gshard}{{43}{}{{}}{{}}}
-\bibcite{mixed_precision2018}{{44}{}{{}}{{}}}
-\bibcite{colossal_auto}{{45}{}{{}}{{}}}
-\bibcite{flash_attention_2022}{{46}{}{{}}{{}}}
-\bibcite{flashattention3_2024}{{47}{}{{}}{{}}}
-\bibcite{nvidia_a100}{{48}{}{{}}{{}}}
-\bibcite{nvidia_h100}{{49}{}{{}}{{}}}
-\bibcite{nvidia_blackwell}{{50}{}{{}}{{}}}
-\bibcite{whale}{{51}{}{{}}{{}}}
-\bibcite{hetpipe2020}{{52}{}{{}}{{}}}
-\bibcite{frenzy_memory2024}{{53}{}{{}}{{}}}
-\bibcite{nvidia_training_guide}{{54}{}{{}}{{}}}
-\bibcite{arnold2025}{{55}{}{{}}{{}}}
-\bibcite{lora2021}{{56}{}{{}}{{}}}
-\bibcite{qlora2023}{{57}{}{{}}{{}}}
-\bibcite{parameter_efficiency_survey2024}{{58}{}{{}}{{}}}
-\bibcite{laion5b2022}{{59}{}{{}}{{}}}
-\bibcite{comprehensive_mllm_survey2024}{{60}{}{{}}{{}}}
-\bibcite{mllm_datacentric2024}{{61}{}{{}}{{}}}
-\bibcite{open_images}{{62}{}{{}}{{}}}
-\bibcite{coco2014}{{63}{}{{}}{{}}}
-\bibcite{pile2020}{{64}{}{{}}{{}}}
-\bibcite{youtube8m}{{65}{}{{}}{{}}}
-\bibcite{webvid2021}{{66}{}{{}}{{}}}
-\bibcite{textvqa2019}{{67}{}{{}}{{}}}
-\bibcite{aceso2024}{{68}{}{{}}{{}}}
-\bibcite{uniap2025}{{69}{}{{}}{{}}}
-\bibcite{sergeev2018horovod}{{70}{}{{}}{{}}}
-\bibcite{megatron2023}{{71}{}{{}}{{}}}
-\bibcite{zeroplusplus}{{72}{}{{}}{{}}}
-\bibcite{disttrain2025}{{73}{}{{}}{{}}}
-\bibcite{amp2022}{{74}{}{{}}{{}}}
-\bibcite{hethub2024}{{75}{}{{}}{{}}}
-\bibcite{hexiscale2024}{{76}{}{{}}{{}}}
-\bibcite{espresso2025}{{77}{}{{}}{{}}}
-\bibcite{metis2024}{{78}{}{{}}{{}}}
-\bibcite{hap2024}{{79}{}{{}}{{}}}
-\bibcite{distmm2024}{{80}{}{{}}{{}}}
-\bibcite{mics2022}{{81}{}{{}}{{}}}
-\bibcite{amsp}{{82}{}{{}}{{}}}
-\bibcite{docvqa2021}{{83}{}{{}}{{}}}
-\bibcite{chartqa2022}{{84}{}{{}}{{}}}
-\bibcite{vision_language_pretrain_survey2024}{{85}{}{{}}{{}}}
-\bibcite{scienceqa2022}{{86}{}{{}}{{}}}
-\bibcite{stable_diffusion}{{87}{}{{}}{{}}}
-\bibcite{unet}{{88}{}{{}}{{}}}
-\bibcite{nextgpt}{{89}{}{{}}{{}}}
-\bibcite{dreamllm}{{90}{}{{}}{{}}}
-\bibcite{llava_next2024}{{91}{}{{}}{{}}}
-\bibcite{gemini2023}{{92}{}{{}}{{}}}
-\bibcite{palm2022}{{93}{}{{}}{{}}}
-\bibcite{parameter_server}{{94}{}{{}}{{}}}
-\bibcite{fsdp2022}{{95}{}{{}}{{}}}
-\bibcite{parallax}{{96}{}{{}}{{}}}
-\bibcite{edit2025}{{97}{}{{}}{{}}}
-\bibcite{halos2025}{{98}{}{{}}{{}}}
-\bibcite{promisepractice2025}{{99}{}{{}}{{}}}
-\bibcite{terapipe_icml2022}{{100}{}{{}}{{}}}
-\bibcite{chimera_pp2023}{{101}{}{{}}{{}}}
-\bibcite{hanayo_pp}{{102}{}{{}}{{}}}
-\bibcite{zerobubble2024}{{103}{}{{}}{{}}}
-\bibcite{dualpipe2025}{{104}{}{{}}{{}}}
-\bibcite{adapipe2024}{{105}{}{{}}{{}}}
-\bibcite{mepipe2025}{{106}{}{{}}{{}}}
-\bibcite{weipipe2025}{{107}{}{{}}{{}}}
-\bibcite{ulysses2023}{{108}{}{{}}{{}}}
-\bibcite{deepseek_moe2024}{{109}{}{{}}{{}}}
-\bibcite{tensor_parallelism_survey}{{110}{}{{}}{{}}}
-\bibcite{zorse2025}{{111}{}{{}}{{}}}
-\bibcite{helix2025}{{112}{}{{}}{{}}}
-\bibcite{paro2024}{{113}{}{{}}{{}}}
-\bibcite{optireduce2025}{{114}{}{{}}{{}}}
-\bibcite{chen2016checkpoint}{{115}{}{{}}{{}}}
-\bibcite{lynx2024}{{116}{}{{}}{{}}}
-\bibcite{mist2025}{{117}{}{{}}{{}}}
-\bibcite{benoit2008mapping}{{118}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{作者在学期间取得的学术成果}{89}{chapter*.50}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{公开评阅信息}{91}{chapter*.51}\protected@file@percent }
+\bibcite{gopher2022}{{26}{}{{}}{{}}}
+\bibcite{deepseek2024}{{27}{}{{}}{{}}}
+\bibcite{qwen2024}{{28}{}{{}}{{}}}
+\bibcite{llama2_2023}{{29}{}{{}}{{}}}
+\bibcite{llama3}{{30}{}{{}}{{}}}
+\bibcite{gemma2024}{{31}{}{{}}{{}}}
+\bibcite{mistral2023}{{32}{}{{}}{{}}}
+\bibcite{megatron2021}{{33}{}{{}}{{}}}
+\bibcite{megatron2020}{{34}{}{{}}{{}}}
+\bibcite{long_context_benchmark2024}{{35}{}{{}}{{}}}
+\bibcite{zero2020}{{36}{}{{}}{{}}}
+\bibcite{zero2021}{{37}{}{{}}{{}}}
+\bibcite{pytorch_ddp}{{38}{}{{}}{{}}}
+\bibcite{gpipe}{{39}{}{{}}{{}}}
+\bibcite{pipedream2019}{{40}{}{{}}{{}}}
+\bibcite{gshard}{{41}{}{{}}{{}}}
+\bibcite{mixed_precision2018}{{42}{}{{}}{{}}}
+\bibcite{flash_attention_2022}{{43}{}{{}}{{}}}
+\bibcite{flashattention3_2024}{{44}{}{{}}{{}}}
+\bibcite{chen2016checkpoint}{{45}{}{{}}{{}}}
+\bibcite{megatron2023}{{46}{}{{}}{{}}}
+\bibcite{nvidia_a100}{{47}{}{{}}{{}}}
+\bibcite{nvidia_h100}{{48}{}{{}}{{}}}
+\bibcite{nvidia_blackwell}{{49}{}{{}}{{}}}
+\bibcite{whale}{{50}{}{{}}{{}}}
+\bibcite{hetpipe2020}{{51}{}{{}}{{}}}
+\bibcite{frenzy_memory2024}{{52}{}{{}}{{}}}
+\bibcite{nvidia_training_guide}{{53}{}{{}}{{}}}
+\bibcite{arnold2025}{{54}{}{{}}{{}}}
+\bibcite{chinchilla2022}{{55}{}{{}}{{}}}
+\bibcite{beyond_chinchilla2024}{{56}{}{{}}{{}}}
+\bibcite{laion5b2022}{{57}{}{{}}{{}}}
+\bibcite{comprehensive_mllm_survey2024}{{58}{}{{}}{{}}}
+\bibcite{mllm_datacentric2024}{{59}{}{{}}{{}}}
+\bibcite{open_images}{{60}{}{{}}{{}}}
+\bibcite{coco2014}{{61}{}{{}}{{}}}
+\bibcite{pile2020}{{62}{}{{}}{{}}}
+\bibcite{youtube8m}{{63}{}{{}}{{}}}
+\bibcite{webvid2021}{{64}{}{{}}{{}}}
+\bibcite{textvqa2019}{{65}{}{{}}{{}}}
+\bibcite{sergeev2018horovod}{{66}{}{{}}{{}}}
+\bibcite{zeroplusplus}{{67}{}{{}}{{}}}
+\bibcite{disttrain2025}{{68}{}{{}}{{}}}
+\bibcite{distmm2024}{{69}{}{{}}{{}}}
+\bibcite{colossal_auto}{{70}{}{{}}{{}}}
+\bibcite{mist2025}{{71}{}{{}}{{}}}
+\bibcite{adapipe2024}{{72}{}{{}}{{}}}
+\bibcite{amp2022}{{73}{}{{}}{{}}}
+\bibcite{hethub2024}{{74}{}{{}}{{}}}
+\bibcite{hexiscale2024}{{75}{}{{}}{{}}}
+\bibcite{espresso2025}{{76}{}{{}}{{}}}
+\bibcite{metis2024}{{77}{}{{}}{{}}}
+\bibcite{hap2024}{{78}{}{{}}{{}}}
+\bibcite{mics2022}{{79}{}{{}}{{}}}
+\bibcite{amsp}{{80}{}{{}}{{}}}
+\bibcite{docvqa2021}{{81}{}{{}}{{}}}
+\bibcite{chartqa2022}{{82}{}{{}}{{}}}
+\bibcite{vision_language_pretrain_survey2024}{{83}{}{{}}{{}}}
+\bibcite{scienceqa2022}{{84}{}{{}}{{}}}
+\bibcite{stable_diffusion}{{85}{}{{}}{{}}}
+\bibcite{unet}{{86}{}{{}}{{}}}
+\bibcite{nextgpt}{{87}{}{{}}{{}}}
+\bibcite{dreamllm}{{88}{}{{}}{{}}}
+\bibcite{commoncrawl2022}{{89}{}{{}}{{}}}
+\bibcite{llava_next2024}{{90}{}{{}}{{}}}
+\bibcite{gemini2023}{{91}{}{{}}{{}}}
+\bibcite{palm2022}{{92}{}{{}}{{}}}
+\bibcite{parameter_server}{{93}{}{{}}{{}}}
+\bibcite{fsdp2022}{{94}{}{{}}{{}}}
+\bibcite{parallax}{{95}{}{{}}{{}}}
+\bibcite{edit2025}{{96}{}{{}}{{}}}
+\bibcite{halos2025}{{97}{}{{}}{{}}}
+\bibcite{promisepractice2025}{{98}{}{{}}{{}}}
+\bibcite{terapipe_icml2022}{{99}{}{{}}{{}}}
+\bibcite{chimera_pp2023}{{100}{}{{}}{{}}}
+\bibcite{hanayo_pp}{{101}{}{{}}{{}}}
+\bibcite{zerobubble2024}{{102}{}{{}}{{}}}
+\bibcite{dualpipe2025}{{103}{}{{}}{{}}}
+\bibcite{mepipe2025}{{104}{}{{}}{{}}}
+\bibcite{weipipe2025}{{105}{}{{}}{{}}}
+\bibcite{ulysses2023}{{106}{}{{}}{{}}}
+\bibcite{deepseek_moe2024}{{107}{}{{}}{{}}}
+\bibcite{tensor_parallelism_survey}{{108}{}{{}}{{}}}
+\bibcite{zorse2025}{{109}{}{{}}{{}}}
+\bibcite{helix2025}{{110}{}{{}}{{}}}
+\bibcite{paro2024}{{111}{}{{}}{{}}}
+\bibcite{optireduce2025}{{112}{}{{}}{{}}}
+\bibcite{lynx2024}{{113}{}{{}}{{}}}
+\bibcite{benoit2008mapping}{{114}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {chapter}{作者在学期间取得的学术成果}{87}{chapter*.50}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{公开评阅信息}{89}{chapter*.51}\protected@file@percent }
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
 \ttl@finishall
-\gdef \@abspage@last{112}
+\gdef \@abspage@last{110}
