@@ -1,38 +1,39 @@
 \begin{reviewinfo}
-  
-\begin{table}[tbh]
-	\centering
-	\begingroup
-	% 第 1、2 行含双行 \makecell，行高由多行单元格撑开；第 3、4 行多为空格，默认行高偏矮，与上行不一致
-	\setlength{\extrarowheight}{6pt}%
-	\renewcommand{\arraystretch}{1.75}%
-	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
-		\hline
-		\hei{序号} &		\hei{评阅人} & 		\hei{职称}	& 	\hei{导师类型}	& 	\hei{\makecell[c]{工作\\单位}}
-		& 	\hei{总分}	& 	\hei{结论}	& 	\hei{答辩建议} &		\hei{\makecell[c]{熟悉\\程度}}& 	\hei{备注} \\
-		\hline
-		1 &  &  &  &  &	 &  &  &  &	  \\  \hline
-		2 &  &  &  &  &	 &  &  &  &	  \\  \hline
-		3 &  &  &  &  &	 &  &  &  &	  \\  \hline
-		4 &  &  &  &  &	 &  &  &  &	  \\  \hline
-		5 &  &  &  &  &	 &  &  &  &	  \\
-		\hline
-	\end{tabular}
-	\endgroup
-	%\caption{}
-\end{table}
-\wuhao{
-\noindent \textbf{说明：}\\[2pt]
-\noindent 1.\ 结论选项包括2个：“达到学位论文要求”、“尚未达到学位论文要求”（博士、硕士以当年说明为准）。\\[2pt]
-\noindent 2.\ 答辩建议选项包括4个：“无需修改直接答辩”、“修改后答辩”、“修改后复评”、“不予答辩”。\\[2pt]
-\noindent 3.\ 熟悉程度选项包括3个：“有深入了解”、“比较熟悉”、“一般了解”。\\[6pt]
-{\color{red}
-\noindent 提醒（正式成文后删除）：\\[2pt]
-\noindent 1.\ 评阅版论文删除此页。\\[2pt]
-\noindent 2.\ 采用双盲评阅方式的学位申请人撰写的学位论文删除此页。\\[2pt]
-\noindent 3.\ 评阅总分无需取整。\\[2pt]
-\noindent 4.\ 工作单位填至学校、科研院所即可。\\
-}
-}
 
-\end{reviewinfo}
+	\newlength{\reviewtablewidth}
+	\newlength{\reviewtableinnerwidth}
+	\newcolumntype{R}[1]{m{#1\reviewtableinnerwidth}}
+	\newcommand{\reviewhead}[1]{\parbox[c][34pt][c]{\linewidth}{\centering \hei #1}}
+	\newcommand{\reviewheadmulti}[2]{\parbox[c][34pt][c]{\linewidth}{\centering \hei #1\\[-4pt]\hei #2}}
+	\newcommand{\reviewcell}[1]{\parbox[c][42.5pt][c]{\linewidth}{\centering #1}}
+	\begin{table}[tbh]
+		\centering
+		{\wuhao
+		\setlength{\tabcolsep}{0.5pt}
+		\setlength{\reviewtablewidth}{\linewidth}
+		\setlength{\reviewtableinnerwidth}{\dimexpr\reviewtablewidth-18\tabcolsep-10\arrayrulewidth\relax}
+		% word模板中原始的比例如下
+		% 为显示更美观，针对职称（副研究员）和导师类型（非导师），微调了比例
+		% \begin{tabular}{|R{0.075}|R{0.103}|R{0.103}|R{0.075}|R{0.224}|R{0.128}|R{0.078}|R{0.146}|R{0.064}|}
+		\begin{tabular}{|R{0.075}|R{0.103}|R{0.113}|R{0.085}|R{0.21}|R{0.108}|R{0.078}|R{0.12}|R{0.104}|}
+			\hline
+			\reviewhead{序号} & \reviewhead{评阅人} & \reviewhead{职称} & \reviewheadmulti{导师}{类型} & \reviewhead{工作单位} & \reviewhead{评分} & \reviewheadmulti{答辩}{建议} & \reviewhead{熟悉程度} & \reviewhead{备注} \\
+			\hline
+			\reviewcell{1} & \reviewcell{王晓东} & \reviewcell{研究员} & \reviewcell{博导} & \reviewcell{国防科技大学} & \reviewcell{83} & \reviewcell{A} & \reviewcell{比较熟悉} & \reviewcell{} \\ \hline
+			\reviewcell{2} & \reviewcell{李荣春} & \reviewcell{研究员} & \reviewcell{硕导} & \reviewcell{国防科技大学} & \reviewcell{90.3} & \reviewcell{B} & \reviewcell{比较熟悉} & \reviewcell{\mbox{}} \\ \hline
+			\reviewcell{3} & \reviewcell{张博锋} & \reviewcell{正高级工程师} & \reviewcell{硕导} & \reviewcell{飞腾信息技术有限公司} & \reviewcell{85.45} & \reviewcell{A} & \reviewcell{比较熟悉} & \reviewcell{行业专家} \\ \hline
+			\reviewcell{4} & \reviewcell{专家四} & \reviewcell{} & \reviewcell{} & \reviewcell{} & \reviewcell{84} & \reviewcell{B} & \reviewcell{比较熟悉} & \reviewcell{校级评阅} \\ \hline
+			\reviewcell{5} & \reviewcell{专家五} & \reviewcell{} & \reviewcell{} & \reviewcell{} & \reviewcell{88} & \reviewcell{A} & \reviewcell{有深入了解} & \reviewcell{校级评阅} \\ \hline
+		\end{tabular}}
+	\end{table}
+	
+	\wuhao{
+	\noindent \textbf{说明}：
+	
+		1. 答辩建议选项包括4个：“A同意直接答辩”、“B同意修改后答辩”、“C须作较大\linebreak[4]修改后复评”、“D不同意答辩”。
+	
+		2. 熟悉程度选项包括3个：“有深入了解”、“比较熟悉”、“一般了解”。
+	\\
+	}
+	
+	\end{reviewinfo}

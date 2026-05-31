@@ -1,6 +1,6 @@
 \contentsline {figure}{\numberline {1.1}{\ignorespaces 多模态大语言模型的核心组成部分\relax }}{3}{figure.caption.8}%
 \contentsline {figure}{\numberline {1.2}{\ignorespaces NVIDIA GPU 架构与代表性产品演进\relax }}{5}{figure.caption.9}%
-\contentsline {figure}{\numberline {1.3}{\ignorespaces 使用 Megatron 训练多模态大语言模型\relax }}{8}{figure.caption.10}%
+\contentsline {figure}{\numberline {1.3}{\ignorespaces 使用 Megatron-LM 框架在同构集群上训练多模态大语言模型的典型并行配置\relax }}{8}{figure.caption.10}%
 \contentsline {figure}{\numberline {2.1}{\ignorespaces MLLM 多阶段训练中典型模块冻结\relax }}{16}{figure.caption.13}%
 \contentsline {figure}{\numberline {2.2}{\ignorespaces 数据并行示意\relax }}{17}{figure.caption.14}%
 \contentsline {figure}{\numberline {2.3}{\ignorespaces 张量并行示意（左、右分别示意两类典型矩阵切分与通信模式；二者在注意力子层与前馈子层中均需组合使用）\relax }}{18}{figure.caption.15}%

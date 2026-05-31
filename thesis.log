@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  19 MAY 2026 09:47
+This is XeTeX, Version 3.141592653-2.6-0.999994 (TeX Live 2022) (preloaded format=xelatex 2023.4.10)  31 MAY 2026 11:44
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1464,61 +1464,57 @@ Package fontspec Info: Font family 'SimSun(2)' created for font 'SimSun' with
 
 
 
-] [2
+] [2]
+Overfull \hbox (44.46617pt too wide) in paragraph at lines 34--35
+\TU/TimesNewRoman(0)/m/n/12.045 hybrid parallel partitioning and scheduling, as well as pipeline-stage differentiated recomputation—
+ []
 
-]
-LaTeX Font Info:    Calculating math sizes for size <12.045> on input line 33.
 
+Overfull \hbox (11.06909pt too wide) in paragraph at lines 34--35
+\TU/TimesNewRoman(0)/m/n/12.045 constituting a multi-level optimization scheme of “partitioning–scheduling–recomputation”. 
+ []
+
+LaTeX Font Info:    Calculating math sizes for size <12.045> on input line 39.
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 33.
+(Font)              size <8> substituted on input line 39.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 33.
+(Font)              size <8> substituted on input line 39.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 33.
+(Font)              size <8> substituted on input line 39.
 
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 10.84042pt on input line 33.
+(Font)              scaled to size 10.84042pt on input line 39.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 7.58826pt on input line 33.
+(Font)              scaled to size 7.58826pt on input line 39.
 LaTeX Font Info:    Font shape `U/fsy/m/n' will be
-(Font)              scaled to size 5.4202pt on input line 33.
+(Font)              scaled to size 5.4202pt on input line 39.
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 33.
+(Font)              size <8> substituted on input line 39.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <8.43146> not available
-(Font)              size <8> substituted on input line 33.
+(Font)              size <8> substituted on input line 39.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <8.43146> not available
-(Font)              size <8> substituted on input line 33.
+(Font)              size <8> substituted on input line 39.
 
 
-Overfull \hbox (6.38344pt too wide) in paragraph at lines 31--34
-[]\TU/TimesNewRoman(0)/m/n/12.045 This thesis presents MMoH, a heterogeneous-aware hybrid parallel method for MLLM
+Overfull \hbox (3.3408pt too wide) in paragraph at lines 36--40
+\TU/TimesNewRoman(0)/m/n/12.045 dundant backward computation and communication in consecutively frozen prefix pipeline
  []
 
-
-Overfull \hbox (0.57896pt too wide) in paragraph at lines 31--34
-\TU/TimesNewRoman(0)/m/n/12.045 training. MMoH combines demand-driven topology identification, compound-granularity
- []
+[3
 
 
-Overfull \hbox (3.3483pt too wide) in paragraph at lines 31--34
-\TU/TimesNewRoman(0)/m/n/12.045 and reconfigure execution as training progresses. MMoH also introduces early-termination
- []
 
-
-Overfull \hbox (0.54524pt too wide) in paragraph at lines 35--38
-\TU/TimesNewRoman(0)/m/n/12.045 batch sizes and longer sequences, HR-MMoH delivers the highest throughput across freez-
- []
-
+]
 
 Package fontspec Info: Font family 'Arial(1)' created for font 'Arial' with
 (fontspec)             options [Mapping=tex-text].
@@ -1543,13 +1539,7 @@ Package fontspec Info: Font family 'Arial(1)' created for font 'Arial' with
 (fontspec)             - 'bold italic small caps'  (b/scit) with NFSS spec.:
 (fontspec)             <->"Arial/BI/OT:script=latn;language=dflt;+smcp;mapping=tex-text;"
 
-) [3
-
-
-
-] [4
-
-] (./data/appendix01.tex [5
+) [4] (./data/appendix01.tex [5
 
 
 ]) [6] (./data/chap01.tex [1
@@ -1559,18 +1549,20 @@ Package fontspec Info: Font family 'Arial(1)' created for font 'Arial' with
 ]
 File: figures//mllm_components.pdf Graphic file (type pdf)
 <use figures//mllm_components.pdf>
- [2] [3] [4]
+ [2] [3]
 File: figures//nvidia_gpu_evolution.pdf Graphic file (type pdf)
 <use figures//nvidia_gpu_evolution.pdf>
 
 
 LaTeX Font Warning: Font shape `TU/SimSun(1)/m/it' undefined
-(Font)              using `TU/SimSun(1)/m/n' instead on input line 104.
+(Font)              using `TU/SimSun(1)/m/n' instead on input line 102.
 
-[5] [6] [7]
+[4] [5] [6]
 File: figures//fig02_megatron_mllm.jpg Graphic file (type bmp)
 <figures//fig02_megatron_mllm.jpg>
- [8] [9] [10] [11]) (./data/chap02.tex [12] [13
+ [7] [8] [9] [10]) (./data/chap02.tex [11] [12
+
+] [13
 
 
 ] [14] [15]
@@ -1843,9 +1835,21 @@ Underfull \hbox (badness 1009) in paragraph at lines 806--812
 
 ) (./data/resume.tex [87] [88
 
-]) [89
+]) (./data/reviewinfo.tex [89
 
 ] [90
+
+]
+\reviewtablewidth=\skip102
+\reviewtableinnerwidth=\skip103
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--38
+
+ []
+
+) [91
+
+] [92
 
 ]
 \tf@thm=\write9
@@ -1860,15 +1864,15 @@ LaTeX Font Warning: Size substitutions with differences
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: C43EFD3A13405EA6AF1BC551E4170ED1;10485.
+(rerunfilecheck)             Checksum: BB23C6486250DBF0D6C77C49A71936C0;10579.
  ) 
 Here is how much of TeX's memory you used:
- 42987 strings out of 476179
- 879125 string characters out of 5813072
- 1210449 words of memory out of 5000000
- 62888 multiletter control sequences out of 15000+600000
- 504578 words of font info for 257 fonts, out of 8000000 for 9000
+ 43038 strings out of 476179
+ 881911 string characters out of 5813072
+ 1210576 words of memory out of 5000000
+ 62936 multiletter control sequences out of 15000+600000
+ 504586 words of font info for 258 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  125i,20n,120p,1082b,1019s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on thesis.pdf (110 pages).
+Output written on thesis.pdf (112 pages).

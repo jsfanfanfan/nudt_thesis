@@ -1,18 +1,20 @@
 \begin{cabstract}
-多模态大语言模型（MLLMs）融合了视觉与语言等多模态能力，巨大的参数量和计算量使其训练过程高度依赖分布式并行计算。
-面向真实场景时，GPU 集群通常由多代异构的设备组成，显存、算力与互联带宽的代际差异明显，训练系统难以在异构设备间实现稳定高效的资源协同。
-与此同时，MLLMs 由编码器、投影层与 LLM 基座等异构子模块构成，并普遍采用分阶段冻结训练的训练方式，导致不同训练阶段的计算负载与显存需求差异显著且会动态变化。
-现有并行训练方法多基于同构 GPU 集群的前提，而且没有联合考虑 MLLMs 的模块结构与分阶段冻结的训练方式，导致在异构 GPU 集群下训练 MLLMs 时容易出现负载不均衡、计算通信冗余以及 GPU 利用率低的问题，进而限制训练吞吐量。
+多模态大语言模型（MLLMs）在传统语言模型的基础之上融合了视觉与听觉等多模态能力，成为新的研究热点，然而巨大的参数量和数据量使其训练过程高度依赖分布式并行计算。
+面向真实场景时，训练中使用的 GPU 集群通常由多代异构的设备组成，显存、算力与互联带宽的代际差异明显，训练系统难以在异构设备间实现稳定高效的资源协同。
+与此同时，MLLMs 由编码器、投影层与 LLM 基座等异构子模块构成，并普遍采用分阶段冻结训练的方式，导致不同训练阶段的计算负载与显存需求差异显著且会动态变化。
+现有并行训练方法多基于同构 GPU 集群的假设，忽视了异构 GPU 设备之间的性能差异，而且没有联合考虑 MLLMs 的模块结构与分阶段冻结的训练方式，导致在异构 GPU 集群下训练 MLLMs 时容易出现负载不均衡、计算与通信冗余以及 GPU 利用率低的问题，进而限制了训练吞吐量。
 
-针对异构 GPU 集群与分阶段冻结训练下并行策略固定、易出现负载不均衡与冗余计算通信的问题，本文提出一种面向异构 GPU 集群的多模态大语言模型高效混合并行方法（MMoH）。
+为了提高训练吞吐量，本文从混合并行划分与调度、以及流水级差异化重计算两方面展开研究，依次提出面向异构 GPU 集群的多模态大语言模型高效混合并行方法（MMoH）与面向异构 GPU 集群的多模态大语言模型重计算方法（HR-MMoH），共同构成“划分—调度—重计算”多级优化方案。
+
+针对异构 GPU 集群与分阶段冻结训练下并行策略固定、易出现负载不均衡与冗余计算与通信的问题，本文提出一种面向异构 GPU 集群的多模态大语言模型高效混合并行方法（MMoH）。
 该方法通过需求驱动的设备拓扑识别、复合粒度模型抽象与冻结感知模型划分，自动生成面向不同训练阶段的混合并行策略，使并行配置能够随训练阶段动态调整。
-进一步地，MMoH 通过提前终止调度机制消除连续冻结流水级中的冗余反向计算与通信，降低不必要的计算和通信开销。
-在两种规模的异构 GPU 集群与两种规模的 MLLMs（3B、12B）上的实验结果表明，MMoH 在多种冻结场景下相较现有方法 Megatron-LM、Whale 与 Espresso 均取得性能提升，最高加速约 1.77 倍，验证了该方法在异构环境中的有效性。
+进一步地，MMoH 通过提前终止调度机制消除连续冻结前缀流水级中的冗余反向计算与通信，降低不必要的计算和通信开销。
+在两种规模的异构 GPU 集群与两种规模的 MLLMs（3B、12B）上的实验结果表明，MMoH 在多种冻结场景下相较现有训练方法 Megatron-LM、Whale 与 Espresso 均取得性能提升，最高加速约 1.77 倍，验证了该方法在异构 GPU 集群中的有效性。
 
 针对现有全局统一重计算策略在异构 GPU 集群上难以兼顾 GPU 利用率与显存开销的问题，本文在 MMoH 基础上进一步提出一种面向异构 GPU 集群的多模态大语言模型重计算方法（HR-MMoH）。
-该方法在 MMoH 划分与调度结果基础上，按流水级进行差异化重计算配置，并结合剖析驱动的配置搜索形成“划分—调度—重计算多级优化”方法，从而在不同设备与不同训练阶段间实现更细粒度的计算与显存权衡。
+该方法在 MMoH 划分与调度结果基础上，按流水级进行差异化重计算配置，并结合剖析驱动的配置搜索形成“划分—调度—重计算”多级优化方法，从而在不同设备与不同训练阶段间实现更细粒度的计算与显存权衡。
 在更大批次大小与更长序列长度的端到端实验中，HR-MMoH 在不同冻结场景下均取得最大吞吐，迭代时间相比 Espresso 缩短约 6.1\%--23.1\%，相对 Whale 的可训练子集缩短约 11.0\%--40.6\%。
-上述结果表明，HR-MMoH 能够进一步提升异构 GPU 集群训练 MLLMs 的速度。
+上述结果表明，HR-MMoH 能够进一步提升异构 GPU 集群上训练 MLLMs 的速度。
 \end{cabstract}
 \ckeywords{多模态大语言模型；异构 GPU 集群；流水线并行；重计算}
 
@@ -24,16 +26,21 @@
 \fi
 
 \begin{eabstract}
-Training multimodal large language models (MLLMs) on production GPU clusters is a systems challenge: clusters are heterogeneous across generations, while MLLMs are modular and commonly trained with stage-wise freezing. 
-Device heterogeneity (memory capacity, compute throughput, and interconnect bandwidth) and stage-dependent model behavior jointly create time-varying imbalance in computation, memory, and communication. 
-Existing parallel training systems are primarily designed for homogeneous clusters and do not jointly model hardware heterogeneity, module structure, and freeze schedules, which leads to stragglers, redundant communication/computation, and low accelerator utilization in heterogeneous settings.
+Multimodal large language models (MLLMs) integrate visual and auditory multimodal capabilities on top of traditional language models and have become a new research hotspot; however, their massive parameter and data scales make the training process highly dependent on distributed parallel computing.
+In real-world scenarios, the GPU clusters used in training usually consist of heterogeneous devices across multiple generations, with pronounced generational differences in memory capacity, compute throughput, and interconnect bandwidth, and training systems struggle to achieve stable and efficient resource coordination among heterogeneous devices.
+Meanwhile, MLLMs comprise heterogeneous submodules such as encoders, projectors, and LLM backbones, and commonly adopt stage-wise freezing training, causing the compute load and memory demand in different training stages to differ significantly and change dynamically.
+Existing parallel training methods are mostly based on the assumption of homogeneous GPU clusters, neglect performance differences among heterogeneous GPU devices, and do not jointly consider the module structure of MLLMs and the training approach of stage-wise freezing, which leads to load imbalance, redundant computation and communication, and low GPU utilization when training MLLMs on heterogeneous GPU clusters, thereby limiting training throughput.
 
-This thesis presents MMoH, a heterogeneous-aware hybrid parallel method for MLLM training. 
-MMoH combines demand-driven topology identification, compound-granularity model abstraction, and freeze-aware partitioning to generate stage-specific parallel plans and reconfigure execution as training progresses. 
-MMoH also introduces early-termination scheduling, which removes redundant backward computation and communication in consecutively frozen pipeline stages. Across two heterogeneous clusters and two model scales (3B and 12B), MMoH improves performance over Megatron-LM, Whale, and Espresso under multiple freezing scenarios, achieving up to 1.77$\times$ speedup.
+To improve training throughput, this thesis conducts research from two aspects---hybrid parallel partitioning and scheduling, as well as pipeline-stage differentiated recomputation---and sequentially proposes an efficient hybrid parallel method for multimodal large language models on heterogeneous GPU clusters (MMoH) and a recomputation method for multimodal large language models on heterogeneous GPU clusters (HR-MMoH), jointly constituting a multi-level optimization scheme of ``partitioning--scheduling--recomputation''.
 
-Building on MMoH, this thesis further presents HR-MMoH, a heterogeneous-aware recomputation method that addresses the inefficiency of globally uniform recomputation on heterogeneous clusters. HR-MMoH applies pipeline-stage-specific recomputation decisions and performs profiling-guided configuration search, yielding multi-level optimization across partitioning, scheduling, and recomputation. 
-In end-to-end runs with larger batch sizes and longer sequences, HR-MMoH delivers the highest throughput across freezing scenarios. 
-Relative to Espresso, HR-MMoH reduces iteration time by 6.1\%--23.1\%; relative to the trainable subset of Whale, it reduces iteration time by 11.0\%--40.6\%.
+To address the problem that parallel strategies are fixed and load imbalance as well as redundant computation and communication easily arise under heterogeneous GPU clusters and stage-wise freezing training, this thesis proposes an efficient hybrid parallel method for multimodal large language models on heterogeneous GPU clusters (MMoH).
+This method automatically generates hybrid parallel strategies oriented toward different training stages through demand-driven device topology identification, compound-granularity model abstraction, and freeze-aware model partitioning, enabling parallel configurations to adjust dynamically with training stages.
+Furthermore, MMoH eliminates redundant backward computation and communication in consecutively frozen prefix pipeline stages through an early-termination scheduling mechanism, reducing unnecessary computation and communication overhead.
+Experimental results on two scales of heterogeneous GPU clusters and two scales of MLLMs (3B, 12B) show that MMoH achieves performance improvements compared with existing training methods Megatron-LM, Whale, and Espresso under multiple freezing scenarios, with a maximum speedup of approximately 1.77$\times$, validating the effectiveness of this method on heterogeneous GPU clusters.
+
+To address the problem that existing globally uniform recomputation strategies struggle to balance GPU utilization and memory overhead on heterogeneous GPU clusters, this thesis further proposes, on the basis of MMoH, a recomputation method for multimodal large language models on heterogeneous GPU clusters (HR-MMoH).
+This method configures differentiated recomputation per pipeline stage based on the partitioning and scheduling results of MMoH, and combines profiling-guided configuration search to form a multi-level optimization method of ``partitioning--scheduling--recomputation'', thereby achieving finer-grained trade-offs between computation and memory across different devices and different training stages.
+In end-to-end experiments with larger batch sizes and longer sequence lengths, HR-MMoH achieves the highest throughput under different freezing scenarios, reducing iteration time by approximately 6.1\%--23.1\% compared with Espresso and by approximately 11.0\%--40.6\% relative to the trainable subset of Whale.
+The above results indicate that HR-MMoH can further improve the speed of training MLLMs on heterogeneous GPU clusters.
 \end{eabstract}
 \ekeywords{Multimodal large language model, Heterogeneous GPU cluster, Pipeline parallelism, Recomputation}
